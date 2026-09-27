@@ -5,4 +5,9 @@ async function listarTodos() {
   return linhas;
 }
 
-module.exports = { listarTodos };
+async function buscarPorId(id) {
+  const [linhas] = await pool.query('SELECT * FROM produto WHERE id = ?', [id]);
+  return linhas[0];
+}
+
+module.exports = { listarTodos, buscarPorId };
