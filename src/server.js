@@ -7,7 +7,10 @@ const categoriaRoutes = require('./routes/categoriaRoutes');
 const clienteRoutes = require('./routes/clienteRoutes');
 const produtoRoutes = require('./routes/produtoRoutes');
 const authRoutes = require('./routes/authRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes');
 
+
+app.use('/pedidos', pedidoRoutes);
 app.use('/login', authRoutes);
 app.use('/clientes', clienteRoutes);
 app.use('/categorias', categoriaRoutes);
