@@ -6,7 +6,9 @@ app.use(express.json());  // ← primeiro de tudo, antes das rotas
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const clienteRoutes = require('./routes/clienteRoutes');
 const produtoRoutes = require('./routes/produtoRoutes');
+const authRoutes = require('./routes/authRoutes');
 
+app.use('/login', authRoutes);
 app.use('/clientes', clienteRoutes);
 app.use('/categorias', categoriaRoutes);
 app.use('/produtos', produtoRoutes);
