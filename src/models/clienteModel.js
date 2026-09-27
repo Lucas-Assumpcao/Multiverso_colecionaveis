@@ -9,4 +9,9 @@ async function inserir(cliente) {
   return resultado.insertId;
 }
 
-module.exports = { inserir };
+async function buscarPorEmail(email) {
+  const [linhas] = await pool.query('SELECT * FROM cliente WHERE email = ?', [email]);
+  return linhas[0];
+}
+
+module.exports = { inserir, buscarPorEmail };
