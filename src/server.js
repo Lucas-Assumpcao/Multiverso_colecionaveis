@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
+const categoriaRoutes = require('./routes/categoriaRoutes');
 
+app.use('/categorias', categoriaRoutes);
 app.use(express.json());
 
 app.get('/', (req, res) => {
