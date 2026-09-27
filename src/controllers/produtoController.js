@@ -10,4 +10,21 @@ async function listar(req, res) {
   }
 }
 
-module.exports = { listar };
+async function buscarPorId(req, res) {
+  try {
+    const { id } = req.params;
+    const produto = await produtoService.buscarPorId(id);
+
+    if (!produto) {
+      return res.status(404).json({ mensagem: 'Produto não encontrado' });
+    }
+
+    res.json(produto);
+
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ mensagem: 'Erro ao buscar produto' });
+  }
+}
+
+module.exports = { listar, buscarPorId };
