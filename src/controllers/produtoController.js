@@ -1,12 +1,22 @@
 const produtoService = require('../services/produtoService');
 
 async function listar(req, res) {
-  try {
-    const produtos = await produtoService.listarProdutos();
-    res.json(produtos);
-  } catch (erro) {
-    console.error(erro);
-    res.status(500).json({ mensagem: 'Erro ao buscar produtos' });
+  if (req.query.nome) {
+    try {
+      const produtos = await produtoService.buscarPorNome(req.query.nome);
+      res.json(produtos);
+    } catch (erro) {
+      console.error(erro);
+      res.status(500).json({ mensagem: 'Erro ao buscar produtos por nome' });
+    }
+  } else {
+    try {
+      const produtos = await produtoService.listarProdutos();
+      res.json(produtos);
+    } catch (erro) {
+      console.error(erro);
+      res.status(500).json({ mensagem: 'Erro ao buscar produtos' });
+    }
   }
 }
 
@@ -38,4 +48,5 @@ async function listarProdutosPorCategoria(req, res) {
   }
 }
 
-module.exports = { listar, buscarPorId, listarProdutosPorCategoria };
+
+module.exports = { listar, buscarPorId, listarProdutosPorCategoria};

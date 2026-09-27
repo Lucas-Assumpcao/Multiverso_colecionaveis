@@ -15,4 +15,9 @@ async function listarProdutosPorCategoria(categoria_id) {
   return produtos;
 }
 
-module.exports = { listarProdutos, buscarPorId, listarProdutosPorCategoria };
+async function buscarPorNome(nome) {
+  const produtos = await produtoModel.buscarPorNome(nome);
+  return produtos;
+}
+
+module.exports = { listarProdutos, buscarPorId, listarProdutosPorCategoria, buscarPorNome };

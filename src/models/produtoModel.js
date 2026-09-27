@@ -15,4 +15,12 @@ async function listarCategoria(categoria_id) {
   return linhas;
 }
 
-module.exports = { listarTodos, buscarPorId, listarCategoria };
+async function buscarPorNome(nome) {
+  const [linhas] = await pool.query(
+    'SELECT * FROM produto WHERE nome LIKE ?',
+    [`%${nome}%`]
+  );
+  return linhas;
+}
+
+module.exports = { listarTodos, buscarPorId, listarCategoria, buscarPorNome };
