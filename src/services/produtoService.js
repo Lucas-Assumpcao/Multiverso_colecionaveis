@@ -10,4 +10,9 @@ async function buscarPorId(id) {
   return produto;
 }
 
-module.exports = { listarProdutos, buscarPorId };
+async function listarProdutosPorCategoria(categoria_id) {
+  const produtos = await produtoModel.listarCategoria(categoria_id);
+  return produtos;
+}
+
+module.exports = { listarProdutos, buscarPorId, listarProdutosPorCategoria };

@@ -10,4 +10,9 @@ async function buscarPorId(id) {
   return linhas[0];
 }
 
-module.exports = { listarTodos, buscarPorId };
+async function listarCategoria(categoria_id) {
+  const [linhas] = await pool.query('SELECT * FROM produto WHERE categoria_id = ?', [categoria_id]);
+  return linhas;
+}
+
+module.exports = { listarTodos, buscarPorId, listarCategoria };

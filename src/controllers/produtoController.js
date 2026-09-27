@@ -27,4 +27,15 @@ async function buscarPorId(req, res) {
   }
 }
 
-module.exports = { listar, buscarPorId };
+async function listarProdutosPorCategoria(req, res) {
+  try {
+    const { categoria } = req.params;
+    const produtos = await produtoService.listarProdutosPorCategoria(categoria);
+    res.json(produtos);
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ mensagem: 'Erro ao buscar produtos por categoria' });
+  }
+}
+
+module.exports = { listar, buscarPorId, listarProdutosPorCategoria };
