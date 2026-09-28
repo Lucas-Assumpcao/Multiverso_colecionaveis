@@ -11,13 +11,18 @@ async function criar(pedido, itens) {
     );
     const pedidoId = resultadoPedido.insertId;
 
-   for (const item of itens) {
+    for (const item of itens) {
       await conexao.query(
         'INSERT INTO item_pedido (pedido_id, produto_id, quantidade, preco_unitario) VALUES (?, ?, ?, ?)',
         [pedidoId, item.produto_id, item.quantidade, item.preco_unitario]
       );
+
+      await conexao.query(
+        'UPDATE produto SET estoque = estoque - ? WHERE id = ?',
+        [item.quantidade, item.produto_id]
+      );
     }
-    
+
     await conexao.commit();
     return pedidoId;
   } catch (erro) {

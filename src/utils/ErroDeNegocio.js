@@ -4,3 +4,5 @@ class ErroDeNegocio extends Error {
     this.status = status;
   }
 }
+
+module.exports = ErroDeNegocio;
