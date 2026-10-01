@@ -3,7 +3,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import AdminPainel from './pages/AdminPainel';
 import AdminProdutos from './pages/AdminProdutos';
-import AdminProdutoForm from './pages/AdminProdutosForm';
+import AdminProdutoForm from './pages/AdminProdutoForm';
 import AdminPedidos from './pages/AdminPedidos';
 import Cadastro from './pages/Cadastro';
 import Carrinho from './pages/Carrinho';
@@ -11,7 +11,7 @@ import Categoria from './pages/Categoria';
 import Confirmacao from './pages/Confirmacao';
 import Endereco from './pages/Endereco';
 import MeusPedidos from './pages/MeusPedidos';
-import Pagamento from './pages/Pagamentos';
+import Pagamento from './pages/Pagamento';
 import ProdutoDetalhe from './pages/ProdutoDetalhe';
 import NotFound from './pages/NotFound';
 
