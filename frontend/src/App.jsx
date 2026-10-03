@@ -34,7 +34,7 @@ function App() {
         <Route path="/endereco" element={<Endereco />} />
         <Route path="/meus-pedidos" element={<MeusPedidos />} />
         <Route path="/pagamento" element={<Pagamento />} />
-        <Route path="/produto/:id" element={<ProdutoDetalhe />} />
+        <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
