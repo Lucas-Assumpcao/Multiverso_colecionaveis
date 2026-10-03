@@ -9,3 +9,16 @@ export async function listarPorCategoria(categoriaId) {
 
   return resposta.json();
 }
+
+export async function buscarPorId(id) {
+  const resposta = await fetch(`${API_URL}/produtos/${id}`);
+
+  if (resposta.status === 404) {
+    throw new Error('Produto não encontrado');
+  }
+  if (!resposta.ok) {
+    throw new Error('Erro ao buscar produto');
+  }
+
+  return resposta.json();
+}
