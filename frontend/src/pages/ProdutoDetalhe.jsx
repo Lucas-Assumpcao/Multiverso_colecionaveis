@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { buscarPorId } from '../services/produtoService';
+import { useCarrinho } from '../context/useCarrinho';
 
 function ProdutoDetalhe() {
   const { id } = useParams();
   const [produto, setProduto] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
+  const [adicionado, setAdicionado] = useState(false);
+  const { adicionar } = useCarrinho();
 
   useEffect(() => {
     let ativo = true;
-
     const carregar = async () => {
       setCarregando(true);
       setErro(null);
@@ -23,10 +25,15 @@ function ProdutoDetalhe() {
         if (ativo) setCarregando(false);
       }
     };
-
     carregar();
     return () => { ativo = false; };
   }, [id]);
+
+  function handleAdicionar() {
+    adicionar(produto);
+    setAdicionado(true);
+    setTimeout(() => setAdicionado(false), 1500);
+  }
 
   if (carregando) return <p className="p-8">Carregando produto...</p>;
   if (erro) return <p className="p-8">Erro: {erro.message}</p>;
@@ -46,9 +53,10 @@ function ProdutoDetalhe() {
       </p>
       <button
         disabled={produto.estoque === 0}
+        onClick={handleAdicionar}
         className="bg-amarelo text-roxo font-bold px-6 py-3 rounded-lg mt-6 disabled:opacity-40"
       >
-        Adicionar à coleção
+        {adicionado ? 'Adicionado! ✓' : 'Adicionar à coleção'}
       </button>
     </div>
   );

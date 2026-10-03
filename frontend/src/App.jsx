@@ -14,11 +14,13 @@ import MeusPedidos from './pages/MeusPedidos';
 import Pagamento from './pages/Pagamento';
 import ProdutoDetalhe from './pages/ProdutoDetalhe';
 import NotFound from './pages/NotFound';
+import { CarrinhoProvider } from './context/CarrinhoContext';
 
 
 
 function App() {
   return (
+    <CarrinhoProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -38,6 +40,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+    </CarrinhoProvider>
   );
 }
 
