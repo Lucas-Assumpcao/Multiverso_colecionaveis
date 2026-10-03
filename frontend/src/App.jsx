@@ -15,13 +15,14 @@ import Pagamento from './pages/Pagamento';
 import ProdutoDetalhe from './pages/ProdutoDetalhe';
 import NotFound from './pages/NotFound';
 import { CarrinhoProvider } from './context/CarrinhoContext';
-
+import Header from './components/Header';
 
 
 function App() {
   return (
     <CarrinhoProvider>
     <BrowserRouter>
+    <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
