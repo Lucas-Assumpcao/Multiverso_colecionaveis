@@ -4,12 +4,14 @@ const cors = require('cors');
 const enderecoRoutes = require('./routes/enderecoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const pagamentoRoutes = require('./routes/pagamentoRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
 
 app.use(cors());
 app.use(express.json());  // ← primeiro de tudo, antes das rotas
 app.use('/enderecos', enderecoRoutes);
 app.use('/admin', adminRoutes);
 app.use('/pagamentos', pagamentoRoutes);
+app.use('/webhooks', webhookRoutes);
 
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const clienteRoutes = require('./routes/clienteRoutes');
