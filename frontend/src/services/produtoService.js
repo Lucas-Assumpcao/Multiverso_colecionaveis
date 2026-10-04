@@ -22,3 +22,9 @@ export async function buscarPorId(id) {
 
   return resposta.json();
 }
+
+export async function listarTodos() {
+  const resposta = await fetch(`${API_URL}/produtos`);
+  if (!resposta.ok) throw new Error('Erro ao buscar produtos');
+  return resposta.json();
+}
