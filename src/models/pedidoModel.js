@@ -33,4 +33,29 @@ async function criar(pedido, itens) {
   }
 }
 
-module.exports = { criar };
+async function listarPorCliente(clienteId) {
+  const [pedidos] = await pool.query(
+    'SELECT * FROM pedido WHERE cliente_id = ? ORDER BY data_pedido DESC',
+    [clienteId]
+  );
+  return pedidos;
+}
+
+async function buscarPorId(id, clienteId) {
+  const [pedidos] = await pool.query(
+    'SELECT * FROM pedido WHERE id = ? AND cliente_id = ?',
+    [id, clienteId]
+  );
+  if (pedidos.length === 0) return null;
+
+  const [itens] = await pool.query(
+    `SELECT ip.produto_id, ip.quantidade, ip.preco_unitario, p.nome
+     FROM item_pedido ip
+     JOIN produto p ON p.id = ip.produto_id
+     WHERE ip.pedido_id = ?`,
+    [id]
+  );
+
+  return { ...pedidos[0], itens };
+}
+module.exports = { criar, listarPorCliente, buscarPorId };
