@@ -23,7 +23,6 @@ async function criarPreferencia(pedidoId, clienteId) {
         failure: 'http://localhost:5173/pagamento',
         pending: 'http://localhost:5173/confirmacao',
       },
-      auto_return: 'approved',
     },
   });
 
