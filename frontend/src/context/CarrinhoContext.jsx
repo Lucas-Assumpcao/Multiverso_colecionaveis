@@ -39,16 +39,16 @@ export function CarrinhoProvider({ children }) {
       atual.map((i) => (i.produto_id === produtoId ? { ...i, quantidade } : i))
     );
   }
+
   function limpar() {
-  setItens([]);
-}
+    setItens([]);
+  }
 
   const total = itens.reduce((soma, i) => soma + i.preco * i.quantidade, 0);
 
   return (
-    <CarrinhoContext.Provider value={{ itens, adicionar, remover, atualizarQuantidade, total }}>
+    <CarrinhoContext.Provider value={{ itens, adicionar, remover, atualizarQuantidade, limpar, total }}>
       {children}
     </CarrinhoContext.Provider>
   );
 }
-
