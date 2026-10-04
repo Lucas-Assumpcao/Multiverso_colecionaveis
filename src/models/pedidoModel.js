@@ -58,4 +58,14 @@ async function buscarPorId(id, clienteId) {
 
   return { ...pedidos[0], itens };
 }
-module.exports = { criar, listarPorCliente, buscarPorId };
+async function listarTodos() {
+  const [pedidos] = await pool.query(
+    'SELECT p.*, c.nome AS cliente_nome FROM pedido p JOIN cliente c ON c.id = p.cliente_id ORDER BY p.data_pedido DESC'
+  );
+  return pedidos;
+}
+
+async function atualizarStatus(id, status) {
+  await pool.query('UPDATE pedido SET status = ? WHERE id = ?', [status, id]);
+}
+module.exports = { criar, listarPorCliente, buscarPorId, listarTodos, atualizarStatus };

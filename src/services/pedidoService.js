@@ -43,5 +43,16 @@ async function buscarPedido(id, clienteId) {
   if (!pedido) throw new ErroDeNegocio('Pedido não encontrado', 404);
   return pedido;
 }
+async function listarTodosPedidos() {
+  return pedidoModel.listarTodos();
+}
 
-module.exports = { criarPedido, listarPedidosCliente, buscarPedido };
+async function atualizarStatusPedido(id, status) {
+  const validos = ['aguardando_pagamento', 'pago', 'enviado', 'entregue', 'cancelado'];
+  if (!validos.includes(status)) {
+    throw new ErroDeNegocio('Status inválido', 400);
+  }
+  await pedidoModel.atualizarStatus(id, status);
+}
+
+module.exports = { criarPedido, listarPedidosCliente, buscarPedido, listarTodosPedidos, atualizarStatusPedido };

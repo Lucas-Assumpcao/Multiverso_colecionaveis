@@ -22,5 +22,25 @@ async function buscarPorNome(nome) {
   );
   return linhas;
 }
+async function inserir(produto) {
+  const { categoria_id, nome, descricao, preco, estoque, imagem_url } = produto;
+  const [resultado] = await pool.query(
+    'INSERT INTO produto (categoria_id, nome, descricao, preco, estoque, imagem_url) VALUES (?, ?, ?, ?, ?, ?)',
+    [categoria_id, nome, descricao, preco, estoque, imagem_url || null]
+  );
+  return resultado.insertId;
+}
 
-module.exports = { listarTodos, buscarPorId, listarCategoria, buscarPorNome };
+async function atualizar(id, produto) {
+  const { categoria_id, nome, descricao, preco, estoque, imagem_url } = produto;
+  await pool.query(
+    'UPDATE produto SET categoria_id=?, nome=?, descricao=?, preco=?, estoque=?, imagem_url=? WHERE id=?',
+    [categoria_id, nome, descricao, preco, estoque, imagem_url || null, id]
+  );
+}
+
+async function remover(id) {
+  await pool.query('DELETE FROM produto WHERE id = ?', [id]);
+}
+
+module.exports = { listarTodos, buscarPorId, listarCategoria, buscarPorNome, inserir, atualizar, remover };

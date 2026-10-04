@@ -2,11 +2,12 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const enderecoRoutes = require('./routes/enderecoRoutes');
-
+const adminRoutes = require('./routes/adminRoutes');
 
 app.use(cors());
 app.use(express.json());  // ← primeiro de tudo, antes das rotas
 app.use('/enderecos', enderecoRoutes);
+app.use('/admin', adminRoutes);
 
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const clienteRoutes = require('./routes/clienteRoutes');
