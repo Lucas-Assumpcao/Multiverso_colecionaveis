@@ -39,6 +39,9 @@ export function CarrinhoProvider({ children }) {
       atual.map((i) => (i.produto_id === produtoId ? { ...i, quantidade } : i))
     );
   }
+  function limpar() {
+  setItens([]);
+}
 
   const total = itens.reduce((soma, i) => soma + i.preco * i.quantidade, 0);
 
@@ -48,3 +51,4 @@ export function CarrinhoProvider({ children }) {
     </CarrinhoContext.Provider>
   );
 }
+
