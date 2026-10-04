@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/useCarrinho';
 import { criar } from '../services/pedidoService';
+import { criarPagamento } from '../services/pedidoService';
 
 function Pagamento() {
   const { state } = useLocation();
@@ -15,23 +16,26 @@ function Pagamento() {
     return <p className="p-8">Endereço não informado. <a href="/endereco" className="text-roxo underline">Voltar</a></p>;
   }
 
-  async function handleConfirmar() {
-    setErro(null);
-    setCarregando(true);
-    try {
-      const resultado = await criar({
-        endereco_id: state.enderecoId,
-        valor_frete: state.valorFrete,
-        itens: itens.map((i) => ({ produto_id: i.produto_id, quantidade: i.quantidade })),
-      });
-      limpar();
-      navigate('/confirmacao', { state: { pedidoId: resultado.id } });
-    } catch (e) {
-      setErro(e);
-    } finally {
-      setCarregando(false);
-    }
+ async function handleConfirmar() {
+  setErro(null);
+  setCarregando(true);
+  try {
+    const resultado = await criar({
+      endereco_id: state.enderecoId,
+      valor_frete: state.valorFrete,
+      itens: itens.map((i) => ({ produto_id: i.produto_id, quantidade: i.quantidade })),
+    });
+
+    const pagamento = await criarPagamento(resultado.id);
+    limpar();
+    window.location.href = pagamento.init_point; // sai do React, vai pro checkout do Mercado Pago
+
+  } catch (e) {
+    setErro(e);
+  } finally {
+    setCarregando(false);
   }
+}
 
   return (
     <div className="p-8 max-w-md mx-auto">
