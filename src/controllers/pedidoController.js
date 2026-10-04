@@ -16,4 +16,13 @@ async function criar(req, res) {
     res.status(500).json({ mensagem: 'Erro ao criar pedido' });
   }
 }
-module.exports = { criar };
+async function listarPedidosCliente(clienteId) {
+  return pedidoModel.listarPorCliente(clienteId);
+}
+
+async function buscarPedido(id, clienteId) {
+  const pedido = await pedidoModel.buscarPorId(id, clienteId);
+  if (!pedido) throw new ErroDeNegocio('Pedido não encontrado', 404);
+  return pedido;
+}
+module.exports = { criar, listarPedidosCliente, buscarPedido };

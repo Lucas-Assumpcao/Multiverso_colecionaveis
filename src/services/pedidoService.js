@@ -34,5 +34,14 @@ async function criarPedido(dados) {
 
   return pedidoId;
 }
+async function listarPedidosCliente(clienteId) {
+  return pedidoModel.listarPorCliente(clienteId);
+}
 
-module.exports = { criarPedido };
+async function buscarPedido(id, clienteId) {
+  const pedido = await pedidoModel.buscarPorId(id, clienteId);
+  if (!pedido) throw new ErroDeNegocio('Pedido não encontrado', 404);
+  return pedido;
+}
+
+module.exports = { criarPedido, listarPedidosCliente, buscarPedido };
