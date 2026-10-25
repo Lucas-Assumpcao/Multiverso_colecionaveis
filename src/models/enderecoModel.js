@@ -9,4 +9,12 @@ async function inserir(clienteId, dados) {
   return resultado.insertId;
 }
 
-module.exports = { inserir };
+async function pertenceAoCliente(id, clienteId) {
+  const [enderecos] = await pool.query(
+    'SELECT id FROM endereco WHERE id = ? AND cliente_id = ?',
+    [id, clienteId]
+  );
+  return enderecos.length > 0;
+}
+
+module.exports = { inserir, pertenceAoCliente };

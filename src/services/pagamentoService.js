@@ -24,7 +24,7 @@ async function criarPreferencia(pedidoId, clienteId) {
       external_reference: String(pedidoId), // liga o pagamento ao seu pedido
       back_urls: {
         success: 'http://localhost:5173/confirmacao',
-        failure: 'http://localhost:5173/pagamento',
+        failure: 'http://localhost:5173/confirmacao',
         pending: 'http://localhost:5173/confirmacao',
       },
     },

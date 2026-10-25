@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const ErroDeNegocio = require('../utils/ErroDeNegocio');
 
 async function criar(pedido, itens) {
   const conexao = await pool.getConnection();
@@ -17,10 +18,13 @@ async function criar(pedido, itens) {
         [pedidoId, item.produto_id, item.quantidade, item.preco_unitario]
       );
 
-      await conexao.query(
-        'UPDATE produto SET estoque = estoque - ? WHERE id = ?',
-        [item.quantidade, item.produto_id]
+      const [resultadoEstoque] = await conexao.query(
+        'UPDATE produto SET estoque = estoque - ? WHERE id = ? AND estoque >= ?',
+        [item.quantidade, item.produto_id, item.quantidade]
       );
+      if (resultadoEstoque.affectedRows === 0) {
+        throw new ErroDeNegocio('Estoque insuficiente', 409);
+      }
     }
 
     await conexao.commit();

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { criar, consultarCep } from '../services/enderecoService';
+import { FRETE_FIXO } from '../config';
 
 function Endereco() {
   const [form, setForm] = useState({
@@ -38,7 +39,7 @@ function Endereco() {
     setCarregando(true);
     try {
       const resultado = await criar(form);
-      navigate('/pagamento', { state: { enderecoId: resultado.id, valorFrete: 15.0 } });
+      navigate('/pagamento', { state: { enderecoId: resultado.id } });
     } catch (e) {
       setErro(e);
     } finally {
@@ -49,6 +50,7 @@ function Endereco() {
   return (
     <div className="p-8 max-w-md mx-auto">
       <h1 className="text-roxo text-3xl font-bold mb-6">Endereço de entrega</h1>
+      <p className="text-sm text-gray-600 mb-3">Frete fixo: R$ {FRETE_FIXO.toFixed(2)}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           placeholder="CEP" value={form.cep}
