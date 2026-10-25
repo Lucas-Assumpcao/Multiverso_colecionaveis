@@ -14,7 +14,7 @@ import MeusPedidos from './pages/MeusPedidos';
 import Pagamento from './pages/Pagamento';
 import ProdutoDetalhe from './pages/ProdutoDetalhe';
 import NotFound from './pages/NotFound';
-import { CarrinhoProvider } from './context/CarrinhoContext';
+import { CarrinhoProvider } from './context/CarrinhoContext.jsx';
 import Header from './components/Header';
 
 

@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-
-export const CarrinhoContext = createContext();
+import { useState, useEffect } from 'react';
+import { CarrinhoContext } from './carrinhoContext';
 
 export function CarrinhoProvider({ children }) {
   const [itens, setItens] = useState(() => {
