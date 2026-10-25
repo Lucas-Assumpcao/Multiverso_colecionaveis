@@ -94,7 +94,8 @@ JWT_SECRET=uma_frase_longa_e_aleatoria
 MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
 ```
 ```bash
-npx nodemon src/server.js
+npm run dev
+npm start
 ```
 
 ### Front-end
