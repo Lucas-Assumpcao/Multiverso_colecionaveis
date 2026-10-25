@@ -50,7 +50,7 @@ INSERT INTO produto (categoria_id, nome, descricao, preco, estoque, imagem_url) 
 -- usuário administrador (senha de teste — trocar o hash em produção)
 -- ---------------------------------------------------------
 INSERT INTO usuario_admin (nome, email, senha_hash) VALUES
-('Admin Multiverso', 'admin@multiversocolecionaveis.com.br', '$2b$10$exemplodehashbcryptaqui');
+('Admin Multiverso', 'admin@multiversocolecionaveis.com.br', '$2b$10$TuXVzxeiwdUD/1gL16PMduRh9LuwdgrBu95YoSQpfcxcouPMDcaqe');
 
 -- ---------------------------------------------------------
 -- cliente + endereço de teste (para testar o fluxo de compra)
