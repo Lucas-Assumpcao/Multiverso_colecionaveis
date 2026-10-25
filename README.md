@@ -107,6 +107,16 @@ npm run dev
 
 Front em `http://localhost:5173`, API em `http://localhost:3000`.
 
+## Testes
+
+Com a API em execução e o banco de dados populado, rode na raiz do projeto:
+
+```bash
+npm test
+```
+
+Os testes criam clientes, endereços e pedidos de teste. Para remover esses registros depois, execute `tests/limpar-testes.sql` no MySQL Workbench.
+
 ### Conta de administrador (demo)
 | | |
 |---|---|
