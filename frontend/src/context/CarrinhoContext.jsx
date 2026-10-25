@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CarrinhoContext } from './carrinhoContext';
+import { CarrinhoContext } from './carrinhoCtx';
 
 export function CarrinhoProvider({ children }) {
   const [itens, setItens] = useState(() => {

@@ -5,4 +5,20 @@
   --color-amarelo: #F5B700;
   --color-vermelho: #E63946;
   --color-chumbo: #22223B;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Poppins", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  button {
+    @apply font-display;
+  }
 }
