@@ -43,6 +43,15 @@ function ProdutoDetalhe() {
       <Link to={`/categoria/${produto.categoria_id}`} className="text-roxo underline">
         &larr; Voltar
       </Link>
+      {produto.imagem_url && (
+        <img
+          src={produto.imagem_url}
+          alt={produto.nome}
+          loading="lazy"
+          className="w-full h-80 object-contain mt-4"
+          onError={(event) => { event.currentTarget.style.display = 'none'; }}
+        />
+      )}
       <h1 className="text-3xl font-bold mt-4">{produto.nome}</h1>
       <p className="text-gray-600 mt-2">{produto.descricao}</p>
       <p className="text-2xl font-bold text-roxo mt-4">
