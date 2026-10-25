@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useCarrinho } from '../context/useCarrinho';
-import { criar } from '../services/pedidoService';
-import { criarPagamento } from '../services/pedidoService';
+import { criar, criarPagamento } from '../services/pedidoService';
+import { FRETE_FIXO } from '../config';
 
 function Pagamento() {
   const { state } = useLocation();
@@ -20,7 +20,6 @@ function Pagamento() {
   try {
     const resultado = await criar({
       endereco_id: state.enderecoId,
-      valor_frete: state.valorFrete,
       itens: itens.map((i) => ({ produto_id: i.produto_id, quantidade: i.quantidade })),
     });
 
@@ -48,11 +47,11 @@ function Pagamento() {
         ))}
         <div className="flex justify-between text-sm py-1 text-gray-500">
           <span>Frete</span>
-          <span>R$ {state.valorFrete.toFixed(2)}</span>
+          <span>R$ {FRETE_FIXO.toFixed(2)}</span>
         </div>
         <div className="flex justify-between font-bold pt-2 border-t mt-2">
           <span>Total</span>
-          <span>R$ {(total + state.valorFrete).toFixed(2)}</span>
+          <span>R$ {(total + FRETE_FIXO).toFixed(2)}</span>
         </div>
       </div>
 

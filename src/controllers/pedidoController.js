@@ -2,10 +2,10 @@ const pedidoService = require('../services/pedidoService');
 
 async function criar(req, res) {
   try {
-    const { endereco_id, itens, valor_frete } = req.body;
+    const { endereco_id, itens } = req.body;
     const cliente_id = req.clienteId;
 
-    const pedidoId = await pedidoService.criarPedido({ cliente_id, endereco_id, itens, valor_frete });
+    const pedidoId = await pedidoService.criarPedido({ cliente_id, endereco_id, itens });
     res.status(201).json({ id: pedidoId, mensagem: 'Pedido criado com sucesso' });
 
   } catch (erro) {

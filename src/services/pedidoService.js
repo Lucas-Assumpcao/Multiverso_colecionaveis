@@ -1,48 +1,78 @@
 const produtoModel = require('../models/produtoModel');
 const pedidoModel = require('../models/pedidoModel');
+const enderecoModel = require('../models/enderecoModel');
 const ErroDeNegocio = require('../utils/ErroDeNegocio');
+const { FRETE_FIXO } = require('../config/negocio');
+
+function arredondar(valor) {
+  return Math.round(valor * 100) / 100;
+}
 
 async function criarPedido(dados) {
-  const {  cliente_id, endereco_id, itens, valor_frete } = dados;
+  const { cliente_id, endereco_id, itens } = dados;
 
-  let valorTotal = valor_frete;
-  const itensCompletos = [];
-
+  if (!Number.isInteger(endereco_id) || endereco_id <= 0) {
+    throw new ErroDeNegocio('endereco_id deve ser um inteiro maior que zero', 400);
+  }
+  if (!Array.isArray(itens) || itens.length === 0 || itens.length > 50) {
+    throw new ErroDeNegocio('itens deve ser um array nao vazio com no maximo 50 itens', 400);
+  }
   for (const item of itens) {
-    const produto = await produtoModel.buscarPorId(item.produto_id);
-
-   if (!produto) {
-      throw new ErroDeNegocio(`Produto com ID ${item.produto_id} não encontrado`, 404);
+    if (!item || !Number.isInteger(item.produto_id) || item.produto_id <= 0) {
+      throw new ErroDeNegocio('Cada item precisa ter produto_id inteiro maior que zero', 400);
     }
-    if (produto.estoque < item.quantidade) {
-      throw new ErroDeNegocio(`Estoque insuficiente para o produto com ID ${item.produto_id}`, 409);
+    if (!Number.isInteger(item.quantidade) || item.quantidade < 1 || item.quantidade > 99) {
+      throw new ErroDeNegocio('Cada quantidade deve ser um inteiro entre 1 e 99', 400);
     }
-   
-    itensCompletos.push({
-      produto_id: produto.id,
-      quantidade: item.quantidade,
-      preco_unitario: produto.preco
-    });
-
-    valorTotal += produto.preco * item.quantidade;
   }
 
-  const pedidoId = await pedidoModel.criar(
-    { cliente_id, endereco_id, valor_frete, valor_total: valorTotal },
+  const itensAgrupados = new Map();
+  for (const item of itens) {
+    itensAgrupados.set(item.produto_id, (itensAgrupados.get(item.produto_id) || 0) + item.quantidade);
+  }
+
+  const enderecoPertenceAoCliente = await enderecoModel.pertenceAoCliente(endereco_id, cliente_id);
+  if (!enderecoPertenceAoCliente) {
+    throw new ErroDeNegocio('Endere\u00e7o n\u00e3o encontrado', 404);
+  }
+
+  let valorTotal = FRETE_FIXO;
+  const itensCompletos = [];
+  for (const [produtoId, quantidade] of itensAgrupados) {
+    const produto = await produtoModel.buscarPorId(produtoId);
+    if (!produto) {
+      throw new ErroDeNegocio('Produto com ID ' + produtoId + ' nao encontrado', 404);
+    }
+    if (produto.estoque < quantidade) {
+      throw new ErroDeNegocio('Estoque insuficiente', 409);
+    }
+
+    const precoUnitario = Number(produto.preco);
+    itensCompletos.push({ produto_id: produto.id, quantidade, preco_unitario: precoUnitario });
+    valorTotal += precoUnitario * quantidade;
+  }
+
+  return pedidoModel.criar(
+    {
+      cliente_id,
+      endereco_id,
+      valor_frete: FRETE_FIXO,
+      valor_total: arredondar(valorTotal),
+    },
     itensCompletos
   );
-
-  return pedidoId;
 }
+
 async function listarPedidosCliente(clienteId) {
   return pedidoModel.listarPorCliente(clienteId);
 }
 
 async function buscarPedido(id, clienteId) {
   const pedido = await pedidoModel.buscarPorId(id, clienteId);
-  if (!pedido) throw new ErroDeNegocio('Pedido não encontrado', 404);
+  if (!pedido) throw new ErroDeNegocio('Pedido n\u00e3o encontrado', 404);
   return pedido;
 }
+
 async function listarTodosPedidos() {
   return pedidoModel.listarTodos();
 }
@@ -50,7 +80,7 @@ async function listarTodosPedidos() {
 async function atualizarStatusPedido(id, status) {
   const validos = ['aguardando_pagamento', 'pago', 'enviado', 'entregue', 'cancelado'];
   if (!validos.includes(status)) {
-    throw new ErroDeNegocio('Status inválido', 400);
+    throw new ErroDeNegocio('Status inv\u00e1lido', 400);
   }
   await pedidoModel.atualizarStatus(id, status);
 }
