@@ -8,6 +8,7 @@ import AdminPedidos from './pages/AdminPedidos';
 import Cadastro from './pages/Cadastro';
 import Carrinho from './pages/Carrinho';
 import Categoria from './pages/Categoria';
+import Busca from './pages/Busca';
 import Confirmacao from './pages/Confirmacao';
 import Endereco from './pages/Endereco';
 import MeusPedidos from './pages/MeusPedidos';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/carrinho" element={<Carrinho />} />
         <Route path="/categoria/:categoriaId" element={<Categoria />} />
+        <Route path="/busca" element={<Busca />} />
         <Route path="/confirmacao" element={<Confirmacao />} />
         <Route path="/endereco" element={<Endereco />} />
         <Route path="/meus-pedidos" element={<MeusPedidos />} />

@@ -28,3 +28,9 @@ export async function listarTodos() {
   if (!resposta.ok) throw new Error('Erro ao buscar produtos');
   return resposta.json();
 }
+
+export async function buscarPorNome(nome) {
+  const resposta = await fetch(`${API_URL}/produtos?nome=${encodeURIComponent(nome)}`);
+  if (!resposta.ok) throw new Error('Erro ao buscar produtos');
+  return resposta.json();
+}
