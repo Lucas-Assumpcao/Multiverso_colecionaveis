@@ -109,7 +109,7 @@ CREATE TABLE item_pedido (
 CREATE TABLE pagamento (
   id              INT AUTO_INCREMENT PRIMARY KEY,
   pedido_id       INT NOT NULL,
-  metodo          ENUM('pix','cartao','boleto') NOT NULL,
+  metodo          ENUM('pix','cartao','boleto') NULL,
   status          ENUM('aprovado','pendente','recusado') NOT NULL DEFAULT 'pendente',
   transacao_id    VARCHAR(100),
   data_pagamento  DATETIME,
