@@ -82,38 +82,43 @@ Multiverso_colecionaveis/
 
 ## Rotas principais
 
-| Rota | Método | Auth |
-|---|---|---|
-| `/produtos` `?categoria=` `?nome=` | GET | — |
-| `/produtos/:id` | GET | — |
-| `/categorias` | GET | — |
-| `/clientes` | POST | — |
-| `/login` | POST | — |
-| `/enderecos` | POST | Cliente |
-| `/pedidos` | POST, GET | Cliente |
-| `/pedidos/:id` | GET | Cliente (dono) |
-| `/pagamentos/:pedidoId` | POST | Cliente |
-| `/webhooks/mercadopago` | POST | Mercado Pago |
-| `/admin/login` | POST | — |
-| `/produtos` | POST, PUT `:id`, DELETE `:id` | Admin |
-| `/admin/pedidos` | GET, PUT `:id/status` | Admin |
+| Rota                               | Método                        | Auth           |
+| ---------------------------------- | ----------------------------- | -------------- |
+| `/produtos` `?categoria=` `?nome=` | GET                           | —              |
+| `/produtos/:id`                    | GET                           | —              |
+| `/categorias`                      | GET                           | —              |
+| `/clientes`                        | POST                          | —              |
+| `/login`                           | POST                          | —              |
+| `/enderecos`                       | POST                          | Cliente        |
+| `/pedidos`                         | POST, GET                     | Cliente        |
+| `/pedidos/:id`                     | GET                           | Cliente (dono) |
+| `/pagamentos/:pedidoId`            | POST                          | Cliente        |
+| `/webhooks/mercadopago`            | POST                          | Mercado Pago   |
+| `/admin/login`                     | POST                          | —              |
+| `/produtos`                        | POST, PUT `:id`, DELETE `:id` | Admin          |
+| `/admin/pedidos`                   | GET, PUT `:id/status`         | Admin          |
 
 ## Rodando localmente
 
 ### Pré-requisitos
+
 Node.js e MySQL instalados.
 
 ### Banco de dados
+
 ```sql
 SOURCE create.sql;
 SOURCE insert.sql;
 ```
 
 ### API
+
 ```bash
 npm install
 ```
+
 Cria um `.env` na raiz (modelo em `.env.example`):
+
 ```env
 DB_HOST=localhost
 DB_USER=root
@@ -123,12 +128,14 @@ PORT=3000
 JWT_SECRET=uma_frase_longa_e_aleatoria
 MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
 ```
+
 ```bash
 npm run dev
 npm start
 ```
 
 ### Front-end
+
 ```bash
 cd frontend
 npm install
@@ -146,6 +153,7 @@ npm test
 ```
 
 Pré-requisitos:
+
 - back-end em execução
 - banco populado com `create.sql` + `insert.sql`
 - testes automatizados criam clientes e pedidos de teste; para limpar registros de teste, execute `tests/limpar-testes.sql` no MySQL Workbench
@@ -158,11 +166,12 @@ $env:RUN_MP="1"; npm test
 Documentação de testes: [planilha-testes.xlsx](./planilha-testes.xlsx)
 
 ### Conta de administrador (demo)
-| | |
-|---|---|
-| URL | `/admin` |
+
+|        |                                      |
+| ------ | ------------------------------------ |
+| URL    | `/admin`                             |
 | E-mail | admin@multiversocolecionaveis.com.br |
-| Senha | admin123 |
+| Senha  | admin123                             |
 
 ## O que eu faria diferente numa v2
 
