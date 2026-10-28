@@ -42,7 +42,7 @@ INSERT INTO produto (categoria_id, nome, descricao, preco, estoque, imagem_url) 
 (3, 'Action Figure Baby Yoda',           'Star Wars — The Mandalorian',        189.90, 15, '/produtos/yoda.webp'),
 (3, 'Boneco Chewbacca Retrô',            'Linha vintage, embalagem retrô',     169.90,  9, '/produtos/chewbacca.jpg'),
 (3, 'Estatueta Master Chief',            'Halo — edição de colecionador',      259.90,  6, '/produtos/master.webp'),
-(3, 'Action Figure Link',                'The Legend of Zelda — Breath of Wild',209.90, 10, '/produtos/link.webp'),
+(3, 'Action Figure Link',                'The Legend of Zelda — Breath of the Wild',209.90, 10, '/produtos/link.webp'),
 (3, 'Pôster Retrô De Volta para o Futuro','Impressão em alta qualidade',        59.90, 40, '/produtos/poster.webp'),
 (3, 'Miniatura DeLorean',                'Réplica em escala, edição retrô',    149.90,  8, '/produtos/delorean.jpg');
 

@@ -6,7 +6,7 @@ Loja virtual full-stack para colecionáveis e action figures — construída do 
 
 ## Por que este projeto
 
-Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — não só fazer rotas funcionarem, mas tomar as decisões que times de verdade tomam: onde validar, onde confiar (ou não) no dado que chega do cliente, como separar responsabilidades em camadas, e como tratar erro de forma que signifique alguma coisa pra quem consome a API.
+Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — não só fazer rotas funcionarem, mas tomar as decisões que times de verdade tomam: onde validar, onde confiar (ou não) no dado que chega do cliente, como separar responsabilidades em camadas, e como tratar erro de forma que signifique alguma coisa pra quem consume a API.
 
 ## Destaques técnicos
 
@@ -17,33 +17,63 @@ Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — n
 - **Preço e identidade do comprador nunca vêm do front** — o back-end busca o preço real do produto no banco e identifica o cliente pelo token, não por dado que o cliente poderia manipular
 - **Integração de pagamento real** com Mercado Pago (Checkout Pro, ambiente sandbox) incluindo webhook para atualização assíncrona de status
 - **Queries parametrizadas** em todo acesso ao banco, prevenindo SQL Injection
-- **42 testes manuais documentados**, cobrindo casos de sucesso, erro e borda (estoque insuficiente, acesso cruzado entre contas, token inválido/expirado)
+- **61 casos documentados (39 automáticos e 22 manuais)** cobrindo sucesso, erro e borda (estoque insuficiente, acesso cruzado entre contas, token inválido/expirado)
 
 ## Stack
 
 **Back-end:** Node.js, Express, MySQL, mysql2, bcrypt, jsonwebtoken, Mercado Pago SDK, cors, dotenv
 **Front-end:** React, Vite, React Router, Tailwind CSS v4, Context API
 
+## Documentação
+
+- [briefing.md](./briefing.md)
+- [banco-de-dados.md](./banco-de-dados.md)
+- [api.md](./api.md)
+- [manual-do-usuario.md](./manual-do-usuario.md)
+- [requisitos-situacao.md](./requisitos-situacao.md)
+- [planilha-testes.xlsx](./planilha-testes.xlsx)
+- [manual-de-marca-multiverso-colecionaveis.pdf](./manual-de-marca-multiverso-colecionaveis.pdf)
+- [documento-requisitos-multiverso-colecionaveis.pdf](./documento-requisitos-multiverso-colecionaveis.pdf)
+- [docs/atualizar-imagens.sql](./docs/atualizar-imagens.sql)
+
 ## Estrutura
 
-```
+```text
 Multiverso_colecionaveis/
-├── src/                      → API
-│   ├── config/                 → conexão com o banco, credenciais do Mercado Pago
-│   ├── routes/                  → definição das rotas
+├── src/                        → API
+│   ├── config/                   → conexão com o banco, credenciais do Mercado Pago
+│   ├── routes/                   → definição das rotas
 │   ├── controllers/              → HTTP: recebe requisição, valida entrada, responde
-│   ├── services/                  → regra de negócio
-│   ├── models/                     → queries no banco
-│   └── middlewares/                 → autenticação (cliente e admin)
-├── frontend/                 → React
+│   ├── services/                 → regra de negócio
+│   ├── models/                   → queries no banco
+│   └── middlewares/              → autenticação (cliente e admin)
+├── frontend/                  → React
 │   └── src/
-│       ├── pages/               → telas
+│       ├── pages/                → telas
 │       ├── components/           → componentes reutilizáveis
-│       ├── context/               → estado global (carrinho)
-│       └── services/               → chamadas à API
-├── create.sql                → schema do banco
-├── insert.sql                 → dados de exemplo (3 categorias, 18 produtos)
-└── planilha_testes.xlsx      → log de testes manuais
+│       ├── context/              → estado global (carrinho)
+│       └── services/             → chamadas à API
+├── docs/                      → materiais auxiliares e migrações
+│   ├── migracoes/
+│   └── atualizar-imagens.sql
+├── tests/                     → testes automatizados
+│   ├── api.test.js
+│   └── limpar-testes.sql
+├── create.sql                 → schema do banco
+├── insert.sql                 → dados de exemplo
+├── planilha-testes.xlsx       → planilha de testes
+├── briefing.md                → visão do projeto
+├── api.md                     → documentação da API
+├── banco-de-dados.md          → descrição do banco
+├── manual-do-usuario.md       → guia do usuário
+├── requisitos-situacao.md    → contexto do projeto
+├── manual-de-marca-multiverso-colecionaveis.pdf
+├── documento-requisitos-multiverso-colecionaveis.pdf
+├── package.json               → scripts da API
+├── .env.example               → exemplo de variáveis de ambiente
+├── .gitignore
+├── README.md
+└── .git/
 ```
 
 ## Modelo de dados
@@ -52,39 +82,44 @@ Multiverso_colecionaveis/
 
 ## Rotas principais
 
-| Rota | Método | Auth |
-|---|---|---|
-| `/produtos` `?categoria=` `?nome=` | GET | — |
-| `/produtos/:id` | GET | — |
-| `/categorias` | GET | — |
-| `/clientes` | POST | — |
-| `/login` | POST | — |
-| `/enderecos` | POST | Cliente |
-| `/pedidos` | POST, GET | Cliente |
-| `/pedidos/:id` | GET | Cliente (dono) |
-| `/pagamentos/:pedidoId` | POST | Cliente |
-| `/webhooks/mercadopago` | POST | Mercado Pago |
-| `/admin/login` | POST | — |
-| `/produtos` | POST, PUT `:id`, DELETE `:id` | Admin |
-| `/admin/pedidos` | GET, PUT `:id/status` | Admin |
+| Rota                               | Método                        | Auth           |
+| ---------------------------------- | ----------------------------- | -------------- |
+| `/produtos` `?categoria=` `?nome=` | GET                           | —              |
+| `/produtos/:id`                    | GET                           | —              |
+| `/categorias`                      | GET                           | —              |
+| `/clientes`                        | POST                          | —              |
+| `/login`                           | POST                          | —              |
+| `/enderecos`                       | POST                          | Cliente        |
+| `/pedidos`                         | POST, GET                     | Cliente        |
+| `/pedidos/:id`                     | GET                           | Cliente (dono) |
+| `/pagamentos/:pedidoId`            | POST                          | Cliente        |
+| `/webhooks/mercadopago`            | POST                          | Mercado Pago   |
+| `/admin/login`                     | POST                          | —              |
+| `/produtos`                        | POST, PUT `:id`, DELETE `:id` | Admin          |
+| `/admin/pedidos`                   | GET, PUT `:id/status`         | Admin          |
 
 ## Rodando localmente
 
 ### Pré-requisitos
+
 Node.js e MySQL instalados.
 
 ### Banco de dados
+
 ```sql
 SOURCE create.sql;
 SOURCE insert.sql;
 ```
 
 ### API
+
 ```bash
 npm install
 ```
+
 Cria um `.env` na raiz (modelo em `.env.example`):
-```
+
+```env
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=sua_senha
@@ -93,12 +128,14 @@ PORT=3000
 JWT_SECRET=uma_frase_longa_e_aleatoria
 MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
 ```
+
 ```bash
 npm run dev
 npm start
 ```
 
 ### Front-end
+
 ```bash
 cd frontend
 npm install
@@ -115,20 +152,32 @@ Com a API em execução e o banco de dados populado, rode na raiz do projeto:
 npm test
 ```
 
-Os testes criam clientes, endereços e pedidos de teste. Para remover esses registros depois, execute `tests/limpar-testes.sql` no MySQL Workbench.
+Pré-requisitos:
+
+- back-end em execução
+- banco populado com `create.sql` + `insert.sql`
+- testes automatizados criam clientes e pedidos de teste; para limpar registros de teste, execute `tests/limpar-testes.sql` no MySQL Workbench
+- teste opcional do Mercado Pago: `RUN_MP=1` em ambiente Unix/macOS ou, no PowerShell:
+
+```powershell
+$env:RUN_MP="1"; npm test
+```
+
+Documentação de testes: [planilha-testes.xlsx](./planilha-testes.xlsx)
 
 ### Conta de administrador (demo)
-| | |
-|---|---|
-| URL | `/admin` |
+
+|        |                                      |
+| ------ | ------------------------------------ |
+| URL    | `/admin`                             |
 | E-mail | admin@multiversocolecionaveis.com.br |
-| Senha | admin123 |
+| Senha  | admin123                             |
 
 ## O que eu faria diferente numa v2
 
-- Webhook do Mercado Pago testado manualmente (via Thunder Client) em vez de ao vivo — exigiria expor a porta local publicamente (ex: ngrok) pra validar o disparo automático
-- Frete calculado no front via ViaCEP; o ideal é essa lógica morar no back-end
-- Migrar o back-end para TypeScript, tipando contratos entre camadas
+- webhook implementado, ainda não exercitado com notificação real
+- frete fixo definido no servidor; o ViaCEP só preenche o endereço
+- migrar o back-end para TypeScript, tipando contratos entre camadas
 
 ## Autor
 
