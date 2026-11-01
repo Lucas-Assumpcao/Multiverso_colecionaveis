@@ -49,7 +49,7 @@ function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed bottom-4 left-1/2 z-50 flex w-[calc(100%-2rem)] -translate-x-1/2 flex-col gap-3 sm:left-auto sm:right-4 sm:w-auto sm:translate-x-0">
+      <div className="fixed bottom-4 left-1/2 z-[70] flex w-[calc(100%-2rem)] -translate-x-1/2 flex-col gap-3 sm:left-auto sm:right-4 sm:w-auto sm:translate-x-0">
         {toasts.map((toast) => {
           const { Icon, className } = toastVariants[toast.variant];
 

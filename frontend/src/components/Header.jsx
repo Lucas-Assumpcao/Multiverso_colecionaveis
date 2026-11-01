@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, Search, ShoppingCart, X } from 'lucide-react';
 import { useCarrinho } from '../context/useCarrinho';
+import { useCarrinhoDrawer } from '../hooks/useCarrinhoDrawer';
 import { useCategorias, rotuloCurto } from '../hooks/useCategorias';
 import LogoIcone from './LogoIcone';
 
 function Header() {
   const { itens } = useCarrinho();
+  const { abrir } = useCarrinhoDrawer();
   const navigate = useNavigate();
   const { categorias, erro: erroCategorias } = useCategorias();
   const [termoBusca, setTermoBusca] = useState('');
@@ -15,7 +17,7 @@ function Header() {
   const [contadorKey, setContadorKey] = useState(0);
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
-  const contagemAnterior = useRef(0);
+  const contagemAnterior = useRef(totalItens);
   const token = localStorage.getItem('token');
   const totalItens = itens.reduce((soma, item) => soma + item.quantidade, 0);
 
@@ -43,7 +45,10 @@ function Header() {
     if (!menuAberto) return undefined;
 
     function fecharComEscape(event) {
-      if (event.key === 'Escape') setMenuAberto(false);
+      if (event.key === 'Escape') {
+        setMenuAberto(false);
+        menuButtonRef.current?.focus();
+      }
     }
 
     function fecharAoClicarFora(event) {
@@ -134,15 +139,18 @@ function Header() {
 
   function carrinhoLink(mobile = false) {
     return (
-      <Link
-        to="/carrinho"
-        onClick={() => setMenuAberto(false)}
+      <button
+        type="button"
+        onClick={(event) => {
+          setMenuAberto(false);
+          abrir(event.currentTarget);
+        }}
         aria-label={`Abrir carrinho${totalItens ? `, ${totalItens} itens` : ''}`}
         className={`relative inline-flex size-10 shrink-0 items-center justify-center rounded-full text-amarelo transition-colors hover:bg-white/10 ${mobile ? '' : 'px-2'}`}
       >
         <ShoppingCart aria-hidden="true" className="size-5" />
         {contador()}
-      </Link>
+      </button>
     );
   }
 

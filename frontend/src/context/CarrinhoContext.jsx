@@ -58,17 +58,22 @@ export function CarrinhoProvider({ children }) {
       ? Number(produto.estoque)
       : null;
     const limite = estoqueProduto ?? existente?.estoque ?? null;
-
-    if (existente && limite !== null && existente.quantidade >= limite) {
-      return { ok: false, limite };
-    }
-
-    if (!existente && limite === 0) {
-      return { ok: false, limite };
-    }
-
     const imagemUrl = produto.imagem_url ?? existente?.imagem_url ?? null;
     const estoque = estoqueProduto ?? existente?.estoque ?? null;
+
+    if (existente && limite !== null && existente.quantidade >= limite) {
+      if (existente.imagem_url !== imagemUrl || existente.estoque !== estoque) {
+        salvarItens(atual.map((item) => (
+          item.produto_id === produto.id ? { ...item, imagem_url: imagemUrl, estoque } : item
+        )));
+      }
+      return { ok: false, limite };
+    }
+
+    if (!existente && limite !== null && limite <= 0) {
+      return { ok: false, limite };
+    }
+
     const novosItens = existente
       ? atual.map((item) => (
         item.produto_id === produto.id

@@ -1,9 +1,11 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { CarrinhoProvider } from './context/CarrinhoContext';
+import CarrinhoDrawerProvider from './context/CarrinhoDrawerProvider';
 import ToastProvider from './context/ToastProvider';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import CarrinhoDrawer from './components/CarrinhoDrawer';
 import Skeleton, { ProdutoCardSkeleton } from './components/ui/Skeleton';
 import Container from './components/ui/Container';
 
@@ -75,17 +77,20 @@ function App() {
     <CarrinhoProvider>
       <ToastProvider>
         <BrowserRouter>
-          <a
-            href="#conteudo"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-amarelo focus:px-4 focus:py-3 focus:font-semibold focus:text-roxo"
-          >
-            Pular para o conteúdo
-          </a>
-          <Header />
-          <main id="conteudo" tabIndex="-1" className="min-h-[70vh]">
-          <RouteContent />
-          </main>
-          <Footer />
+          <CarrinhoDrawerProvider>
+            <a
+              href="#conteudo"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-amarelo focus:px-4 focus:py-3 focus:font-semibold focus:text-roxo"
+            >
+              Pular para o conteúdo
+            </a>
+            <Header />
+            <main id="conteudo" tabIndex="-1" className="min-h-[70vh]">
+              <RouteContent />
+            </main>
+            <Footer />
+            <CarrinhoDrawer />
+          </CarrinhoDrawerProvider>
         </BrowserRouter>
       </ToastProvider>
     </CarrinhoProvider>

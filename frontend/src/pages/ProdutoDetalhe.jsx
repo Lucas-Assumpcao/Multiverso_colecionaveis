@@ -4,6 +4,7 @@ import { buscarPorId } from '../services/produtoService';
 import { useCarrinho } from '../context/useCarrinho';
 import Container from '../components/ui/Container';
 import { useToast } from '../hooks/useToast';
+import { useCarrinhoDrawer } from '../hooks/useCarrinhoDrawer';
 
 function ProdutoDetalhe() {
   const { id } = useParams();
@@ -13,6 +14,7 @@ function ProdutoDetalhe() {
   const [adicionado, setAdicionado] = useState(false);
   const { adicionar } = useCarrinho();
   const toast = useToast();
+  const { abrir: abrirCarrinho } = useCarrinhoDrawer();
 
   useEffect(() => {
     let ativo = true;
@@ -32,13 +34,14 @@ function ProdutoDetalhe() {
     return () => { ativo = false; };
   }, [id]);
 
-  function handleAdicionar() {
+  function handleAdicionar(event) {
     const resultado = adicionar(produto);
     if (!resultado.ok) {
       toast.info('Você já separou todo o estoque disponível desse item.');
       return;
     }
     setAdicionado(true);
+    abrirCarrinho(event.currentTarget);
     setTimeout(() => setAdicionado(false), 1500);
   }
 
