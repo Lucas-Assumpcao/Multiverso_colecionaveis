@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useCarrinho } from '../context/useCarrinho';
 import { criar, criarPagamento } from '../services/pedidoService';
 import { FRETE_FIXO } from '../config';
+import Container from '../components/ui/Container';
 
 function Pagamento() {
   const { state } = useLocation();
@@ -11,7 +12,7 @@ function Pagamento() {
   const [carregando, setCarregando] = useState(false);
 
   if (!state?.enderecoId) {
-    return <p className="p-8">Endereço não informado. <a href="/endereco" className="text-roxo underline">Voltar</a></p>;
+    return <Container className="py-6 sm:py-10">Endereço não informado. <a href="/endereco" className="text-roxo underline">Voltar</a></Container>;
   }
 
  async function handleConfirmar() {
@@ -35,7 +36,8 @@ function Pagamento() {
 }
 
   return (
-    <div className="p-8 max-w-md mx-auto">
+    <Container className="py-6 sm:py-10">
+      <div className="mx-auto max-w-md">
       <h1 className="text-roxo text-3xl font-bold mb-6">Pagamento</h1>
 
       <div className="border rounded-lg p-4 mb-4">
@@ -66,7 +68,8 @@ function Pagamento() {
       >
         {carregando ? 'Processando...' : 'Ir para o pagamento'}
       </button>
-    </div>
+      </div>
+    </Container>
   );
 }
 

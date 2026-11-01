@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { buscarPorId } from '../services/produtoService';
 import { useCarrinho } from '../context/useCarrinho';
+import Container from '../components/ui/Container';
 
 function ProdutoDetalhe() {
   const { id } = useParams();
@@ -35,11 +36,12 @@ function ProdutoDetalhe() {
     setTimeout(() => setAdicionado(false), 1500);
   }
 
-  if (carregando) return <p className="p-8">Carregando produto...</p>;
-  if (erro) return <p className="p-8">Erro: {erro.message}</p>;
+  if (carregando) return <Container className="py-6 sm:py-10">Carregando produto...</Container>;
+  if (erro) return <Container className="py-6 sm:py-10">Erro: {erro.message}</Container>;
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
+    <Container className="py-6 sm:py-10">
+      <div className="mx-auto max-w-3xl">
       <Link to={`/categoria/${produto.categoria_id}`} className="text-roxo underline">
         &larr; Voltar
       </Link>
@@ -68,7 +70,8 @@ function ProdutoDetalhe() {
       >
         {adicionado ? 'Adicionado! ✓' : 'Adicionar à coleção'}
       </button>
-    </div>
+      </div>
+    </Container>
   );
 }
 

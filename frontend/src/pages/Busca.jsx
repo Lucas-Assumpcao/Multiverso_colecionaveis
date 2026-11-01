@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { buscarPorNome } from '../services/produtoService';
 import ProdutoCard from '../components/ProdutoCard';
+import Container from '../components/ui/Container';
 
 function Busca() {
   const [searchParams] = useSearchParams();
@@ -41,7 +42,7 @@ function Busca() {
   }, [nome]);
 
   return (
-    <div className="p-8">
+    <Container className="py-6 sm:py-10">
       <h1 className="text-roxo text-3xl font-bold mb-4">Resultados para "{nome}"</h1>
       {carregando ? (
         <p>Buscando produtos...</p>
@@ -56,7 +57,7 @@ function Busca() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 

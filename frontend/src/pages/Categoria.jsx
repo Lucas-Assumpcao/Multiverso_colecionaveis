@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { listarPorCategoria } from '../services/produtoService';
 import ProdutoCard from '../components/ProdutoCard';
+import Container from '../components/ui/Container';
 
 function Categoria() {
   const { categoriaId } = useParams();
@@ -41,7 +42,7 @@ function Categoria() {
   }, [categoriaId]);
 
   return (
-    <div className="p-8">
+    <Container className="py-6 sm:py-10">
       <h1 className="text-roxo text-3xl font-bold mb-4">Categoria {categoriaId}</h1>
       {carregando ? (
         <p>Carregando produtos...</p>
@@ -56,7 +57,7 @@ function Categoria() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 

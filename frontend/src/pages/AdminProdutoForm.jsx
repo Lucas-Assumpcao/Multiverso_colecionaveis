@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { buscarPorId } from '../services/produtoService';
 import { listarCategorias } from '../services/categoriaService';
 import { criarProduto, atualizarProduto } from '../services/adminService';
+import Container from '../components/ui/Container';
 
 function AdminProdutoForm() {
   const [searchParams] = useSearchParams();
@@ -54,7 +55,8 @@ function AdminProdutoForm() {
   }
 
   return (
-    <div className="p-8 max-w-md mx-auto">
+    <Container className="py-6 sm:py-10">
+      <div className="mx-auto max-w-lg">
       <h1 className="text-roxo text-3xl font-bold mb-6">{id ? 'Editar' : 'Novo'} produto</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <select
@@ -103,7 +105,8 @@ function AdminProdutoForm() {
           {carregando ? 'Salvando...' : 'Salvar'}
         </button>
       </form>
-    </div>
+      </div>
+    </Container>
   );
 }
 

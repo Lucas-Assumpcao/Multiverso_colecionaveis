@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/clienteService';
 import Button from '../components/ui/Button';
 import Field from '../components/ui/Field';
+import Container from '../components/ui/Container';
 import { useToast } from '../hooks/useToast';
 
 function Login() {
@@ -27,7 +28,8 @@ function Login() {
   };
 
   return (
-    <div className="p-8 max-w-sm mx-auto">
+    <Container className="py-6 sm:py-10">
+      <div className="mx-auto max-w-md">
       <h1 className="text-roxo text-3xl font-bold mb-6">Login</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Field
@@ -55,7 +57,8 @@ function Login() {
       <p className="mt-4 text-sm">
         Não tem conta? <Link to="/cadastro" className="text-roxo underline">Cadastre-se</Link>
       </p>
-    </div>
+      </div>
+    </Container>
   );
 }
 

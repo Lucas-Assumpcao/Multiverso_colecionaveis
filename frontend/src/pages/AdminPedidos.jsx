@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { listarPedidos, atualizarStatusPedido } from '../services/adminService';
+import Container from '../components/ui/Container';
 
 const statusOpcoes = ['aguardando_pagamento', 'pago', 'enviado', 'entregue', 'cancelado'];
 
@@ -33,15 +34,16 @@ function AdminPedidos() {
     }
   }
 
-  if (carregando) return <p className="p-8">Carregando...</p>;
-  if (erro) return <p className="p-8">Erro: {erro.message}</p>;
+  if (carregando) return <Container className="py-6 sm:py-10">Carregando...</Container>;
+  if (erro) return <Container className="py-6 sm:py-10">Erro: {erro.message}</Container>;
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <Container className="py-6 sm:py-10">
+      <div className="mx-auto max-w-5xl">
       <h1 className="text-roxo text-3xl font-bold mb-6">Pedidos</h1>
       <div className="flex flex-col gap-2">
         {pedidos.map((p) => (
-          <div key={p.id} className="border rounded-lg p-3 flex justify-between items-center">
+          <div key={p.id} className="flex flex-col gap-3 rounded-card border border-borda p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-bold">Pedido #{p.id} — {p.cliente_nome}</p>
               <p className="text-sm text-gray-500">
@@ -51,14 +53,15 @@ function AdminPedidos() {
             <select
               value={p.status}
               onChange={(e) => handleStatus(p.id, e.target.value)}
-              className="border rounded-lg p-2 text-sm"
+              className="w-full rounded-lg border border-borda p-2 text-sm sm:w-auto"
             >
               {statusOpcoes.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </Container>
   );
 }
 

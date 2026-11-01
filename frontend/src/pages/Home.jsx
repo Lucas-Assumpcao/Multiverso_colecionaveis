@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { listarCategorias } from '../services/categoriaService';
+import Container from '../components/ui/Container';
 
 function Home() {
   const [categorias, setCategorias] = useState([]);
@@ -38,7 +39,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="p-8">
+    <Container className="py-6 sm:py-10">
       <h1 className="text-roxo text-3xl font-bold mb-6">Multiverso Colecionáveis</h1>
 
       {carregando ? (
@@ -58,7 +59,7 @@ function Home() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 
