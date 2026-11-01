@@ -15,11 +15,11 @@ function Header() {
   const [menuAberto, setMenuAberto] = useState(false);
   const [rolado, setRolado] = useState(false);
   const [contadorKey, setContadorKey] = useState(0);
+  const totalItens = itens.reduce((soma, item) => soma + item.quantidade, 0);
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
   const contagemAnterior = useRef(totalItens);
   const token = localStorage.getItem('token');
-  const totalItens = itens.reduce((soma, item) => soma + item.quantidade, 0);
 
   useEffect(() => {
     const atualizarRolagem = () => setRolado(window.scrollY > 8);
