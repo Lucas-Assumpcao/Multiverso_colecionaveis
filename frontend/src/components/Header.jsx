@@ -22,7 +22,7 @@ function Header() {
   }
 
   return (
-    <header className="bg-roxo text-white px-6 py-4 flex justify-between items-center">
+    <header className="on-dark bg-roxo text-white px-6 py-4 flex justify-between items-center">
       <Link to="/" className="font-bold text-lg text-amarelo">
         Multiverso Colecionáveis
       </Link>
