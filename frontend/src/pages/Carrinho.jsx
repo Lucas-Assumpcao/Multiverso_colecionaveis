@@ -30,7 +30,7 @@ function Carrinho() {
                 onChange={(e) => atualizarQuantidade(item.produto_id, Number(e.target.value))}
                 className="w-16 border rounded p-1 text-center"
               />
-              <button onClick={() => remover(item.produto_id)} className="text-vermelho text-sm">
+              <button type="button" onClick={() => remover(item.produto_id)} className="text-vermelho text-sm">
                 Remover
               </button>
             </div>

@@ -95,6 +95,7 @@ function Endereco() {
         </div>
         {erro && <p className="text-vermelho text-sm">{erro.message}</p>}
         <button
+          type="submit"
           disabled={carregando}
           className="bg-amarelo text-roxo font-bold py-3 rounded-lg mt-2 disabled:opacity-50"
         >

@@ -47,6 +47,7 @@ function AdminPainel() {
           />
           {erro && <p className="text-vermelho text-sm">{erro.message}</p>}
           <button
+            type="submit"
             disabled={carregando}
             className="bg-amarelo text-roxo font-bold py-3 rounded-lg disabled:opacity-50"
           >
@@ -67,7 +68,7 @@ function AdminPainel() {
         <Link to="/admin/pedidos" className="bg-roxo text-amarelo font-bold p-4 rounded-lg text-center">
           Gerenciar Pedidos
         </Link>
-        <button onClick={sair} className="text-vermelho text-sm mt-4">Sair</button>
+        <button type="button" onClick={sair} className="text-vermelho text-sm mt-4">Sair</button>
       </div>
     </div>
   );

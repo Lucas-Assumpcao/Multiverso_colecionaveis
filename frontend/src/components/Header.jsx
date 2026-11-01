@@ -46,7 +46,7 @@ function Header() {
         {token ? (
           <>
             <Link to="/meus-pedidos">Meus Pedidos</Link>
-            <button onClick={sair} className="text-amarelo">Sair</button>
+            <button type="button" onClick={sair} className="text-amarelo">Sair</button>
           </>
         ) : (
           <>

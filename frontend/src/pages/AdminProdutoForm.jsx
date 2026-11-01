@@ -96,6 +96,7 @@ function AdminProdutoForm() {
         />
         {erro && <p className="text-vermelho text-sm">{erro.message}</p>}
         <button
+          type="submit"
           disabled={carregando}
           className="bg-amarelo text-roxo font-bold py-3 rounded-lg disabled:opacity-50"
         >

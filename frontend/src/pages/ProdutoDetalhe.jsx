@@ -61,6 +61,7 @@ function ProdutoDetalhe() {
         {produto.estoque > 0 ? `${produto.estoque} em estoque` : 'Sem estoque'}
       </p>
       <button
+        type="button"
         disabled={produto.estoque === 0}
         onClick={handleAdicionar}
         className="bg-amarelo text-roxo font-bold px-6 py-3 rounded-lg mt-6 disabled:opacity-40"

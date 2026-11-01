@@ -59,6 +59,7 @@ function Pagamento() {
 
       {erro && <p className="text-vermelho text-sm mb-2">{erro.message}</p>}
       <button
+        type="button"
         onClick={handleConfirmar}
         disabled={carregando}
         className="bg-amarelo text-roxo font-bold py-3 rounded-lg w-full disabled:opacity-50"

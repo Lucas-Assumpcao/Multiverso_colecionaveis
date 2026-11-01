@@ -56,7 +56,7 @@ function AdminProdutos() {
             </div>
             <div className="flex gap-3 text-sm">
               <Link to={`/admin/produtos/form?id=${p.id}`} className="text-roxo underline">Editar</Link>
-              <button onClick={() => handleRemover(p.id)} className="text-vermelho">Remover</button>
+              <button type="button" onClick={() => handleRemover(p.id)} className="text-vermelho">Remover</button>
             </div>
           </div>
         ))}
