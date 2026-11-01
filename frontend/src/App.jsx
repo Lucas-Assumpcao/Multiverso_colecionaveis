@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { CarrinhoProvider } from './context/CarrinhoContext';
 import ToastProvider from './context/ToastProvider';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import Skeleton, { ProdutoCardSkeleton } from './components/ui/Skeleton';
 import Container from './components/ui/Container';
 
@@ -28,7 +29,7 @@ const UiKit = import.meta.env.DEV
 
 function PageSkeleton() {
   return (
-    <Container as="main" className="py-8" aria-busy="true" aria-label="Carregando página">
+    <Container as="div" className="py-8" aria-busy="true" aria-label="Carregando página">
       <Skeleton className="mb-6 h-9 w-2/3 max-w-sm" />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
@@ -44,7 +45,7 @@ function RouteContent() {
 
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <main key={`${location.pathname}${location.search}`} className="animate-fade-up">
+      <div key={`${location.pathname}${location.search}`} className="animate-fade-up">
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -64,7 +65,7 @@ function RouteContent() {
           {import.meta.env.DEV && <Route path="/ui-kit" element={<UiKit />} />}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </main>
+      </div>
     </Suspense>
   );
 }
@@ -74,8 +75,17 @@ function App() {
     <CarrinhoProvider>
       <ToastProvider>
         <BrowserRouter>
+          <a
+            href="#conteudo"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-amarelo focus:px-4 focus:py-3 focus:font-semibold focus:text-roxo"
+          >
+            Pular para o conteúdo
+          </a>
           <Header />
+          <main id="conteudo" tabIndex="-1" className="min-h-[70vh]">
           <RouteContent />
+          </main>
+          <Footer />
         </BrowserRouter>
       </ToastProvider>
     </CarrinhoProvider>
