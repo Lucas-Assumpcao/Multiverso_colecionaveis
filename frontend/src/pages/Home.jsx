@@ -1,42 +1,9 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { listarCategorias } from '../services/categoriaService';
 import Container from '../components/ui/Container';
+import { useCategorias } from '../hooks/useCategorias';
 
 function Home() {
-  const [categorias, setCategorias] = useState([]);
-  const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState(null);
-
-  useEffect(() => {
-    let ativo = true;
-
-    const carregarCategorias = async () => {
-      setCarregando(true);
-      setErro(null);
-
-      try {
-        const dados = await listarCategorias();
-        if (ativo) {
-          setCategorias(dados);
-        }
-      } catch (erroCarregamento) {
-        if (ativo) {
-          setErro(erroCarregamento);
-        }
-      } finally {
-        if (ativo) {
-          setCarregando(false);
-        }
-      }
-    };
-
-    carregarCategorias();
-
-    return () => {
-      ativo = false;
-    };
-  }, []);
+  const { categorias, carregando, erro } = useCategorias();
 
   return (
     <Container className="py-6 sm:py-10">

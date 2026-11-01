@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { buscarPorId } from '../services/produtoService';
-import { listarCategorias } from '../services/categoriaService';
 import { criarProduto, atualizarProduto } from '../services/adminService';
 import Container from '../components/ui/Container';
+import { useCategorias } from '../hooks/useCategorias';
 
 function AdminProdutoForm() {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
   const navigate = useNavigate();
 
-  const [categorias, setCategorias] = useState([]);
+  const {
+    categorias,
+    carregando: carregandoCategorias,
+    erro: erroCategorias,
+  } = useCategorias();
   const [form, setForm] = useState({
     categoria_id: '', nome: '', descricao: '', preco: '', estoque: '', imagem_url: '',
   });
   const [erro, setErro] = useState(null);
   const [carregando, setCarregando] = useState(false);
-
-  useEffect(() => {
-    listarCategorias().then(setCategorias);
-  }, []);
 
   useEffect(() => {
     if (id) {
@@ -58,6 +58,8 @@ function AdminProdutoForm() {
     <Container className="py-6 sm:py-10">
       <div className="mx-auto max-w-lg">
       <h1 className="text-roxo text-3xl font-bold mb-6">{id ? 'Editar' : 'Novo'} produto</h1>
+      {carregandoCategorias && <p className="text-sm text-suave">Carregando categorias...</p>}
+      {erroCategorias && <p className="text-sm text-vermelho-escuro">Não foi possível carregar as categorias.</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <select
           value={form.categoria_id}
