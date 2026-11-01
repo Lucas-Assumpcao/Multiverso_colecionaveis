@@ -22,6 +22,9 @@ const MeusPedidos = lazy(() => import('./pages/MeusPedidos'));
 const Pagamento = lazy(() => import('./pages/Pagamento'));
 const ProdutoDetalhe = lazy(() => import('./pages/ProdutoDetalhe'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const UiKit = import.meta.env.DEV
+  ? lazy(() => import('./pages/UiKit'))
+  : null;
 
 function PageSkeleton() {
   return (
@@ -58,6 +61,7 @@ function RouteContent() {
           <Route path="/meus-pedidos" element={<MeusPedidos />} />
           <Route path="/pagamento" element={<Pagamento />} />
           <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
+          {import.meta.env.DEV && <Route path="/ui-kit" element={<UiKit />} />}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
