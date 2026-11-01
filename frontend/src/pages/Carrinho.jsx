@@ -1,9 +1,19 @@
 import { Link } from 'react-router-dom';
+import { ImageOff } from 'lucide-react';
 import { useCarrinho } from '../context/useCarrinho';
 import Container from '../components/ui/Container';
+import { useToast } from '../hooks/useToast';
 
 function Carrinho() {
   const { itens, remover, atualizarQuantidade, total } = useCarrinho();
+  const toast = useToast();
+
+  function mudarQuantidade(produtoId, quantidade, estoque) {
+    const resultado = atualizarQuantidade(produtoId, quantidade);
+    if (!resultado.ok && estoque !== null && quantidade > estoque) {
+      toast.info('Você já separou todo o estoque disponível desse item.');
+    }
+  }
 
   if (itens.length === 0) {
     return (
@@ -22,14 +32,37 @@ function Carrinho() {
       <div className="flex flex-col gap-4">
         {itens.map((item) => (
           <div key={item.produto_id} className="flex flex-col gap-3 border-b border-borda pb-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
+            <div className="flex min-w-0 items-center gap-3">
+              {item.imagem_url
+                ? (
+                  <img
+                    src={item.imagem_url}
+                    alt=""
+                    className="size-16 shrink-0 rounded-lg bg-lilas/30 object-contain p-1"
+                  />
+                )
+                : (
+                  <div className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-lilas/30 text-roxo-claro">
+                    <ImageOff aria-hidden="true" className="size-7" />
+                  </div>
+                )}
+              <div className="min-w-0">
               <p className="font-bold">{item.nome}</p>
               <p className="text-sm text-gray-500">R$ {item.preco.toFixed(2)} cada</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <input
-                type="number" min="1" value={item.quantidade}
-                onChange={(e) => atualizarQuantidade(item.produto_id, Number(e.target.value))}
+                type="number"
+                min="1"
+                max={item.estoque ?? undefined}
+                value={item.quantidade}
+                aria-label={`Quantidade de ${item.nome}`}
+                onChange={(e) => mudarQuantidade(
+                  item.produto_id,
+                  Number(e.target.value),
+                  item.estoque,
+                )}
                 className="w-16 border rounded p-1 text-center"
               />
               <button type="button" onClick={() => remover(item.produto_id)} className="text-vermelho text-sm">

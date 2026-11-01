@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { buscarPorId } from '../services/produtoService';
 import { useCarrinho } from '../context/useCarrinho';
 import Container from '../components/ui/Container';
+import { useToast } from '../hooks/useToast';
 
 function ProdutoDetalhe() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ function ProdutoDetalhe() {
   const [erro, setErro] = useState(null);
   const [adicionado, setAdicionado] = useState(false);
   const { adicionar } = useCarrinho();
+  const toast = useToast();
 
   useEffect(() => {
     let ativo = true;
@@ -31,7 +33,11 @@ function ProdutoDetalhe() {
   }, [id]);
 
   function handleAdicionar() {
-    adicionar(produto);
+    const resultado = adicionar(produto);
+    if (!resultado.ok) {
+      toast.info('Você já separou todo o estoque disponível desse item.');
+      return;
+    }
     setAdicionado(true);
     setTimeout(() => setAdicionado(false), 1500);
   }
