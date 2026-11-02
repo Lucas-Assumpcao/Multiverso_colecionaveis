@@ -48,7 +48,9 @@ function Carrinho() {
                 )}
               <div className="min-w-0">
               <p className="font-bold">{item.nome}</p>
-              <p className="text-sm text-gray-500">R$ {item.preco.toFixed(2)} cada</p>
+              <p className="text-sm text-gray-500">
+                {Number(item.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} cada
+              </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -74,7 +76,9 @@ function Carrinho() {
       </div>
 
       <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xl font-bold">Total: R$ {total.toFixed(2)}</p>
+        <p className="text-xl font-bold">
+          Total: {Number(total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+        </p>
         <Link to="/endereco" className="bg-amarelo text-roxo font-bold px-6 py-3 rounded-lg">
           Fechar pedido
         </Link>

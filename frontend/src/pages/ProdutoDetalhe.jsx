@@ -66,7 +66,7 @@ function ProdutoDetalhe() {
       <h1 className="text-3xl font-bold mt-4">{produto.nome}</h1>
       <p className="text-gray-600 mt-2">{produto.descricao}</p>
       <p className="text-2xl font-bold text-roxo mt-4">
-        R$ {Number(produto.preco).toFixed(2)}
+        {Number(produto.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
       </p>
       <p className="text-sm text-gray-500 mt-1">
         {produto.estoque > 0 ? `${produto.estoque} em estoque` : 'Sem estoque'}
