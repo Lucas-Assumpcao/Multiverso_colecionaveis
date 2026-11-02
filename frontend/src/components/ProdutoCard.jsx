@@ -6,13 +6,14 @@ import { useToast } from '../hooks/useToast';
 import Badge from './ui/Badge';
 import Button from './ui/Button';
 
-function ProdutoCard({ produto, indice = 0 }) {
+function ProdutoCard({ produto, indice = 0, headingLevel = 2 }) {
   const { adicionar } = useCarrinho();
   const { abrir: abrirCarrinho } = useCarrinhoDrawer();
   const toast = useToast();
   const estoque = Number(produto.estoque);
   const esgotado = estoque <= 0;
   const atraso = Math.min(Math.max(indice, 0), 7) * 70;
+  const Heading = headingLevel === 3 ? 'h3' : 'h2';
 
   function handleAdicionar(event) {
     const resultado = adicionar(produto);
@@ -53,7 +54,7 @@ function ProdutoCard({ produto, indice = 0 }) {
         </div>
 
         <div className="flex flex-1 flex-col p-4">
-          <h2 className="line-clamp-2 min-h-12 font-bold text-roxo">{produto.nome}</h2>
+          <Heading className="line-clamp-2 min-h-12 font-bold text-roxo">{produto.nome}</Heading>
           <p className="mt-2 line-clamp-2 min-h-10 text-sm text-suave">
             {produto.descricao || 'Um novo item para completar sua coleção.'}
           </p>

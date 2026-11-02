@@ -81,7 +81,7 @@ function Home() {
 
   return (
     <div>
-      <section className="relative isolate overflow-hidden bg-roxo text-white">
+      <section aria-labelledby="home-titulo" className="relative isolate overflow-hidden bg-roxo text-white">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <span className="animate-ring-pulse absolute size-44 rounded-full border border-amarelo/30 sm:size-64" />
           <span className="animate-ring-pulse absolute size-64 rounded-full border border-amarelo/20 [animation-delay:300ms] sm:size-96" />
@@ -90,7 +90,7 @@ function Home() {
         <Container className="relative grid min-h-[26rem] items-center gap-8 py-12 sm:py-16 lg:min-h-[34rem] lg:grid-cols-2 lg:py-20">
           <div className="animate-fade-up">
             <p className="mb-4 font-semibold uppercase tracking-[0.2em] text-lilas">Multiverso Colecionáveis</p>
-            <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+            <h1 id="home-titulo" className="max-w-2xl font-display text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
               Todo fandom, <span className="text-amarelo">um só lugar.</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-lilas sm:text-xl">
@@ -232,7 +232,7 @@ function Home() {
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
               {destaques.map((produto, indice) => (
-                <ProdutoCard key={produto.id} produto={produto} indice={indice} />
+                <ProdutoCard key={produto.id} produto={produto} indice={indice} headingLevel={3} />
               ))}
             </div>
           )}
@@ -246,7 +246,7 @@ function Home() {
             </div>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {ultimasUnidades.map((produto, indice) => (
-                <ProdutoCard key={produto.id} produto={produto} indice={indice} />
+                <ProdutoCard key={produto.id} produto={produto} indice={indice} headingLevel={3} />
               ))}
             </div>
           </section>
@@ -274,8 +274,8 @@ function Home() {
           </div>
         </section>
 
-        <section className="rounded-card bg-roxo px-6 py-10 text-center text-white sm:px-10 sm:py-14">
-          <h2 className="font-display text-3xl font-extrabold sm:text-4xl">Bora montar sua coleção?</h2>
+        <section aria-labelledby="cta-titulo" className="rounded-card bg-roxo px-6 py-10 text-center text-white sm:px-10 sm:py-14">
+          <h2 id="cta-titulo" className="font-display text-3xl font-extrabold sm:text-4xl">Bora montar sua coleção?</h2>
           <p className="mx-auto mt-3 max-w-xl text-lilas">
             O próximo item inesquecível está esperando por você.
           </p>
