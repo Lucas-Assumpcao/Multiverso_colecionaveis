@@ -55,6 +55,7 @@ function ProdutoDetalhe() {
   }));
   const [tentativa, setTentativa] = useState(0);
   const [quantidadeState, setQuantidadeState] = useState({ id, valor: 1 });
+  const [intersectionState, setIntersectionState] = useState({ id, caixaVisivel: false, caixaJaVisivel: false, rodapeVisivel: false });
   const caixaCompraRef = useRef(null);
   const { adicionar } = useCarrinho();
   const navigate = useNavigate();
@@ -77,6 +78,12 @@ function ProdutoDetalhe() {
     (item) => Number(item.id) === Number(produto?.categoria_id),
   );
   usePageTitle(produto?.nome || 'Produto');
+  const visibilidade = intersectionState.id === id
+    ? intersectionState
+    : { caixaVisivel: false, caixaJaVisivel: false, rodapeVisivel: false };
+  const mostrarBarraFixa = visibilidade.caixaJaVisivel
+    && !visibilidade.caixaVisivel
+    && !visibilidade.rodapeVisivel;
   const relacionados = produto
     ? produtos
       .filter((item) => (
@@ -104,6 +111,44 @@ function ProdutoDetalhe() {
       ativo = false;
     };
   }, [id, tentativa]);
+
+  useEffect(() => {
+    if (window.matchMedia('(min-width: 1024px)').matches) return undefined;
+    const caixaCompra = caixaCompraRef.current;
+    const rodape = document.querySelector('footer');
+    if (!caixaCompra || !rodape || !('IntersectionObserver' in window)) return undefined;
+
+    const observadorCompra = new IntersectionObserver(([entrada]) => {
+      setIntersectionState((atual) => ({
+        ...(atual.id === id ? atual : {
+          id,
+          caixaVisivel: false,
+          caixaJaVisivel: false,
+          rodapeVisivel: false,
+        }),
+        caixaVisivel: entrada.isIntersecting,
+        caixaJaVisivel: entrada.isIntersecting || (atual.id === id && atual.caixaJaVisivel),
+      }));
+    });
+    const observadorRodape = new IntersectionObserver(([entrada]) => {
+      setIntersectionState((atual) => ({
+        ...(atual.id === id ? atual : {
+          id,
+          caixaVisivel: false,
+          caixaJaVisivel: false,
+          rodapeVisivel: false,
+        }),
+        rodapeVisivel: entrada.isIntersecting,
+      }));
+    });
+
+    observadorCompra.observe(caixaCompra);
+    observadorRodape.observe(rodape);
+    return () => {
+      observadorCompra.disconnect();
+      observadorRodape.disconnect();
+    };
+  }, [id, produto]);
 
   function tentarNovamente() {
     setRequisicaoState({ id, carregando: true, erro: null });
@@ -283,6 +328,21 @@ function ProdutoDetalhe() {
             ))}
           </div>
         </section>
+      )}
+      {mostrarBarraFixa && (
+        <div
+          className="animate-fade-up fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-borda bg-white/95 px-4 pt-3 shadow-card-hover backdrop-blur lg:hidden motion-reduce:animate-none"
+          style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
+        >
+          <span className="shrink-0 font-bold text-roxo">{formatarPreco(produto.preco)}</span>
+          <Button
+            disabled={estoque <= 0}
+            onClick={(event) => adicionarAoCarrinho(event)}
+            className="min-w-0"
+          >
+            Adicionar à coleção
+          </Button>
+        </div>
       )}
     </Container>
   );
