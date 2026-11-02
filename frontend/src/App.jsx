@@ -47,7 +47,7 @@ function RouteContent() {
 
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <div key={`${location.pathname}${location.search}`} className="animate-fade-up">
+      <div key={location.pathname} className="animate-fade-up">
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
