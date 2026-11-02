@@ -11,9 +11,9 @@ Legenda: **Implementado** · **Parcial** · **Fora da v1** (decisão de escopo, 
 | RF01 | Cadastro de cliente | Essencial | Implementado | `POST /clientes`, tela Cadastro |
 | RF02 | Login com token JWT | Essencial | Implementado | `POST /login`, tela Login |
 | RF03 | Recuperação de senha | Importante | **Fora da v1** | Exigiria envio de e-mail |
-| RF04 | Listagem de produtos com paginação | Essencial | **Parcial** | A listagem existe; a paginação ficou para a v2 (catálogo de 18 itens) |
+| RF04 | Listagem de produtos com paginação | Essencial | **Parcial** | Paginação no cliente (12 por página) implementada; paginação no servidor fica para a v2 |
 | RF05 | Filtro por categoria | Essencial | Implementado | `GET /produtos/categoria/:id`, tela Categoria |
-| RF06 | Busca por nome | Essencial | Implementado | `GET /produtos?nome=`, campo no topo e tela Busca |
+| RF06 | Busca por nome | Essencial | Implementado | Busca local por nome e descrição, campo no topo com sugestões de produtos e tela Busca |
 | RF07 | Detalhe do produto | Essencial | Implementado | `GET /produtos/:id`, tela Detalhe |
 | RF08 | Carrinho (adicionar, remover, quantidade) | Essencial | Implementado | Contexto do carrinho, tela Carrinho |
 | RF09 | Frete por CEP | Essencial | **Parcial** | O CEP preenche o endereço (ViaCEP); o frete é fixo, R$ 15,00, calculado no servidor. Cálculo por região ficou para a v2 |
