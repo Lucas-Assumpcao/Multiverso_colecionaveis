@@ -4,6 +4,7 @@ import ListaProdutos from '../components/ListaProdutos';
 import Container from '../components/ui/Container';
 import { invalidarCategorias, rotuloCurto, useCategorias } from '../hooks/useCategorias';
 import { invalidarProdutos, useProdutos } from '../hooks/useProdutos';
+import usePageTitle from '../hooks/usePageTitle';
 
 function normalizar(texto) {
   return texto
@@ -33,6 +34,7 @@ function Busca() {
     ))
     : produtos;
   const categoriasVisiveis = categorias.slice(0, 3);
+  usePageTitle(termo ? `Resultados para "${termo}"` : 'Todos os produtos');
 
   function tentarNovamente() {
     if (erroProdutos) invalidarProdutos();

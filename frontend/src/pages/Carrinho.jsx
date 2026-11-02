@@ -9,6 +9,7 @@ import EmptyState from '../components/ui/EmptyState';
 import { FRETE_FIXO } from '../config';
 import { useCarrinho } from '../context/useCarrinho';
 import { useToast } from '../hooks/useToast';
+import usePageTitle from '../hooks/usePageTitle';
 
 function formatarPreco(valor) {
   return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -20,6 +21,7 @@ function Carrinho() {
   const toast = useToast();
   const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
   const temToken = Boolean(localStorage.getItem('token'));
+  usePageTitle('Carrinho');
 
   function fecharPedido() {
     if (!temToken) {

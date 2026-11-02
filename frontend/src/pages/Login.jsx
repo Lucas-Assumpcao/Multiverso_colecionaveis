@@ -5,6 +5,7 @@ import Button from '../components/ui/Button';
 import Field from '../components/ui/Field';
 import Container from '../components/ui/Container';
 import { useToast } from '../hooks/useToast';
+import usePageTitle from '../hooks/usePageTitle';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
+  usePageTitle('Login');
 
   const handleSubmit = async (e) => {
     e.preventDefault();

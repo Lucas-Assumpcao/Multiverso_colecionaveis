@@ -13,6 +13,7 @@ import { useCarrinhoDrawer } from '../hooks/useCarrinhoDrawer';
 import { useToast } from '../hooks/useToast';
 import { rotuloCurto, useCategorias } from '../hooks/useCategorias';
 import { obterProdutoEmCache, useProdutos } from '../hooks/useProdutos';
+import usePageTitle from '../hooks/usePageTitle';
 import { buscarPorId } from '../services/produtoService';
 
 function formatarPreco(valor) {
@@ -75,6 +76,7 @@ function ProdutoDetalhe() {
   const categoria = categorias.find(
     (item) => Number(item.id) === Number(produto?.categoria_id),
   );
+  usePageTitle(produto?.nome || 'Produto');
   const relacionados = produto
     ? produtos
       .filter((item) => (
