@@ -147,13 +147,23 @@ function Header() {
       return;
     }
 
-    if (event.key === 'Enter' && sugestaoAtiva >= 0 && opcoesSugestao[sugestaoAtiva]) {
+    const sugestoesProntas = termoAtual.length >= 2 && termoDebounced === termoAtual;
+    if (
+      event.key === 'Enter'
+      && sugestoesProntas
+      && sugestaoAtiva >= 0
+      && opcoesSugestao[sugestaoAtiva]
+    ) {
       event.preventDefault();
       selecionarSugestao(opcoesSugestao[sugestaoAtiva]);
       return;
     }
 
-    if (!['ArrowDown', 'ArrowUp'].includes(event.key) || opcoesSugestao.length === 0) return;
+    if (
+      !['ArrowDown', 'ArrowUp'].includes(event.key)
+      || !sugestoesProntas
+      || opcoesSugestao.length === 0
+    ) return;
     event.preventDefault();
     setSugestoesAbertas(true);
     setSugestaoAtiva((indiceAtual) => {
