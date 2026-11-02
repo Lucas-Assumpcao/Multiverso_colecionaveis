@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Button from './ui/Button';
 import EmptyState from './ui/EmptyState';
 import { ProdutoCardSkeleton } from './ui/Skeleton';
@@ -14,7 +15,32 @@ function ListaProdutos({
   vazioAcao,
 }) {
   const listaRef = useRef(null);
-  const quantidade = produtos.length;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const ordensValidas = ['padrao', 'menor-preco', 'maior-preco', 'nome'];
+  const ordemSolicitada = searchParams.get('ordem');
+  const ordem = ordensValidas.includes(ordemSolicitada) ? ordemSolicitada : 'padrao';
+  const somenteDisponiveis = searchParams.get('disp') === '1';
+
+  function atualizarParametro(chave, valor) {
+    const parametros = new URLSearchParams(searchParams);
+    if (valor) parametros.set(chave, valor);
+    else parametros.delete(chave);
+    parametros.delete('pagina');
+    setSearchParams(parametros);
+  }
+
+  const filtrados = somenteDisponiveis
+    ? produtos.filter((produto) => Number(produto.estoque) > 0)
+    : produtos;
+  const ordenados = [...filtrados];
+  if (ordem === 'menor-preco') {
+    ordenados.sort((a, b) => Number(a.preco) - Number(b.preco));
+  } else if (ordem === 'maior-preco') {
+    ordenados.sort((a, b) => Number(b.preco) - Number(a.preco));
+  } else if (ordem === 'nome') {
+    ordenados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' }));
+  }
+  const quantidade = ordenados.length;
 
   if (erro) {
     return (
@@ -57,15 +83,22 @@ function ListaProdutos({
           <select
             id="ordem-produtos"
             className="min-h-10 rounded-lg border border-borda bg-white px-3 text-sm text-chumbo"
-            defaultValue="padrao"
+            value={ordem}
+            onChange={(event) => atualizarParametro('ordem', event.target.value)}
           >
             <option value="padrao">Padrão</option>
             <option value="menor-preco">Menor preço</option>
             <option value="maior-preco">Maior preço</option>
             <option value="nome">Nome A–Z</option>
           </select>
-          <label className="inline-flex items-center gap-2 text-sm text-chumbo">
-            <input type="checkbox" className="size-4 accent-roxo" />
+          <label htmlFor="somente-disponiveis" className="inline-flex items-center gap-2 text-sm text-chumbo">
+            <input
+              id="somente-disponiveis"
+              type="checkbox"
+              checked={somenteDisponiveis}
+              onChange={(event) => atualizarParametro('disp', event.target.checked ? '1' : '')}
+              className="size-4 accent-roxo"
+            />
             Só disponíveis
           </label>
         </div>
@@ -75,7 +108,7 @@ function ListaProdutos({
         <EmptyState title={vazioTitulo} text={vazioTexto} action={vazioAcao} />
       ) : (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {produtos.map((produto, indice) => (
+          {ordenados.map((produto, indice) => (
             <ProdutoCard key={produto.id} produto={produto} indice={indice} />
           ))}
         </div>
