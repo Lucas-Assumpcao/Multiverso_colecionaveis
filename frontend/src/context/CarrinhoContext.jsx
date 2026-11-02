@@ -51,7 +51,11 @@ export function CarrinhoProvider({ children }) {
     setItens(novosItens);
   }
 
-  function adicionar(produto) {
+  function adicionar(produto, quantidade = 1) {
+    if (!Number.isInteger(quantidade) || quantidade < 1) {
+      return { ok: false, limite: null };
+    }
+
     const atual = itensRef.current;
     const existente = atual.find((item) => item.produto_id === produto.id);
     const estoqueProduto = estoqueConhecido(produto.estoque)
@@ -61,7 +65,7 @@ export function CarrinhoProvider({ children }) {
     const imagemUrl = produto.imagem_url ?? existente?.imagem_url ?? null;
     const estoque = estoqueProduto ?? existente?.estoque ?? null;
 
-    if (existente && limite !== null && existente.quantidade >= limite) {
+    if (existente && limite !== null && existente.quantidade + quantidade > limite) {
       if (existente.imagem_url !== imagemUrl || existente.estoque !== estoque) {
         salvarItens(atual.map((item) => (
           item.produto_id === produto.id ? { ...item, imagem_url: imagemUrl, estoque } : item
@@ -70,7 +74,7 @@ export function CarrinhoProvider({ children }) {
       return { ok: false, limite };
     }
 
-    if (!existente && limite !== null && limite <= 0) {
+    if (!existente && limite !== null && quantidade > limite) {
       return { ok: false, limite };
     }
 
@@ -81,7 +85,7 @@ export function CarrinhoProvider({ children }) {
             ...item,
             imagem_url: imagemUrl,
             estoque,
-            quantidade: item.quantidade + 1,
+            quantidade: item.quantidade + quantidade,
           }
           : item
       ))
@@ -91,7 +95,7 @@ export function CarrinhoProvider({ children }) {
           produto_id: produto.id,
           nome: produto.nome,
           preco: Number(produto.preco),
-          quantidade: 1,
+          quantidade,
           imagem_url: imagemUrl,
           estoque,
         },

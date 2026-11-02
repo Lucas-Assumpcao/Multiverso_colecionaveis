@@ -6,6 +6,10 @@ let produtosPromise = null;
 let versaoProdutos = 0;
 const ouvintes = new Set();
 
+export function obterProdutoEmCache(id) {
+  return produtosCache?.find((produto) => String(produto.id) === String(id)) ?? null;
+}
+
 function carregarProdutos() {
   if (produtosCache !== null) return Promise.resolve(produtosCache);
   if (produtosPromise) return produtosPromise;
