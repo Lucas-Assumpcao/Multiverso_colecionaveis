@@ -144,7 +144,10 @@ function ListaProdutos({
       {quantidade === 0 ? (
         <EmptyState title={vazioTitulo} text={vazioTexto} action={vazioAcao} />
       ) : (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <div
+          key={`${ordem}-${somenteDisponiveis}-${pagina}`}
+          className="animate-fade-up grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
+        >
           {produtosPagina.map((produto, indice) => (
             <ProdutoCard key={produto.id} produto={produto} indice={indice} />
           ))}
