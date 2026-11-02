@@ -60,6 +60,17 @@
     box-shadow: 0 0 0 0 rgb(245 183 0 / 45%);
   }
 
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
   100% {
     box-shadow: 0 0 0 8px rgb(245 183 0 / 0%);
   }
@@ -86,6 +97,10 @@
 
 .animate-ring-pulse {
   animation: ring-pulse 1.2s ease-out infinite;
+}
+
+.animate-hero-float {
+  animation: hero-float 6s ease-in-out infinite;
 }
 
 @layer base {
