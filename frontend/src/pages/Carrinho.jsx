@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ImageOff, Minus, Plus, Trash2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
@@ -16,8 +16,19 @@ function formatarPreco(valor) {
 
 function Carrinho() {
   const { itens, remover, atualizarQuantidade, limpar, total } = useCarrinho();
+  const navigate = useNavigate();
   const toast = useToast();
   const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
+  const temToken = Boolean(localStorage.getItem('token'));
+
+  function fecharPedido() {
+    if (!temToken) {
+      toast.info('Entre na sua conta para fechar o pedido.');
+      navigate('/login', { state: { from: '/endereco' } });
+      return;
+    }
+    navigate('/endereco');
+  }
 
   function mudarQuantidade(item, delta) {
     const resultado = atualizarQuantidade(item.produto_id, item.quantidade + delta);
@@ -155,7 +166,7 @@ function Carrinho() {
               <span>{formatarPreco(total + FRETE_FIXO)}</span>
             </div>
           </div>
-          <Button to="/endereco" size="lg" className="mt-6 w-full">
+          <Button onClick={fecharPedido} size="lg" className="mt-6 w-full">
             Fechar pedido
           </Button>
           <Link to="/" className="mt-4 block text-center text-sm font-semibold text-roxo underline">

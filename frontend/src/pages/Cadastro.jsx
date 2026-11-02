@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { cadastrar } from '../services/clienteService';
 import Button from '../components/ui/Button';
 import Field from '../components/ui/Field';
@@ -12,6 +12,7 @@ function Cadastro() {
   const [senha, setSenha] = useState('');
   const [carregando, setCarregando] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
 
   const handleSubmit = async (e) => {
@@ -19,7 +20,7 @@ function Cadastro() {
     setCarregando(true);
     try {
       await cadastrar({ nome, email, senha });
-      navigate('/login');
+      navigate('/login', { state: location.state });
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -64,7 +65,7 @@ function Cadastro() {
         </Button>
       </form>
       <p className="mt-4 text-sm">
-        Já tem conta? <Link to="/login" className="text-roxo underline">Entrar</Link>
+        Já tem conta? <Link to="/login" state={location.state} className="text-roxo underline">Entrar</Link>
       </p>
       </div>
     </Container>

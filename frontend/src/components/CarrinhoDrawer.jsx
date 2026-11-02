@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { ImageOff, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { FRETE_FIXO } from '../config';
 import { useCarrinho } from '../context/useCarrinho';
 import { useCarrinhoDrawer } from '../hooks/useCarrinhoDrawer';
@@ -12,6 +13,7 @@ const MENSAGEM_LIMITE = 'Você já separou todo o estoque disponível desse item
 function CarrinhoDrawer() {
   const { aberto, fechar, elementoAcionador } = useCarrinhoDrawer();
   const { itens, total, remover, atualizarQuantidade } = useCarrinho();
+  const navigate = useNavigate();
   const toast = useToast();
   const painelRef = useRef(null);
 
@@ -71,6 +73,16 @@ function CarrinhoDrawer() {
   function mudarQuantidade(item, delta) {
     const resultado = atualizarQuantidade(item.produto_id, item.quantidade + delta);
     if (!resultado.ok && delta > 0) toast.info(MENSAGEM_LIMITE);
+  }
+
+  function fecharPedido() {
+    fechar();
+    if (!localStorage.getItem('token')) {
+      toast.info('Entre na sua conta para fechar o pedido.');
+      navigate('/login', { state: { from: '/endereco' } });
+      return;
+    }
+    navigate('/endereco');
   }
 
   return (
@@ -208,7 +220,7 @@ function CarrinhoDrawer() {
                 >
                   Ver carrinho
                 </Button>
-                <Button to="/endereco" onClick={fechar} className="w-full">
+                <Button onClick={fecharPedido} className="w-full">
                   Fechar pedido
                 </Button>
               </div>
