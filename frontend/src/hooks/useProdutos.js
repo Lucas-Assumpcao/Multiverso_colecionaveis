@@ -38,7 +38,11 @@ export function useProdutos() {
   const [erro, setErro] = useState(null);
 
   useEffect(() => {
-    const notificar = () => setVersao(versaoProdutos);
+    const notificar = () => {
+      setVersao(versaoProdutos);
+      setCarregando(true);
+      setErro(null);
+    };
     ouvintes.add(notificar);
     return () => ouvintes.delete(notificar);
   }, []);
@@ -46,8 +50,6 @@ export function useProdutos() {
   useEffect(() => {
     let ativo = true;
     const versaoDaLeitura = versaoProdutos;
-    setCarregando(true);
-    setErro(null);
 
     carregarProdutos()
       .then((resultado) => {
