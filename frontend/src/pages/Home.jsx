@@ -14,8 +14,9 @@ import Button from '../components/ui/Button';
 import Container from '../components/ui/Container';
 import EmptyState from '../components/ui/EmptyState';
 import { ProdutoCardSkeleton } from '../components/ui/Skeleton';
-import { rotuloCurto, useCategorias } from '../hooks/useCategorias';
-import { useProdutos } from '../hooks/useProdutos';
+import Skeleton from '../components/ui/Skeleton';
+import { invalidarCategorias, rotuloCurto, useCategorias } from '../hooks/useCategorias';
+import { invalidarProdutos, useProdutos } from '../hooks/useProdutos';
 
 const coresCategoria = [
   'bg-roxo-claro text-white',
@@ -67,6 +68,11 @@ function Home() {
   const produtoHero = produtos.find((produto) => produto.imagem_url && Number(produto.estoque) > 0);
   const temToken = Boolean(localStorage.getItem('token'));
 
+  function tentarNovamente() {
+    if (erroCategorias) invalidarCategorias();
+    if (erroProdutos) invalidarProdutos();
+  }
+
   function rolarPara(id) {
     document.getElementById(id)?.scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
@@ -116,7 +122,17 @@ function Home() {
             </div>
           </div>
 
-          {produtoHero && (
+          {carregandoProdutos ? (
+            <div
+              aria-busy="true"
+              aria-label="Carregando produto em destaque"
+              className="mx-auto w-full max-w-xs rounded-card border border-white/20 bg-white p-3 shadow-card-hover sm:max-w-sm lg:max-w-md"
+            >
+              <Skeleton className="aspect-square w-full rounded-xl" />
+              <Skeleton className="mx-2 mb-2 mt-4 h-5 w-3/4" />
+              <Skeleton className="mx-2 mb-2 h-4 w-1/3" />
+            </div>
+          ) : produtoHero && (
             <div className="animate-hero-float mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md">
               <div className="overflow-hidden rounded-card border border-white/20 bg-white p-3 shadow-card-hover">
                 <img
@@ -144,13 +160,14 @@ function Home() {
             </div>
           </div>
 
-          {erro ? (
+          {erroCategorias ? (
             <EmptyState
               title="Não foi possível carregar a coleção"
               text="Tente novamente em instantes."
+              action={<Button onClick={tentarNovamente} variant="secondary">Tentar de novo</Button>}
             />
-          ) : carregando ? (
-            <div className="grid gap-4 md:grid-cols-3">
+          ) : carregandoCategorias || carregandoProdutos ? (
+            <div aria-busy="true" aria-label="Carregando categorias" className="grid gap-4 md:grid-cols-3">
               {Array.from({ length: 3 }, (_, indice) => (
                 <div key={indice} className="h-48 animate-shimmer rounded-card bg-borda" />
               ))}
@@ -178,7 +195,9 @@ function Home() {
                     <span>
                       <span className="block text-2xl font-extrabold">{rotuloCurto(categoria.nome)}</span>
                       <span className="mt-1 block text-sm opacity-90">
-                        {quantidade} {quantidade === 1 ? 'produto' : 'produtos'}
+                        {erroProdutos
+                          ? 'Contagem indisponível'
+                          : `${quantidade} ${quantidade === 1 ? 'produto' : 'produtos'}`}
                       </span>
                     </span>
                   </Link>
@@ -193,14 +212,23 @@ function Home() {
             <p className="font-semibold uppercase tracking-widest text-roxo-claro">Peças que merecem destaque</p>
             <h2 id="destaques-titulo" className="mt-2 text-3xl font-extrabold text-roxo">Em destaque</h2>
           </div>
-          {erro ? (
-            <EmptyState title="Destaques indisponíveis" text="Não foi possível carregar os produtos agora." />
-          ) : carregando ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+          {erroProdutos || erroCategorias ? (
+            <EmptyState
+              title="Destaques indisponíveis"
+              text="Não foi possível carregar os produtos agora."
+              action={<Button onClick={tentarNovamente} variant="secondary">Tentar de novo</Button>}
+            />
+          ) : carregandoProdutos || carregandoCategorias ? (
+            <div aria-busy="true" aria-label="Carregando produtos em destaque" className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
               {Array.from({ length: 6 }, (_, indice) => <ProdutoCardSkeleton key={indice} />)}
             </div>
+          ) : produtos.length === 0 ? (
+            <EmptyState
+              title="Nossa coleção está chegando"
+              text="Em breve, novos produtos para você descobrir."
+            />
           ) : destaques.length === 0 ? (
-            <EmptyState title="Em breve, novidades" text="Ainda não há produtos disponíveis para destacar." />
+            <EmptyState title="Novidades em breve" text="Ainda não há produtos disponíveis para destacar." />
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
               {destaques.map((produto, indice) => (
@@ -210,7 +238,7 @@ function Home() {
           )}
         </section>
 
-        {ultimasUnidades.length > 0 && (
+        {!carregandoProdutos && !erroProdutos && !erroCategorias && ultimasUnidades.length > 0 && (
           <section id="ultimas-unidades" aria-labelledby="ultimas-titulo" className="scroll-mt-28">
             <div className="mb-6">
               <p className="font-semibold uppercase tracking-widest text-vermelho-escuro">Não deixe passar</p>
