@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { listarTodos } from '../services/produtoService';
 import { removerProduto } from '../services/adminService';
 import Container from '../components/ui/Container';
+import { invalidarProdutos } from '../hooks/useProdutos';
 
 function AdminProdutos() {
   const [produtos, setProdutos] = useState([]);
@@ -29,6 +30,7 @@ function AdminProdutos() {
     if (!confirm('Remover este produto?')) return;
     try {
       await removerProduto(id);
+      invalidarProdutos();
       recarregar();
     } catch (e) {
       alert(e.message);

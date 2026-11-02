@@ -4,6 +4,7 @@ import { useCarrinho } from '../context/useCarrinho';
 import { criar, criarPagamento } from '../services/pedidoService';
 import { FRETE_FIXO } from '../config';
 import Container from '../components/ui/Container';
+import { invalidarProdutos } from '../hooks/useProdutos';
 
 function Pagamento() {
   const { state } = useLocation();
@@ -23,6 +24,7 @@ function Pagamento() {
       endereco_id: state.enderecoId,
       itens: itens.map((i) => ({ produto_id: i.produto_id, quantidade: i.quantidade })),
     });
+    invalidarProdutos();
 
     const pagamento = await criarPagamento(resultado.id);
     limpar();

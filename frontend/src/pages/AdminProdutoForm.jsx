@@ -4,6 +4,7 @@ import { buscarPorId } from '../services/produtoService';
 import { criarProduto, atualizarProduto } from '../services/adminService';
 import Container from '../components/ui/Container';
 import { useCategorias } from '../hooks/useCategorias';
+import { invalidarProdutos } from '../hooks/useProdutos';
 
 function AdminProdutoForm() {
   const [searchParams] = useSearchParams();
@@ -46,6 +47,7 @@ function AdminProdutoForm() {
       const dados = { ...form, preco: Number(form.preco), estoque: Number(form.estoque) };
       if (id) await atualizarProduto(id, dados);
       else await criarProduto(dados);
+      invalidarProdutos();
       navigate('/admin/produtos');
     } catch (err) {
       setErro(err);
