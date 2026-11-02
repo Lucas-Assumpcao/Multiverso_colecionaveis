@@ -6,6 +6,7 @@ import Button from '../components/ui/Button';
 import Container from '../components/ui/Container';
 import EmptyState from '../components/ui/EmptyState';
 import Skeleton from '../components/ui/Skeleton';
+import ProdutoCard from '../components/ProdutoCard';
 import { FRETE_FIXO } from '../config';
 import { useCarrinho } from '../context/useCarrinho';
 import { useCarrinhoDrawer } from '../hooks/useCarrinhoDrawer';
@@ -74,6 +75,14 @@ function ProdutoDetalhe() {
   const categoria = categorias.find(
     (item) => Number(item.id) === Number(produto?.categoria_id),
   );
+  const relacionados = produto
+    ? produtos
+      .filter((item) => (
+        Number(item.categoria_id) === Number(produto.categoria_id)
+        && Number(item.id) !== Number(produto.id)
+      ))
+      .slice(0, 4)
+    : [];
   useEffect(() => {
     let ativo = true;
     buscarPorId(id)
@@ -261,6 +270,18 @@ function ProdutoDetalhe() {
         </section>
       </div>
 
+      {relacionados.length > 0 && (
+        <section aria-labelledby="mais-produtos-titulo" className="mt-16">
+          <h2 id="mais-produtos-titulo" className="mb-6 text-2xl font-extrabold text-roxo">
+            Mais de {categoria ? rotuloCurto(categoria.nome) : 'esta categoria'}
+          </h2>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {relacionados.map((item, indice) => (
+              <ProdutoCard key={item.id} produto={item} indice={indice} />
+            ))}
+          </div>
+        </section>
+      )}
     </Container>
   );
 }
