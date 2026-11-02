@@ -80,7 +80,11 @@ function ProdutoDetalhe() {
   usePageTitle(produto?.nome || 'Produto');
   const visibilidade = intersectionState.id === id
     ? intersectionState
-    : { caixaVisivel: false, caixaJaVisivel: false, rodapeVisivel: false };
+    : {
+      caixaVisivel: false,
+      caixaJaVisivel: false,
+      rodapeVisivel: false,
+    };
   const mostrarBarraFixa = visibilidade.caixaJaVisivel
     && !visibilidade.caixaVisivel
     && !visibilidade.rodapeVisivel;
@@ -130,17 +134,20 @@ function ProdutoDetalhe() {
         caixaJaVisivel: entrada.isIntersecting || (atual.id === id && atual.caixaJaVisivel),
       }));
     });
-    const observadorRodape = new IntersectionObserver(([entrada]) => {
-      setIntersectionState((atual) => ({
-        ...(atual.id === id ? atual : {
-          id,
-          caixaVisivel: false,
-          caixaJaVisivel: false,
-          rodapeVisivel: false,
-        }),
-        rodapeVisivel: entrada.isIntersecting,
-      }));
-    });
+    const observadorRodape = new IntersectionObserver(
+      ([entrada]) => {
+        setIntersectionState((atual) => ({
+          ...(atual.id === id ? atual : {
+            id,
+            caixaVisivel: false,
+            caixaJaVisivel: false,
+            rodapeVisivel: false,
+          }),
+          rodapeVisivel: entrada.isIntersecting,
+        }));
+      },
+      { rootMargin: '0px 0px -96px 0px' },
+    );
 
     observadorCompra.observe(caixaCompra);
     observadorRodape.observe(rodape);
@@ -324,7 +331,7 @@ function ProdutoDetalhe() {
           </h2>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {relacionados.map((item, indice) => (
-              <ProdutoCard key={item.id} produto={item} indice={indice} />
+              <ProdutoCard key={item.id} produto={item} indice={indice} headingLevel={3} />
             ))}
           </div>
         </section>
