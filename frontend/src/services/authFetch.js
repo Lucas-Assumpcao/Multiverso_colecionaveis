@@ -12,6 +12,10 @@ export async function authFetch(caminho, opcoes = {}) {
   });
 
   const corpo = await resposta.json();
-  if (!resposta.ok) throw new Error(corpo.mensagem || 'Erro na requisição');
+  if (!resposta.ok) {
+    const erro = new Error(corpo.mensagem || 'Erro na requisição');
+    erro.status = resposta.status;
+    throw erro;
+  }
   return corpo;
 }
