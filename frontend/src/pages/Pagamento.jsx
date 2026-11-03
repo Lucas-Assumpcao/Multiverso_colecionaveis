@@ -5,6 +5,7 @@ import { criar, criarPagamento } from '../services/pedidoService';
 import { FRETE_FIXO } from '../config';
 import Container from '../components/ui/Container';
 import { invalidarProdutos } from '../hooks/useProdutos';
+import CheckoutEtapas from '../components/CheckoutEtapas';
 
 function Pagamento() {
   const { state } = useLocation();
@@ -40,6 +41,7 @@ function Pagamento() {
   return (
     <Container className="py-6 sm:py-10">
       <div className="mx-auto max-w-md">
+      <CheckoutEtapas atual={3} />
       <h1 className="text-roxo text-3xl font-bold mb-6">Pagamento</h1>
 
       <div className="border rounded-lg p-4 mb-4">

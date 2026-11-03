@@ -1,5 +1,6 @@
 import { useSearchParams, Link } from 'react-router-dom';
 import Container from '../components/ui/Container';
+import CheckoutEtapas from '../components/CheckoutEtapas';
 
 function Confirmacao() {
   const [searchParams] = useSearchParams();
@@ -19,6 +20,7 @@ function Confirmacao() {
   return (
     <Container className="py-6 text-center sm:py-10">
       <div className="mx-auto max-w-md">
+      <CheckoutEtapas atual={4} />
       <div className="text-5xl mb-4">✓</div>
       <h1 className="text-roxo text-2xl font-bold mb-2">{titulo}</h1>
       <p className="text-gray-600 mb-6">Pedido #{pedidoId}</p>

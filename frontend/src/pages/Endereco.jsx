@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { criar, consultarCep } from '../services/enderecoService';
 import { FRETE_FIXO } from '../config';
 import Container from '../components/ui/Container';
+import CheckoutEtapas from '../components/CheckoutEtapas';
 
 function Endereco() {
   const [form, setForm] = useState({
@@ -51,6 +52,7 @@ function Endereco() {
   return (
     <Container className="py-6 sm:py-10">
       <div className="mx-auto max-w-md">
+      <CheckoutEtapas atual={2} />
       <h1 className="text-roxo text-3xl font-bold mb-6">Endereço de entrega</h1>
       <p className="text-sm text-gray-600 mb-3">Frete fixo: R$ {FRETE_FIXO.toFixed(2)}</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
