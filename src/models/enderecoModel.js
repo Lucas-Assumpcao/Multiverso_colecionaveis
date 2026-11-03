@@ -1,20 +1,23 @@
-const pool = require('../config/db');
+const { Endereco } = require('./documentos');
+const { proximoId } = require('./contadorModel');
+const { idNumerico } = require('./mongoUtils');
 
 async function inserir(clienteId, dados) {
-  const { cep, logradouro, numero, complemento, bairro, cidade, estado } = dados;
-  const [resultado] = await pool.query(
-    'INSERT INTO endereco (cliente_id, cep, logradouro, numero, complemento, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-    [clienteId, cep, logradouro, numero, complemento || null, bairro, cidade, estado]
-  );
-  return resultado.insertId;
+  const endereco = await Endereco.create({
+    ...dados,
+    cliente_id: clienteId,
+    complemento: dados.complemento || null,
+    id: await proximoId('enderecos'),
+  });
+  return endereco.id;
 }
 
 async function pertenceAoCliente(id, clienteId) {
-  const [enderecos] = await pool.query(
-    'SELECT id FROM endereco WHERE id = ? AND cliente_id = ?',
-    [id, clienteId]
-  );
-  return enderecos.length > 0;
+  const enderecoId = idNumerico(id);
+  const cliente = idNumerico(clienteId);
+  if (enderecoId === null || cliente === null) return false;
+
+  return Boolean(await Endereco.exists({ id: enderecoId, cliente_id: cliente }));
 }
 
 module.exports = { inserir, pertenceAoCliente };

@@ -1,21 +1,20 @@
 # Guia de inicialização rápida
 
-Este documento reúne os passos básicos para rodar o projeto Multiverso Colecionáveis: banco MariaDB, API (`server.js`), frontend e testes no Postman.
+Este documento reúne os passos básicos para rodar o projeto Multiverso Colecionáveis: MongoDB, API (`server.js`), frontend e testes no Postman.
 
 ## 1) Pré-requisitos
 
 Antes de iniciar, verifique se você tem instalado:
 
-- Node.js 18+ ou 20+
+- Node.js 20.19 ou superior
 - npm
-- MariaDB (compatível com MySQL)
+- MongoDB configurado como replica set ou MongoDB Atlas
 - Git
 - Postman
 
 Opcional:
 
-- DBeaver ou phpMyAdmin para visualizar o banco
-- MariaDB CLI (`mysql`) com acesso ao terminal
+- MongoDB Compass ou `mongosh` para visualizar o banco
 
 ## 2) Clonar e instalar dependências
 
@@ -32,41 +31,23 @@ cd frontend
 npm install
 ```
 
-## 3) Configurar o banco MariaDB
+## 3) Configurar o MongoDB
 
-### 3.1 Iniciar o MariaDB
+### 3.1 Iniciar o MongoDB
 
-Se o MariaDB estiver instalado localmente, inicie o serviço:
+As transações usadas ao criar pedidos exigem um replica set. Você pode usar MongoDB Atlas ou configurar uma instância MongoDB local como replica set.
 
-Linux (Ubuntu/Debian):
+O URI local de exemplo em `.env.example` usa `replicaSet=rs0`. Configure e inicialize esse replica set antes de executar a aplicação.
 
-```bash
-sudo systemctl start mariadb
-```
+### 3.2 Carregar os dados de demonstração
 
-Ou via XAMPP/WAMP se você usar uma instalação guiada.
-
-### 3.2 Criar o banco e importar os dados
-
-Acesse o MariaDB com o cliente de sua preferência:
+Depois de configurar o `.env` na seção 4, execute na raiz do projeto:
 
 ```bash
-mysql -u root -p
+npm run seed
 ```
 
-Depois execute:
-
-```sql
-SOURCE /caminho/para/o/projeto/create.sql;
-SOURCE /caminho/para/o/projeto/insert.sql;
-```
-
-Se preferir usar o MySQL Workbench, DBeaver ou phpMyAdmin, importe os arquivos:
-
-- `create.sql`
-- `insert.sql`
-
-Importante: o projeto usa o banco `multiverso_colecionaveis` e o arquivo `create.sql` já cria a base caso ela não exista.
+O comando cria categorias, produtos e um administrador de demonstração sem duplicar os registros existentes. A senha padrão do administrador é `admin123`; defina `ADMIN_EMAIL` e `ADMIN_SENHA` no `.env` antes de executar em ambientes não descartáveis.
 
 ## 4) Configurar variáveis de ambiente
 
@@ -79,20 +60,15 @@ cp .env.example .env
 Edite o arquivo `.env` com suas credenciais:
 
 ```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=sua_senha
-DB_NAME=multiverso_colecionaveis
+MONGODB_URI=mongodb://127.0.0.1:27017/multiverso_colecionaveis?replicaSet=rs0
 PORT=3000
 JWT_SECRET=uma_frase_longa_e_aleatoria
 MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
+ADMIN_EMAIL=admin@multiversocolecionaveis.com.br
+ADMIN_SENHA=admin123
 ```
 
-Se você estiver usando um MariaDB com usuário diferente do `root`, ajuste:
-
-- `DB_USER`
-- `DB_PASSWORD`
-- `DB_NAME`
+Use a URI fornecida pelo MongoDB Atlas se estiver usando o serviço gerenciado.
 
 ## 5) Iniciar a API (`server.js`)
 
@@ -244,10 +220,10 @@ POST http://localhost:3000/pedidos
 
 Em ordem ideal:
 
-1. Suba o MariaDB
-2. Importe `create.sql` e `insert.sql`
-3. Crie o `.env`
-4. Rode `npm install`
+1. Inicie o MongoDB replica set ou configure o MongoDB Atlas
+2. Crie o `.env` e configure `MONGODB_URI`
+3. Rode `npm install`
+4. Carregue os dados com `npm run seed`
 5. Inicie a API com `npm run dev`
 6. Rode o frontend com `npm run dev` dentro de `frontend`
 7. Teste os endpoints no Postman
@@ -264,9 +240,9 @@ Sintomas:
 
 Verifique:
 
-- o MariaDB está rodando
-- usuário/senha do `.env` estão corretos
-- o banco `multiverso_colecionaveis` existe
+- o MongoDB está acessível
+- `MONGODB_URI` está correto
+- a instância suporta replica set/transações
 
 ### Porta ocupada
 
@@ -292,7 +268,7 @@ Confirme se a API local está ativa em `http://localhost:3000` e se o serviço d
 
 - API backend: `http://localhost:3000`
 - Frontend: `http://localhost:5173`
-- Banco local: MariaDB em `localhost`
+- Banco local: MongoDB em `localhost` (replica set)
 
 ## 11) Conta administrativa de exemplo
 

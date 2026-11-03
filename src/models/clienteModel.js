@@ -1,17 +1,20 @@
-const pool = require('../config/db');
+const { Cliente } = require('./documentos');
+const { proximoId } = require('./contadorModel');
+const { serializar } = require('./mongoUtils');
 
 async function inserir(cliente) {
-  const { nome, email, senha_hash, cpf } = cliente;
-  const [resultado] = await pool.query(
-    'INSERT INTO cliente (nome, email, senha_hash, cpf) VALUES (?, ?, ?, ?)',
-    [nome, email, senha_hash, cpf]
-  );
-  return resultado.insertId;
+  const novoCliente = await Cliente.create({
+    ...cliente,
+    email: String(cliente.email).trim().toLowerCase(),
+    id: await proximoId('clientes'),
+  });
+  return novoCliente.id;
 }
 
 async function buscarPorEmail(email) {
-  const [linhas] = await pool.query('SELECT * FROM cliente WHERE email = ?', [email]);
-  return linhas[0];
+  return serializar(await Cliente.findOne({
+    email: String(email).trim().toLowerCase(),
+  }).lean());
 }
 
 module.exports = { inserir, buscarPorEmail };

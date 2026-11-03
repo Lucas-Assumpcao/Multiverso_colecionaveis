@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const { conectarBanco, mongoose } = require('./config/db');
 const enderecoRoutes = require('./routes/enderecoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const pagamentoRoutes = require('./routes/pagamentoRoutes');
@@ -30,7 +31,22 @@ app.get('/', (req, res) => {
   res.json({ status: 'API no ar' });
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+async function iniciarServidor() {
+  await conectarBanco();
+  const porta = process.env.PORT || 3000;
+  const servidor = app.listen(porta, () => {
+    console.log(`Servidor rodando em http://localhost:${porta}`);
+  });
+
+  return servidor;
+}
+
+if (require.main === module) {
+  iniciarServidor().catch(async (erro) => {
+    console.error('Não foi possível iniciar a API:', erro);
+    await mongoose.disconnect();
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { app, iniciarServidor };
