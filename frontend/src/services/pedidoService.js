@@ -6,6 +6,9 @@ export async function criar(dados) {
 export async function listar() {
   return authFetch('/pedidos');
 }
+export async function buscarPorId(pedidoId) {
+  return authFetch(`/pedidos/${pedidoId}`);
+}
 export async function criarPagamento(pedidoId) {
   return authFetch(`/pagamentos/${pedidoId}`, { method: 'POST' });
 }
