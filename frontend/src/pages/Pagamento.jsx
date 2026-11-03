@@ -6,16 +6,19 @@ import { FRETE_FIXO } from '../config';
 import Container from '../components/ui/Container';
 import { invalidarProdutos } from '../hooks/useProdutos';
 import CheckoutEtapas from '../components/CheckoutEtapas';
+import useCheckoutGuard from '../hooks/useCheckoutGuard';
 
 function Pagamento() {
   const { state } = useLocation();
   const { itens, total, limpar } = useCarrinho();
   const [erro, setErro] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const permitido = useCheckoutGuard({
+    exigeCarrinho: true,
+    enderecoId: state?.enderecoId,
+  });
 
-  if (!state?.enderecoId) {
-    return <Container className="py-6 sm:py-10">Endereço não informado. <a href="/endereco" className="text-roxo underline">Voltar</a></Container>;
-  }
+  if (!permitido) return null;
 
  async function handleConfirmar() {
   setErro(null);

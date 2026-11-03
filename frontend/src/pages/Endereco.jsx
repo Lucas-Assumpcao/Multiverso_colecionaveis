@@ -4,6 +4,7 @@ import { criar, consultarCep } from '../services/enderecoService';
 import { FRETE_FIXO } from '../config';
 import Container from '../components/ui/Container';
 import CheckoutEtapas from '../components/CheckoutEtapas';
+import useCheckoutGuard from '../hooks/useCheckoutGuard';
 
 function Endereco() {
   const [form, setForm] = useState({
@@ -13,6 +14,9 @@ function Endereco() {
   const [erro, setErro] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const navigate = useNavigate();
+  const permitido = useCheckoutGuard({ exigeCarrinho: true });
+
+  if (!permitido) return null;
 
   function atualizar(campo, valor) {
     setForm((f) => ({ ...f, [campo]: valor }));
