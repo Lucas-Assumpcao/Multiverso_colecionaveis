@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/clienteService';
 import Button from '../components/ui/Button';
 import Field from '../components/ui/Field';
 import Container from '../components/ui/Container';
 import { useToast } from '../hooks/useToast';
+import usePageTitle from '../hooks/usePageTitle';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [carregando, setCarregando] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
+  usePageTitle('Login');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +22,13 @@ function Login() {
     try {
       const resultado = await login(email, senha);
       localStorage.setItem('token', resultado.token);
-      navigate('/');
+      const destino = location.state?.from;
+      navigate(
+        typeof destino === 'string' && destino.startsWith('/') && !destino.startsWith('//')
+          ? destino
+          : '/',
+        { replace: true },
+      );
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -55,7 +64,7 @@ function Login() {
         </Button>
       </form>
       <p className="mt-4 text-sm">
-        Não tem conta? <Link to="/cadastro" className="text-roxo underline">Cadastre-se</Link>
+        Não tem conta? <Link to="/cadastro" state={location.state} className="text-roxo underline">Cadastre-se</Link>
       </p>
       </div>
     </Container>

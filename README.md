@@ -21,7 +21,7 @@ Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — n
 
 ## Stack
 
-**Back-end:** Node.js, Express, MySQL, mysql2, bcrypt, jsonwebtoken, Mercado Pago SDK, cors, dotenv
+**Back-end:** Node.js, Express, MongoDB, Mongoose, bcrypt, jsonwebtoken, Mercado Pago SDK, cors, dotenv
 **Front-end:** React, Vite, React Router, Tailwind CSS v4, Context API
 
 ## Documentação
@@ -54,13 +54,13 @@ Multiverso_colecionaveis/
 │       ├── context/              → estado global (carrinho)
 │       └── services/             → chamadas à API
 ├── docs/                      → materiais auxiliares e migrações
-│   ├── migracoes/
-│   └── atualizar-imagens.sql
+│   ├── migracoes/              → scripts SQL legados (não usados pela aplicação)
+│   └── atualizar-imagens.sql   → script SQL legado
 ├── tests/                     → testes automatizados
 │   ├── api.test.js
-│   └── limpar-testes.sql
-├── create.sql                 → schema do banco
-├── insert.sql                 → dados de exemplo
+│   └── limpar-testes.sql      → script SQL legado
+├── create.sql                 → schema MySQL legado
+├── insert.sql                 → dados MySQL legados
 ├── planilha-testes.xlsx       → planilha de testes
 ├── briefing.md                → visão do projeto
 ├── api.md                     → documentação da API
@@ -78,7 +78,7 @@ Multiverso_colecionaveis/
 
 ## Modelo de dados
 
-8 tabelas: `cliente`, `endereco`, `categoria`, `produto`, `pedido`, `item_pedido`, `pagamento`, `usuario_admin`. `item_pedido` resolve a relação N:N entre pedido e produto e guarda o preço no momento da compra — alterar o preço de um produto depois não afeta pedidos já feitos.
+O banco MongoDB usa as coleções `clientes`, `enderecos`, `categorias`, `produtos`, `pedidos`, `pagamentos`, `usuarios_admin` e `contadores`. Os itens e o preço histórico ficam embutidos no documento de pedido. A API mantém IDs numéricos para preservar o contrato atual com o frontend.
 
 ## Rotas principais
 
@@ -102,13 +102,14 @@ Multiverso_colecionaveis/
 
 ### Pré-requisitos
 
-Node.js e MySQL instalados.
+Node.js e MongoDB configurado como replica set (ou MongoDB Atlas). As transações usadas ao criar pedidos exigem replica set.
 
 ### Banco de dados
 
-```sql
-SOURCE create.sql;
-SOURCE insert.sql;
+Configure `MONGODB_URI` no `.env` antes de iniciar. Para MongoDB local, o URI de exemplo usa `replicaSet=rs0`; configure e inicialize esse replica set antes de executar o seed.
+
+```bash
+npm run seed
 ```
 
 ### API
@@ -120,13 +121,12 @@ npm install
 Cria um `.env` na raiz (modelo em `.env.example`):
 
 ```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=sua_senha
-DB_NAME=multiverso_colecionaveis
+MONGODB_URI=mongodb://127.0.0.1:27017/multiverso_colecionaveis?replicaSet=rs0
 PORT=3000
 JWT_SECRET=uma_frase_longa_e_aleatoria
 MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
+ADMIN_EMAIL=admin@multiversocolecionaveis.com.br
+ADMIN_SENHA=admin123
 ```
 
 ```bash
@@ -155,8 +155,8 @@ npm test
 Pré-requisitos:
 
 - back-end em execução
-- banco populado com `create.sql` + `insert.sql`
-- testes automatizados criam clientes e pedidos de teste; para limpar registros de teste, execute `tests/limpar-testes.sql` no MySQL Workbench
+- banco populado com `npm run seed`
+- testes automatizados criam clientes e pedidos de teste; `tests/limpar-testes.sql` é legado e não deve ser usado com MongoDB
 - teste opcional do Mercado Pago: `RUN_MP=1` em ambiente Unix/macOS ou, no PowerShell:
 
 ```powershell

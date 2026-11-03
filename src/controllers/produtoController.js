@@ -56,6 +56,7 @@ async function criar(req, res) {
     const id = await produtoService.criar(req.body);
     res.status(201).json({ id });
   } catch (erro) {
+    if (erro.status) return res.status(erro.status).json({ mensagem: erro.message });
     console.error(erro);
     res.status(500).json({ mensagem: 'Erro ao criar produto' });
   }

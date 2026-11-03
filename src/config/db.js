@@ -1,15 +1,14 @@
-const mysql = require('mysql2/promise');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-// Pool de conexões: reaproveita conexões abertas em vez de criar uma nova
-// a cada requisição — mais rápido e evita estourar o limite do MySQL.
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-});
+async function conectarBanco() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('A variável MONGODB_URI não foi configurada');
+  }
 
-module.exports = pool;
+  await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
+  return mongoose.connection;
+}
+
+module.exports = { conectarBanco, mongoose };

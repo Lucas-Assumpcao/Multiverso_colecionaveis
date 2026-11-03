@@ -1,32 +1,20 @@
-# Guia rápido para Postman, MariaDB, front e API
+# Guia rápido para Postman, MongoDB, front e API
 
 Este guia foi pensado para facilitar a primeira execução do projeto sem ficar consultando vários arquivos ao mesmo tempo.
 
 ## 1) Checklist de inicialização
 
-### Banco de dados (MariaDB)
+### Banco de dados (MongoDB)
 
-1. Verifique se o MariaDB está ativo.
-2. Abra o terminal e conecte ao banco:
+1. Verifique se o MongoDB está ativo e configurado como replica set ou use o MongoDB Atlas. O fluxo de criação de pedidos usa transações, que não funcionam em instância standalone.
+2. Copie `.env.example` para `.env` e configure `MONGODB_URI`.
+3. Na raiz do projeto, carregue os dados de demonstração:
 
 ```bash
-mysql -u root -p
+npm run seed
 ```
 
-3. Importe a estrutura e os dados:
-
-```sql
-SOURCE /caminho/para/o/projeto/create.sql;
-SOURCE /caminho/para/o/projeto/insert.sql;
-```
-
-4. Confirme que o banco foi criado:
-
-```sql
-SHOW DATABASES;
-USE multiverso_colecionaveis;
-SHOW TABLES;
-```
+O seed cria as coleções necessárias e dados de demonstração. Os arquivos `.sql` no repositório são legados do MySQL e não devem ser executados nesta versão.
 
 ### API (`server.js`)
 
@@ -65,13 +53,12 @@ http://localhost:5173
 Exemplo:
 
 ```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=sua_senha
-DB_NAME=multiverso_colecionaveis
+MONGODB_URI=mongodb://127.0.0.1:27017/multiverso_colecionaveis?replicaSet=rs0
 PORT=3000
 JWT_SECRET=uma_frase_longa_e_aleatoria
 MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
+ADMIN_EMAIL=admin@multiversocolecionaveis.com.br
+ADMIN_SENHA=admin123
 ```
 
 ## 3) Como usar no Postman
@@ -325,9 +312,9 @@ npm run dev
 
 Confirme:
 
-- MariaDB está ativo
-- usuário e senha no `.env` estão corretos
-- banco `multiverso_colecionaveis` existe
+- MongoDB está ativo e acessível
+- `MONGODB_URI` no `.env` está correto
+- a instância está configurada como replica set para suportar transações
 
 ### Erro de CORS
 
@@ -343,9 +330,9 @@ Authorization: Bearer <token>
 
 ## 8) Resumo em 5 passos
 
-1. Suba o MariaDB.
-2. Importe `create.sql` e `insert.sql`.
-3. Crie o `.env`.
+1. Inicie o MongoDB replica set ou configure o MongoDB Atlas.
+2. Configure `MONGODB_URI` no `.env`.
+3. Execute `npm run seed` na raiz.
 4. Execute `npm run dev` na raiz.
 5. Abra o frontend e teste as rotas no Postman.
 

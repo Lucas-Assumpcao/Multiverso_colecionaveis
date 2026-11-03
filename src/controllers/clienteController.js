@@ -12,7 +12,7 @@ async function cadastrar(req, res) {
     res.status(201).json({ id, mensagem: 'Cliente cadastrado com sucesso' });
 
   } catch (erro) {
-    if (erro.code === 'ER_DUP_ENTRY') {
+    if (erro.code === 'ER_DUP_ENTRY' || erro.code === 11000) {
       return res.status(409).json({ mensagem: 'E-mail já cadastrado' });
     }
 

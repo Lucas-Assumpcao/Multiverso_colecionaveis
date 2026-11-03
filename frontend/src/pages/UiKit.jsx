@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import Container from '../components/ui/Container';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
 import EmptyState from '../components/ui/EmptyState';
 import Field from '../components/ui/Field';
 import Skeleton, { ProdutoCardSkeleton } from '../components/ui/Skeleton';
@@ -9,6 +11,7 @@ import { useToast } from '../hooks/useToast';
 
 function UiKit() {
   const toast = useToast();
+  const [dialogAberto, setDialogAberto] = useState(false);
 
   return (
     <Container as="div" className="space-y-12 py-10">
@@ -39,6 +42,25 @@ function UiKit() {
             Testar informação
           </Button>
         </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-xl font-bold text-roxo">Confirmação</h2>
+        <Button variant="danger" onClick={() => setDialogAberto(true)}>
+          Testar confirmação
+        </Button>
+        <ConfirmDialog
+          open={dialogAberto}
+          onCancel={() => setDialogAberto(false)}
+          onConfirm={() => {
+            setDialogAberto(false);
+            toast.success('Ação confirmada.');
+          }}
+          title="Confirmar ação"
+          description="Esta é uma demonstração de confirmação acessível."
+          confirmLabel="Confirmar"
+          variant="danger"
+        />
       </section>
 
       <section className="max-w-md space-y-4">

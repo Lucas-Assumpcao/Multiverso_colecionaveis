@@ -1,14 +1,16 @@
-const pool = require('../config/db');
+const { Categoria } = require('./documentos');
+const { idNumerico, serializar } = require('./mongoUtils');
 
 async function listarTodos() {
-  const [linhas] = await pool.query('SELECT * FROM categoria');
-  return linhas;
+  const categorias = await Categoria.find().sort({ id: 1 }).lean();
+  return categorias.map(serializar);
 }
 
 async function buscarPorId(id) {
-  const [linhas] = await pool.query('SELECT * FROM categoria WHERE id = ?', [id]);
-  return linhas[0];
+  const categoriaId = idNumerico(id);
+  if (categoriaId === null) return null;
+
+  return serializar(await Categoria.findOne({ id: categoriaId }).lean());
 }
 
-
-module.exports = { listarTodos, buscarPorId};
+module.exports = { listarTodos, buscarPorId };

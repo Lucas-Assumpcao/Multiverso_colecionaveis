@@ -6,6 +6,7 @@ import Container from '../components/ui/Container';
 import EmptyState from '../components/ui/EmptyState';
 import { invalidarCategorias, rotuloCurto, useCategorias } from '../hooks/useCategorias';
 import { invalidarProdutos, useProdutos } from '../hooks/useProdutos';
+import usePageTitle from '../hooks/usePageTitle';
 
 const coresCategoria = [
   'bg-roxo-claro text-white',
@@ -31,6 +32,7 @@ function Categoria() {
     ? produtos.filter((produto) => Number(produto.categoria_id) === Number(categoria.id))
     : [];
   const indiceCategoria = categoria ? categorias.indexOf(categoria) : 0;
+  usePageTitle(categoria ? rotuloCurto(categoria.nome) : 'Categoria');
 
   function tentarNovamente() {
     if (erroCategorias) invalidarCategorias();
