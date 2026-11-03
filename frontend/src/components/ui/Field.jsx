@@ -6,6 +6,8 @@ function Field({
   label,
   help,
   error,
+  as: Control = 'input',
+  children,
   className,
   inputClassName,
   ...inputProps
@@ -25,7 +27,7 @@ function Field({
       <label htmlFor={inputId} className="text-sm font-semibold text-chumbo">
         {label}
       </label>
-      <input
+      <Control
         {...inputProps}
         id={inputId}
         aria-invalid={error ? true : undefined}
@@ -35,7 +37,9 @@ function Field({
           error && 'border-vermelho-escuro',
           inputClassName,
         )}
-      />
+      >
+        {children}
+      </Control>
       {help && <p id={helpId} className="text-sm text-suave">{help}</p>}
       {error && <p id={errorId} className="text-sm text-vermelho-escuro">{error}</p>}
     </div>
