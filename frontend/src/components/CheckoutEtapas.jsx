@@ -25,7 +25,7 @@ function CheckoutEtapas({ atual }) {
         />
       </div>
 
-      <ol className="hidden items-center sm:flex">
+      <ol className="sr-only items-center sm:not-sr-only sm:flex">
         {etapas.map((etapa, indice) => {
           const numero = indice + 1;
           const concluida = numero < atual;
