@@ -71,6 +71,12 @@ function Endereco() {
   const [tentouEnviar, setTentouEnviar] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const refsCampos = useRef({});
+  const valoresCepAnterior = useRef({
+    logradouro: '',
+    bairro: '',
+    cidade: '',
+    estado: '',
+  });
   const navigate = useNavigate();
   const toast = useToast();
   const permitido = useCheckoutGuard({ exigeCarrinho: true });
@@ -83,13 +89,29 @@ function Endereco() {
 
     consultarCep(cepNumerico, { signal: controlador.signal })
       .then((dados) => {
+        const anteriores = valoresCepAnterior.current;
+        const novosValores = {
+          logradouro: dados.logradouro || '',
+          bairro: dados.bairro || '',
+          cidade: dados.localidade || '',
+          estado: dados.uf || '',
+        };
         setForm((atual) => ({
           ...atual,
-          logradouro: atual.logradouro || dados.logradouro || '',
-          bairro: atual.bairro || dados.bairro || '',
-          cidade: atual.cidade || dados.localidade || '',
-          estado: atual.estado || dados.uf || '',
+          logradouro: atual.logradouro === anteriores.logradouro
+            ? novosValores.logradouro
+            : atual.logradouro,
+          bairro: atual.bairro === anteriores.bairro
+            ? novosValores.bairro
+            : atual.bairro,
+          cidade: atual.cidade === anteriores.cidade
+            ? novosValores.cidade
+            : atual.cidade,
+          estado: atual.estado === anteriores.estado
+            ? novosValores.estado
+            : atual.estado,
         }));
+        valoresCepAnterior.current = novosValores;
         setConsultaCep({ cep: cepNumerico, status: 'success', mensagem: '' });
       })
       .catch((erro) => {
