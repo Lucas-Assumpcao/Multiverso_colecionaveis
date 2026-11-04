@@ -3,7 +3,6 @@ import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-
 import { CarrinhoProvider } from './context/CarrinhoContext';
 import CarrinhoDrawerProvider from './context/CarrinhoDrawerProvider';
 import ToastProvider from './context/ToastProvider';
-import AdminLayout from './components/AdminLayout';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CarrinhoDrawer from './components/CarrinhoDrawer';
@@ -12,6 +11,7 @@ import Container from './components/ui/Container';
 
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
+const AdminLayout = lazy(() => import('./components/AdminLayout'));
 const AdminPainel = lazy(() => import('./pages/AdminPainel'));
 const AdminProdutos = lazy(() => import('./pages/AdminProdutos'));
 const AdminProdutoForm = lazy(() => import('./pages/AdminProdutoForm'));

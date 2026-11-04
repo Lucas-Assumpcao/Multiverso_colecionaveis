@@ -96,10 +96,29 @@ function AdminLayout() {
     toast.info('Você saiu do painel administrativo.');
   }
 
-  if (!token) return <AdminLogin onLogin={() => setToken(localStorage.getItem('adminToken'))} />;
+  const skipLink = (
+    <a
+      href="#conteudo-admin"
+      className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-amarelo focus:px-4 focus:py-3 focus:font-semibold focus:text-roxo"
+    >
+      Pular para o conteúdo
+    </a>
+  );
+
+  if (!token) {
+    return (
+      <>
+        {skipLink}
+        <main id="conteudo-admin" tabIndex="-1">
+          <AdminLogin onLogin={() => setToken(localStorage.getItem('adminToken'))} />
+        </main>
+      </>
+    );
+  }
 
   return (
     <div className="min-h-[70vh] bg-[#F8F7FB]">
+      {skipLink}
       <div className="border-b border-borda bg-white lg:hidden">
         <Container className="py-3">
           <nav aria-label="Navegação administrativa" className="flex flex-wrap items-center justify-center gap-2">
@@ -152,7 +171,7 @@ function AdminLayout() {
             Sair
           </Button>
         </aside>
-        <main id="conteudo" tabIndex="-1" className="min-w-0 flex-1">
+        <main id="conteudo-admin" tabIndex="-1" className="min-w-0 flex-1">
           <Outlet />
         </main>
       </div>
