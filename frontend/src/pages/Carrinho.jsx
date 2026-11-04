@@ -6,6 +6,7 @@ import Button from '../components/ui/Button';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
 import Container from '../components/ui/Container';
 import EmptyState from '../components/ui/EmptyState';
+import CheckoutEtapas from '../components/CheckoutEtapas';
 import { FRETE_FIXO } from '../config';
 import { useCarrinho } from '../context/useCarrinho';
 import { useToast } from '../hooks/useToast';
@@ -53,6 +54,7 @@ function Carrinho() {
 
   return (
     <Container className="py-6 sm:py-10">
+      <CheckoutEtapas atual={1} />
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="font-semibold uppercase tracking-widest text-roxo-claro">Sua seleção</p>
