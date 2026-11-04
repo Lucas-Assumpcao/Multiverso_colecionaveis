@@ -9,7 +9,7 @@ import EmptyState from '../components/ui/EmptyState';
 import Field from '../components/ui/Field';
 import Skeleton from '../components/ui/Skeleton';
 import { useToast } from '../hooks/useToast';
-import { useCategorias } from '../hooks/useCategorias';
+import { invalidarCategorias, useCategorias } from '../hooks/useCategorias';
 import { invalidarProdutos } from '../hooks/useProdutos';
 import usePageTitle from '../hooks/usePageTitle';
 import { removerProduto } from '../services/adminService';
@@ -56,7 +56,7 @@ function AdminProdutos() {
   const [produtoRemocao, setProdutoRemocao] = useState(null);
   const [removendo, setRemovendo] = useState(false);
   const toast = useToast();
-  const { categorias } = useCategorias();
+  const { categorias, erro: erroCategorias } = useCategorias();
   usePageTitle('Admin — Produtos');
 
   async function carregarProdutos() {
@@ -175,6 +175,14 @@ function AdminProdutos() {
           Só estoque baixo
         </label>
       </section>
+      {erroCategorias && (
+        <div role="alert" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-vermelho-escuro/30 bg-red-50 p-4 text-sm text-vermelho-escuro">
+          <p>Não foi possível carregar as categorias do filtro.</p>
+          <Button variant="secondary" size="sm" onClick={invalidarCategorias}>
+            Tentar de novo
+          </Button>
+        </div>
+      )}
 
       {carregando ? (
         <EsqueletoProdutos />
