@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { CarrinhoProvider } from './context/CarrinhoContext';
 import CarrinhoDrawerProvider from './context/CarrinhoDrawerProvider';
 import ToastProvider from './context/ToastProvider';
+import AdminLayout from './components/AdminLayout';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CarrinhoDrawer from './components/CarrinhoDrawer';
@@ -49,26 +50,49 @@ function RouteContent() {
     <Suspense fallback={<PageSkeleton />}>
       <div key={location.pathname} className="animate-fade-up">
         <Routes location={location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminPainel />} />
-          <Route path="/admin/produtos" element={<AdminProdutos />} />
-          <Route path="/admin/produtos/form" element={<AdminProdutoForm />} />
-          <Route path="/admin/pedidos" element={<AdminPedidos />} />
-          <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/carrinho" element={<Carrinho />} />
-          <Route path="/categoria/:categoriaId" element={<Categoria />} />
-          <Route path="/busca" element={<Busca />} />
-          <Route path="/confirmacao" element={<Confirmacao />} />
-          <Route path="/endereco" element={<Endereco />} />
-          <Route path="/meus-pedidos" element={<MeusPedidos />} />
-          <Route path="/pagamento" element={<Pagamento />} />
-          <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
-          {import.meta.env.DEV && <Route path="/ui-kit" element={<UiKit />} />}
-          <Route path="*" element={<NotFound />} />
+          <Route element={<LojaLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/carrinho" element={<Carrinho />} />
+            <Route path="/categoria/:categoriaId" element={<Categoria />} />
+            <Route path="/busca" element={<Busca />} />
+            <Route path="/confirmacao" element={<Confirmacao />} />
+            <Route path="/endereco" element={<Endereco />} />
+            <Route path="/meus-pedidos" element={<MeusPedidos />} />
+            <Route path="/pagamento" element={<Pagamento />} />
+            <Route path="/produtos/:id" element={<ProdutoDetalhe />} />
+            {import.meta.env.DEV && <Route path="/ui-kit" element={<UiKit />} />}
+            <Route path="*" element={<NotFound />} />
+          </Route>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminPainel />} />
+            <Route path="produtos" element={<AdminProdutos />} />
+            <Route path="produtos/form" element={<AdminProdutoForm />} />
+            <Route path="pedidos" element={<AdminPedidos />} />
+          </Route>
         </Routes>
       </div>
     </Suspense>
+  );
+}
+
+function LojaLayout() {
+  return (
+    <>
+      <a
+        href="#conteudo"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-amarelo focus:px-4 focus:py-3 focus:font-semibold focus:text-roxo"
+      >
+        Pular para o conteúdo
+      </a>
+      <Header />
+      <main id="conteudo" tabIndex="-1" className="min-h-[70vh]">
+        <Outlet />
+      </main>
+      <Footer />
+      <CarrinhoDrawer />
+    </>
   );
 }
 
@@ -78,18 +102,7 @@ function App() {
       <ToastProvider>
         <BrowserRouter>
           <CarrinhoDrawerProvider>
-            <a
-              href="#conteudo"
-              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-amarelo focus:px-4 focus:py-3 focus:font-semibold focus:text-roxo"
-            >
-              Pular para o conteúdo
-            </a>
-            <Header />
-            <main id="conteudo" tabIndex="-1" className="min-h-[70vh]">
-              <RouteContent />
-            </main>
-            <Footer />
-            <CarrinhoDrawer />
+            <RouteContent />
           </CarrinhoDrawerProvider>
         </BrowserRouter>
       </ToastProvider>
