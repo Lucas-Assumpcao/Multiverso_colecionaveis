@@ -67,7 +67,7 @@ function ToastProvider({ children }) {
                 type="button"
                 aria-label="Fechar aviso"
                 onClick={() => dismiss(toast.id)}
-                className="rounded p-1 transition-colors hover:bg-black/5"
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded transition-colors hover:bg-black/5"
               >
                 <X aria-hidden="true" className="size-4" />
               </button>

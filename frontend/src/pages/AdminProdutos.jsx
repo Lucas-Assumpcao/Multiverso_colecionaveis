@@ -227,8 +227,8 @@ function AdminProdutos() {
                     </div>
                   </div>
                   <div className="mt-4 flex justify-end gap-4 border-t border-borda pt-3">
-                    <Link to={`/admin/produtos/form?id=${produto.id}`} className="font-semibold text-roxo underline">Editar</Link>
-                    <button type="button" onClick={() => setProdutoRemocao(produto)} className="font-semibold text-vermelho-escuro underline">
+                    <Link to={`/admin/produtos/form?id=${produto.id}`} className="inline-flex min-h-11 items-center font-semibold text-roxo underline">Editar</Link>
+                    <button type="button" onClick={() => setProdutoRemocao(produto)} className="min-h-11 font-semibold text-vermelho-escuro underline">
                       Remover
                     </button>
                   </div>
@@ -270,8 +270,8 @@ function AdminProdutos() {
                         <td className="px-4 py-3"><Badge variant={estoque.variant}>{estoque.label}</Badge></td>
                         <td className="px-4 py-3">
                           <div className="flex gap-3">
-                            <Link to={`/admin/produtos/form?id=${produto.id}`} className="font-semibold text-roxo underline">Editar</Link>
-                            <button type="button" onClick={() => setProdutoRemocao(produto)} className="font-semibold text-vermelho-escuro underline">
+                            <Link to={`/admin/produtos/form?id=${produto.id}`} className="inline-flex min-h-11 items-center font-semibold text-roxo underline">Editar</Link>
+                            <button type="button" onClick={() => setProdutoRemocao(produto)} className="min-h-11 font-semibold text-vermelho-escuro underline">
                               Remover
                             </button>
                           </div>

@@ -119,7 +119,7 @@ function ListaProdutos({
           </label>
           <select
             id="ordem-produtos"
-            className="min-h-10 rounded-lg border border-borda bg-white px-3 text-sm text-chumbo"
+            className="min-h-11 rounded-lg border border-borda bg-white px-3 text-sm text-chumbo"
             value={ordem}
             onChange={(event) => atualizarParametro('ordem', event.target.value)}
           >
@@ -128,7 +128,7 @@ function ListaProdutos({
             <option value="maior-preco">Maior preço</option>
             <option value="nome">Nome A–Z</option>
           </select>
-          <label htmlFor="somente-disponiveis" className="inline-flex items-center gap-2 text-sm text-chumbo">
+          <label htmlFor="somente-disponiveis" className="inline-flex min-h-11 items-center gap-2 text-sm text-chumbo">
             <input
               id="somente-disponiveis"
               type="checkbox"

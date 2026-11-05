@@ -23,6 +23,7 @@ function formatarPreco(valor) {
 function ProdutoSkeleton() {
   return (
     <Container className="space-y-6 py-6 sm:py-10" aria-busy="true" aria-label="Carregando produto">
+      <h1 className="sr-only">Carregando produto</h1>
       <Skeleton className="h-5 w-56" />
       <div className="grid gap-8 lg:grid-cols-2">
         <Skeleton className="aspect-square w-full rounded-card" />
@@ -184,6 +185,7 @@ function ProdutoDetalhe() {
     return (
       <Container className="py-6 sm:py-10">
         <EmptyState
+          headingLevel={1}
           title="Produto não encontrado"
           text="Esse item não está disponível. Volte à loja para explorar a coleção."
           action={<Button to="/">Voltar para o início</Button>}
@@ -196,6 +198,7 @@ function ProdutoDetalhe() {
     return (
       <Container className="py-6 sm:py-10">
         <EmptyState
+          headingLevel={1}
           title="Não foi possível atualizar o produto"
           text="O produto em cache continua disponível, mas não conseguimos confirmar o estoque agora."
           action={<Button variant="secondary" onClick={tentarNovamente}>
@@ -285,7 +288,7 @@ function ProdutoDetalhe() {
                 aria-label="Diminuir quantidade"
                 disabled={quantidade <= 1}
                 onClick={() => setQuantidadeState({ id, valor: Math.max(1, quantidade - 1) })}
-                className="rounded-l-lg p-3 text-roxo hover:bg-lilas/30 disabled:opacity-40"
+                className="inline-flex size-11 items-center justify-center rounded-l-lg text-roxo hover:bg-lilas/30 disabled:opacity-40"
               >
                 <Minus aria-hidden="true" className="size-4" />
               </button>
@@ -297,7 +300,7 @@ function ProdutoDetalhe() {
                 aria-label="Aumentar quantidade"
                 disabled={estoque <= 0 || quantidade >= limiteQuantidade}
                 onClick={() => setQuantidadeState({ id, valor: Math.min(limiteQuantidade, quantidade + 1) })}
-                className="rounded-r-lg p-3 text-roxo hover:bg-lilas/30 disabled:opacity-40"
+                className="inline-flex size-11 items-center justify-center rounded-r-lg text-roxo hover:bg-lilas/30 disabled:opacity-40"
               >
                 <Plus aria-hidden="true" className="size-4" />
               </button>

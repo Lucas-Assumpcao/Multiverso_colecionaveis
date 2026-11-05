@@ -200,7 +200,7 @@ function Header() {
         aria-label="Multiverso Colecionáveis — início"
         className="flex shrink-0 items-center gap-2"
       >
-        <LogoIcone aria-hidden="true" className="size-10 sm:size-11" />
+        <LogoIcone aria-hidden="true" className="size-11" />
         <span className="hidden leading-none sm:block">
           <span className="block font-display text-sm font-extrabold tracking-wide text-amarelo">MULTIVERSO</span>
           <span className="mt-1 block text-[9px] font-semibold tracking-[0.22em] text-amarelo">COLECIONÁVEIS</span>
@@ -246,12 +246,12 @@ function Header() {
               setSugestaoAtiva(-1);
               setSugestoesAbertas(event.target.value.trim().length >= 2);
             }}
-            className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-chumbo outline-none"
+            className="min-h-11 min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-chumbo"
           />
           <button
             type="submit"
             aria-label="Buscar"
-            className="flex h-10 w-11 shrink-0 items-center justify-center bg-amarelo text-roxo transition-colors hover:brightness-95"
+            className="flex size-11 shrink-0 items-center justify-center bg-amarelo text-roxo transition-colors hover:brightness-95"
           >
             <Search aria-hidden="true" className="size-5" />
           </button>
@@ -306,7 +306,7 @@ function Header() {
     );
   }
 
-  function carrinhoLink(mobile = false) {
+  function carrinhoLink() {
     return (
       <button
         type="button"
@@ -315,7 +315,7 @@ function Header() {
           abrir(event.currentTarget);
         }}
         aria-label={`Abrir carrinho${totalItens ? `, ${totalItens} itens` : ''}`}
-        className={`relative inline-flex size-10 shrink-0 items-center justify-center rounded-full text-amarelo transition-colors hover:bg-white/10 ${mobile ? '' : 'px-2'}`}
+        className="relative inline-flex size-11 shrink-0 items-center justify-center rounded-full text-amarelo transition-colors hover:bg-white/10"
       >
         <ShoppingCart aria-hidden="true" className="size-5" />
         {contador()}
@@ -326,13 +326,13 @@ function Header() {
   function conta(classes = '') {
     return token ? (
       <div className={`flex items-center gap-4 ${classes}`}>
-        <Link to="/meus-pedidos" onClick={() => setMenuAberto(false)} className="transition-colors hover:text-amarelo">Meus Pedidos</Link>
-        <button type="button" onClick={sair} className="text-amarelo transition-colors hover:text-white">Sair</button>
+        <Link to="/meus-pedidos" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 items-center transition-colors hover:text-amarelo">Meus Pedidos</Link>
+        <button type="button" onClick={sair} className="min-h-11 text-amarelo transition-colors hover:text-white">Sair</button>
       </div>
     ) : (
       <div className={`flex items-center gap-4 ${classes}`}>
-        <Link to="/login" onClick={() => setMenuAberto(false)} className="transition-colors hover:text-amarelo">Login</Link>
-        <Link to="/cadastro" onClick={() => setMenuAberto(false)} className="transition-colors hover:text-amarelo">Cadastre-se</Link>
+        <Link to="/login" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 items-center transition-colors hover:text-amarelo">Login</Link>
+        <Link to="/cadastro" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 items-center transition-colors hover:text-amarelo">Cadastre-se</Link>
       </div>
     );
   }
@@ -347,7 +347,7 @@ function Header() {
         key={categoria.id}
         to={`/categoria/${categoria.id}`}
         onClick={() => setMenuAberto(false)}
-        className={`rounded px-2 py-1 text-sm text-white/90 transition-colors hover:bg-white/10 hover:text-amarelo ${classes}`}
+        className={`inline-flex min-h-11 items-center rounded px-2 py-3 text-sm text-white/90 transition-colors hover:bg-white/10 hover:text-amarelo ${classes}`}
       >
         {rotuloCurto(categoria.nome)}
       </Link>
@@ -374,7 +374,7 @@ function Header() {
           </div>
 
           <div className="flex shrink-0 items-center gap-1 lg:hidden">
-            {carrinhoLink(true)}
+            {carrinhoLink()}
             <button
               ref={menuButtonRef}
               type="button"
@@ -382,7 +382,7 @@ function Header() {
               aria-controls="menu-mobile"
               aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
               onClick={() => setMenuAberto((aberto) => !aberto)}
-              className="inline-flex size-10 items-center justify-center rounded-full text-amarelo transition-colors hover:bg-white/10"
+              className="inline-flex size-11 items-center justify-center rounded-full text-amarelo transition-colors hover:bg-white/10"
             >
               {menuAberto
                 ? <X aria-hidden="true" className="size-6" />
@@ -391,7 +391,7 @@ function Header() {
           </div>
         </div>
 
-        <nav aria-label="Categorias" className="hidden min-h-10 flex-wrap items-center justify-center gap-2 border-t border-white/10 py-2 lg:flex">
+        <nav aria-label="Categorias" className="hidden min-h-11 flex-wrap items-center justify-center gap-2 border-t border-white/10 py-2 lg:flex">
           {linksCategorias()}
         </nav>
 
@@ -406,7 +406,7 @@ function Header() {
         >
           <div className="max-h-[80vh] overflow-y-auto py-4">
             {busca('busca-mobile', 'w-full')}
-            <nav aria-label="Categorias" className="mt-4 grid grid-cols-2 gap-2">
+            <nav aria-label="Categorias no menu móvel" className="mt-4 grid grid-cols-2 gap-2">
               {linksCategorias('block break-words')}
             </nav>
             <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 text-sm">

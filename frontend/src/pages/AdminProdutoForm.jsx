@@ -175,7 +175,9 @@ function AdminProdutoForm() {
     return (
       <Container className="py-6 sm:py-10">
         <div className="mx-auto max-w-2xl">
-          <Skeleton className="mb-6 h-9 w-1/2" />
+          <h1 className="mb-6 text-3xl font-extrabold text-roxo">
+            Editar produto
+          </h1>
           <EsqueletoFormulario />
         </div>
       </Container>

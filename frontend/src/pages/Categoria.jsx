@@ -43,6 +43,7 @@ function Categoria() {
     return (
       <Container className="py-6 sm:py-10">
         <EmptyState
+          headingLevel={1}
           title="Categoria não encontrada"
           text="Confira outras categorias e encontre seu próximo colecionável."
           action={<Button to="/" variant="secondary">Voltar para o início</Button>}
