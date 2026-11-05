@@ -87,6 +87,9 @@ function Carrinho() {
                       <img
                         src={item.imagem_url}
                         alt={item.nome}
+                        width={96}
+                        height={96}
+                        decoding="async"
                         className="size-full rounded-xl object-contain p-2"
                       />
                     )

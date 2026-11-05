@@ -215,7 +215,16 @@ function AdminProdutos() {
                 <article key={produto.id} className="rounded-card border border-borda bg-white p-4 shadow-card">
                   <div className="flex gap-3">
                     {produto.imagem_url
-                      ? <img src={produto.imagem_url} alt="" className="size-16 shrink-0 rounded-lg bg-lilas/30 object-contain p-1" />
+                      ? (
+                        <img
+                          src={produto.imagem_url}
+                          alt=""
+                          width={64}
+                          height={64}
+                          decoding="async"
+                          className="size-16 shrink-0 rounded-lg bg-lilas/30 object-contain p-1"
+                        />
+                      )
                       : <div className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-lilas/30"><ImageOff aria-hidden="true" className="size-6 text-roxo-claro" /></div>}
                     <div className="min-w-0 flex-1">
                       <h2 className="font-bold text-roxo">{produto.nome}</h2>
@@ -258,7 +267,16 @@ function AdminProdutos() {
                         <th scope="row" className="px-4 py-3 font-semibold text-chumbo">
                           <div className="flex items-center gap-3">
                             {produto.imagem_url
-                              ? <img src={produto.imagem_url} alt="" className="size-12 rounded-lg bg-lilas/30 object-contain p-1" />
+                              ? (
+                                <img
+                                  src={produto.imagem_url}
+                                  alt=""
+                                  width={48}
+                                  height={48}
+                                  decoding="async"
+                                  className="size-12 rounded-lg bg-lilas/30 object-contain p-1"
+                                />
+                              )
                               : <div className="flex size-12 items-center justify-center rounded-lg bg-lilas/30"><ImageOff aria-hidden="true" className="size-5 text-roxo-claro" /></div>}
                             <span>{produto.nome}</span>
                           </div>

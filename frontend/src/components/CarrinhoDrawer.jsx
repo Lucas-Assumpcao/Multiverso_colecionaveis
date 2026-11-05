@@ -147,6 +147,9 @@ function CarrinhoDrawer() {
                       <img
                         src={item.imagem_url}
                         alt=""
+                        width={80}
+                        height={80}
+                        decoding="async"
                         className="size-20 shrink-0 rounded-lg bg-lilas/30 object-contain p-1"
                       />
                     )

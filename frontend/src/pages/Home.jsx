@@ -138,6 +138,10 @@ function Home() {
                 <img
                   src={produtoHero.imagem_url}
                   alt={`Produto em destaque: ${produtoHero.nome}`}
+                  width={800}
+                  height={800}
+                  fetchPriority="high"
+                  decoding="async"
                   className="aspect-square w-full rounded-xl object-contain"
                 />
                 <div className="px-2 pb-2 pt-4 text-roxo">

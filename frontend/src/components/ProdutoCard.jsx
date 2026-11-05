@@ -40,7 +40,10 @@ function ProdutoCard({ produto, indice = 0, headingLevel = 2 }) {
             <img
               src={produto.imagem_url}
               alt={produto.nome}
+              width={480}
+              height={480}
               loading="lazy"
+              decoding="async"
               className="absolute inset-0 size-full object-contain p-4 transition-transform duration-300 motion-reduce:transition-none group-hover:scale-105"
               onError={(event) => { event.currentTarget.style.display = 'none'; }}
             />

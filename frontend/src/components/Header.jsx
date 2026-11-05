@@ -282,6 +282,9 @@ function Header() {
                       <img
                         src={opcao.produto.imagem_url}
                         alt=""
+                        width={48}
+                        height={48}
+                        decoding="async"
                         className="size-12 shrink-0 rounded-md bg-white object-contain"
                       />
                     ) : (

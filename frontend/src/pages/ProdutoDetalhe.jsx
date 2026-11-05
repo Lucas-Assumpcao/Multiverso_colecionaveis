@@ -231,6 +231,9 @@ function ProdutoDetalhe() {
             <img
               src={produto.imagem_url}
               alt={produto.nome}
+              width={800}
+              height={800}
+              decoding="async"
               className="size-full object-contain p-6 transition-transform duration-300 motion-reduce:transition-none group-hover:scale-105"
             />
           ) : (

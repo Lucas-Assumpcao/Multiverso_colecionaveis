@@ -315,8 +315,11 @@ function AdminProdutoForm() {
                       <img
                         src={form.imagem_url}
                         alt={form.nome ? `Pré-visualização de ${form.nome}` : 'Pré-visualização da imagem do produto'}
+                        width={640}
+                        height={640}
+                        decoding="async"
                         onError={() => setImagemFalhou(true)}
-                        className="max-h-64 max-w-full object-contain"
+                        className="aspect-square max-h-64 max-w-full object-contain"
                       />
                     )
                     : (
