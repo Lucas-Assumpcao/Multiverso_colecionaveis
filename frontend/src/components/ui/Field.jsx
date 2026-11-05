@@ -6,6 +6,7 @@ function Field({
   label,
   help,
   error,
+  labelClassName,
   as: Control = 'input',
   children,
   className,
@@ -24,7 +25,10 @@ function Field({
 
   return (
     <div className={classNames('flex flex-col gap-1.5', className)}>
-      <label htmlFor={inputId} className="text-sm font-semibold text-chumbo">
+      <label
+        htmlFor={inputId}
+        className={classNames('text-sm font-semibold text-chumbo', labelClassName)}
+      >
         {label}
       </label>
       <Control
