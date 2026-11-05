@@ -22,7 +22,31 @@ Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — n
 ## Stack
 
 **Back-end:** Node.js, Express, MongoDB, Mongoose, bcrypt, jsonwebtoken, Mercado Pago SDK, cors, dotenv
-**Front-end:** React, Vite, React Router, Tailwind CSS v4, Context API
+
+## Front-end
+
+**Stack:** React, Vite, React Router, Tailwind CSS v4, Context API e lucide-react.
+
+Funcionalidades principais:
+
+- Carrinho lateral com controle de quantidade e estoque.
+- Busca de produtos com sugestões no campo do cabeçalho.
+- Catálogo com filtros e paginação no cliente (12 produtos por página).
+- Checkout em etapas com endereço, revisão e pagamento via Mercado Pago.
+- Painel administrativo para indicadores, produtos e pedidos.
+
+## Capturas de tela
+
+As capturas serão organizadas em [docs/prints/](./docs/prints/):
+
+- `home-desktop`
+- `home-mobile`
+- `categoria`
+- `detalhe`
+- `carrinho-lateral`
+- `checkout-endereco`
+- `admin-painel`
+- `admin-produtos`
 
 ## Documentação
 
@@ -30,7 +54,7 @@ Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — n
 - [banco-de-dados.md](./banco-de-dados.md)
 - [api.md](./api.md)
 - [manual-do-usuario.md](./manual-do-usuario.md)
-- [requisitos-situacao.md](./requisitos-situacao.md)
+- [requisitos-situacao.md](./docs/requisitos-situacao.md)
 - [planilha-testes.xlsx](./planilha-testes.xlsx)
 - [manual-de-marca-multiverso-colecionaveis.pdf](./manual-de-marca-multiverso-colecionaveis.pdf)
 - [documento-requisitos-multiverso-colecionaveis.pdf](./documento-requisitos-multiverso-colecionaveis.pdf)
@@ -55,7 +79,9 @@ Multiverso_colecionaveis/
 │       └── services/             → chamadas à API
 ├── docs/                      → materiais auxiliares e migrações
 │   ├── migracoes/              → scripts SQL legados (não usados pela aplicação)
-│   └── atualizar-imagens.sql   → script SQL legado
+│   ├── atualizar-imagens.sql   → script SQL legado
+│   ├── requisitos-situacao.md  → situação dos requisitos
+│   └── prints/                 → capturas de tela do front-end
 ├── tests/                     → testes automatizados
 │   ├── api.test.js
 │   └── limpar-testes.sql      → script SQL legado
@@ -66,7 +92,6 @@ Multiverso_colecionaveis/
 ├── api.md                     → documentação da API
 ├── banco-de-dados.md          → descrição do banco
 ├── manual-do-usuario.md       → guia do usuário
-├── requisitos-situacao.md    → contexto do projeto
 ├── manual-de-marca-multiverso-colecionaveis.pdf
 ├── documento-requisitos-multiverso-colecionaveis.pdf
 ├── package.json               → scripts da API
