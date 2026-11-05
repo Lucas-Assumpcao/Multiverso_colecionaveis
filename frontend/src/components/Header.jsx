@@ -327,12 +327,12 @@ function Header() {
     return token ? (
       <div className={`flex items-center gap-4 ${classes}`}>
         <Link to="/meus-pedidos" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 items-center transition-colors hover:text-amarelo">Meus Pedidos</Link>
-        <button type="button" onClick={sair} className="min-h-11 text-amarelo transition-colors hover:text-white">Sair</button>
+        <button type="button" onClick={sair} className="inline-flex min-h-11 min-w-11 items-center justify-center text-amarelo transition-colors hover:text-white">Sair</button>
       </div>
     ) : (
       <div className={`flex items-center gap-4 ${classes}`}>
-        <Link to="/login" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 items-center transition-colors hover:text-amarelo">Login</Link>
-        <Link to="/cadastro" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 items-center transition-colors hover:text-amarelo">Cadastre-se</Link>
+        <Link to="/login" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 transition-colors hover:text-amarelo">Login</Link>
+        <Link to="/cadastro" onClick={() => setMenuAberto(false)} className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 transition-colors hover:text-amarelo">Cadastre-se</Link>
       </div>
     );
   }

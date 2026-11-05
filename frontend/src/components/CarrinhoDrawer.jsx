@@ -89,7 +89,7 @@ function CarrinhoDrawer() {
     <div
       aria-hidden={!aberto}
       inert={!aberto}
-      className={`fixed inset-0 z-[60] ${aberto ? '' : 'pointer-events-none'}`}
+      className={`fixed inset-0 z-[60] overflow-x-clip ${aberto ? '' : 'pointer-events-none'}`}
     >
       <button
         type="button"

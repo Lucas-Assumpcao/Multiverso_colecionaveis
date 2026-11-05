@@ -165,7 +165,7 @@ function AdminProdutos() {
           <option value="preco">Menor preço</option>
           <option value="estoque">Menor estoque</option>
         </Field>
-        <label className="flex items-center gap-3 self-end rounded-lg border border-borda px-3 py-3 text-sm font-semibold text-chumbo">
+        <label className="flex min-h-11 items-center gap-3 self-end rounded-lg border border-borda px-3 py-2 text-sm font-semibold text-chumbo">
           <input
             type="checkbox"
             checked={soEstoqueBaixo}

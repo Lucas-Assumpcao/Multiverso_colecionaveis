@@ -96,7 +96,7 @@ function Carrinho() {
                 <div className="min-w-0">
                   <Link
                     to={`/produtos/${item.produto_id}`}
-                    className="font-bold text-roxo hover:underline"
+                    className="inline-flex min-h-11 items-center font-bold text-roxo hover:underline"
                   >
                     {item.nome}
                   </Link>

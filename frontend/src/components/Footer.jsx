@@ -30,7 +30,7 @@ function Footer() {
                 </li>
               ))}
             <li><Link className="inline-flex min-h-11 items-center py-2 hover:text-amarelo" to="/meus-pedidos">Meus Pedidos</Link></li>
-            <li><Link className="inline-flex min-h-11 items-center py-2 hover:text-amarelo" to="/login">Login</Link></li>
+            <li><Link className="inline-flex min-h-11 min-w-11 items-center justify-center py-2 hover:text-amarelo" to="/login">Login</Link></li>
           </ul>
         </nav>
 

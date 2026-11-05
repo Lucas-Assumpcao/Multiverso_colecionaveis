@@ -111,7 +111,7 @@ function AdminLayout() {
         {skipLink}
         <header className="border-b border-borda bg-white">
           <Container className="flex items-center justify-between gap-4 py-4">
-            <Link to="/admin" className="font-display font-extrabold text-roxo">MULTIVERSO ADMIN</Link>
+            <Link to="/admin" className="inline-flex min-h-11 items-center font-display font-extrabold text-roxo">MULTIVERSO ADMIN</Link>
             <nav aria-label="Navegação pública">
               <Link to="/" className="inline-flex min-h-11 items-center font-semibold text-roxo underline">
                 Voltar à loja
@@ -131,7 +131,7 @@ function AdminLayout() {
       {skipLink}
       <header className="border-b border-borda bg-white">
         <Container className="flex items-center justify-between gap-4 py-3">
-          <Link to="/admin" className="font-display font-extrabold text-roxo">
+          <Link to="/admin" className="inline-flex min-h-11 items-center font-display font-extrabold text-roxo">
             MULTIVERSO <span className="text-sm font-semibold text-roxo-claro">ADMIN</span>
           </Link>
           <nav aria-label="Atalhos administrativos">
