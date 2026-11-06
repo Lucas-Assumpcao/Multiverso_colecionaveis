@@ -35,11 +35,11 @@ Resumo: 13 implementados, 2 parciais e 3 fora da v1.
 |---|---|---|---|
 | RNF01 | Senha com hash bcrypt | Implementado | `senha_hash` em `cliente` e `usuario_admin`; a API nunca devolve o hash |
 | RNF02 | Resposta da API abaixo de 2 s | **A validar** | Não medido formalmente; as rotas respondem de forma imediata no ambiente local |
-| RNF03 | Layout responsivo, a partir de 360 px | **Parcial** | 16 rotas verificadas a 360 px sem overflow horizontal e sem alvos visíveis menores que 44×44 px nos estados renderizados. Checkout e admin não foram validados com dados reais porque a API estava indisponível; `/pagamento` foi exercitada pelo redirecionamento de proteção. |
+| RNF03 | Layout responsivo, a partir de 360 px | **Parcial** | Validado a 360 px nas telas públicas e nos estados sem dados, sem overflow horizontal ou alvos visíveis menores que 44×44 px. `/endereco`, `/pagamento`, `/confirmacao`, `/meus-pedidos` e as telas do admin foram vistas apenas em estados de redirecionamento ou vazios: a API estava desligada e não houve login. Telas autenticadas com dados reais a validar. |
 | RNF04 | Navegadores modernos | Implementado | Testado no Chrome |
 | RNF05 | Rotina de backup do banco | **Fora da v1** | Hoje o banco é recriável a partir de `create.sql` e `insert.sql`; backup periódico não foi automatizado |
 | RNF06 | Segredos fora do repositório | Implementado | `.env` no `.gitignore` e fora do controle de versão; `.env.example` como modelo |
-| RNF07 | Contraste mínimo AA | **Parcial** | Tokens principais medidos; foco visível e textos secundários/erros auditados. A medição cobre as combinações abaixo, não uma verificação automatizada de todas as telas. |
+| RNF07 | Contraste mínimo AA | **Parcial** | Razões de contraste das combinações de tokens abaixo foram calculadas. São cálculos de cores, não validação visual de todos os estados ou telas autenticadas. |
 
 ## Medição de contraste (RNF07)
 
@@ -61,4 +61,4 @@ O critério AA da WCAG pede 4,5:1 para texto normal e 3:1 para texto grande. Raz
 
 **Ajuste adotado:** texto de erro e selos danger sobre fundo claro usam a variante mais escura `#C42B38`, com texto branco nos selos. A medição confirma 5,60:1 sobre branco; o vermelho original `#E63946` não deve ser usado em texto pequeno sobre fundo claro.
 
-A verificação responsiva mediu as 16 rotas em viewport de 360 px e não encontrou overflow horizontal nem alvos interativos visíveis abaixo de 44×44 px nos estados percorridos. Como a API local não estava ativa, dados reais de conta, checkout e admin não foram testados. A auditoria de contraste mediu as combinações listadas, sem executar uma varredura automatizada completa de todas as telas.
+A verificação responsiva foi feita a 360 px nas telas públicas e nos estados sem dados. As rotas autenticadas `/endereco`, `/pagamento`, `/confirmacao`, `/meus-pedidos` e as telas do admin ficaram limitadas a estados de redirecionamento ou vazios: a API estava desligada e não houve login. Portanto, os resultados não certificam essas telas com dados reais. As razões de contraste acima são cálculos; não foi feita uma varredura automatizada completa das telas.

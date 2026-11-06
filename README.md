@@ -35,6 +35,10 @@ Funcionalidades principais:
 - Checkout em etapas com endereço, revisão e pagamento via Mercado Pago.
 - Painel administrativo para indicadores, produtos e pedidos.
 
+### Escopo de verificação visual
+
+As telas públicas e os estados sem dados foram verificados em viewport de 360 px. Sem a API ativa e sem login, `/endereco`, `/pagamento`, `/confirmacao`, `/meus-pedidos` e as telas do admin foram observadas somente em estados de redirecionamento ou vazios; as telas autenticadas com dados reais permanecem a validar. As razões de contraste registradas em [requisitos-situacao.md](./docs/requisitos-situacao.md) são cálculos das combinações de cores, não uma auditoria completa de todas as telas. Lighthouse não foi executado.
+
 ## Capturas de tela
 
 As capturas serão organizadas em [docs/prints/](./docs/prints/):
