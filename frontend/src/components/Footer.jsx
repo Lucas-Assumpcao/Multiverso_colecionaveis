@@ -19,18 +19,18 @@ function Footer() {
 
         <nav aria-label="Links do rodapé">
           <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-amarelo">Explore</h2>
-          <ul className="space-y-2 text-sm text-white/85">
+          <ul className="space-y-1 text-sm text-white/85">
             {erro
               ? <li>Categorias indisponíveis no momento.</li>
               : categorias.map((categoria) => (
                 <li key={categoria.id}>
-                  <Link className="hover:text-amarelo" to={`/categoria/${categoria.id}`}>
+                  <Link className="inline-flex min-h-11 items-center py-2 hover:text-amarelo" to={`/categoria/${categoria.id}`}>
                     {rotuloCurto(categoria.nome)}
                   </Link>
                 </li>
               ))}
-            <li><Link className="hover:text-amarelo" to="/meus-pedidos">Meus Pedidos</Link></li>
-            <li><Link className="hover:text-amarelo" to="/login">Login</Link></li>
+            <li><Link className="inline-flex min-h-11 items-center py-2 hover:text-amarelo" to="/meus-pedidos">Meus Pedidos</Link></li>
+            <li><Link className="inline-flex min-h-11 min-w-11 items-center justify-center py-2 hover:text-amarelo" to="/login">Login</Link></li>
           </ul>
         </nav>
 

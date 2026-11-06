@@ -65,7 +65,7 @@ function Cadastro() {
         </Button>
       </form>
       <p className="mt-4 text-sm">
-        Já tem conta? <Link to="/login" state={location.state} className="text-roxo underline">Entrar</Link>
+        Já tem conta? <Link to="/login" state={location.state} className="inline-flex min-h-11 min-w-11 items-center justify-center text-roxo underline">Entrar</Link>
       </p>
       </div>
     </Container>

@@ -89,7 +89,7 @@ function CarrinhoDrawer() {
     <div
       aria-hidden={!aberto}
       inert={!aberto}
-      className={`fixed inset-0 z-[60] ${aberto ? '' : 'pointer-events-none'}`}
+      className={`fixed inset-0 z-[60] overflow-x-clip ${aberto ? '' : 'pointer-events-none'}`}
     >
       <button
         type="button"
@@ -119,7 +119,7 @@ function CarrinhoDrawer() {
             type="button"
             aria-label="Fechar carrinho"
             onClick={fechar}
-            className="rounded-full p-2 text-roxo transition-colors hover:bg-lilas/40"
+            className="inline-flex size-11 items-center justify-center rounded-full text-roxo transition-colors hover:bg-lilas/40"
           >
             <X aria-hidden="true" className="size-5" />
           </button>
@@ -147,6 +147,9 @@ function CarrinhoDrawer() {
                       <img
                         src={item.imagem_url}
                         alt=""
+                        width={80}
+                        height={80}
+                        decoding="async"
                         className="size-20 shrink-0 rounded-lg bg-lilas/30 object-contain p-1"
                       />
                     )
@@ -162,7 +165,7 @@ function CarrinhoDrawer() {
                         type="button"
                         aria-label={`Remover ${item.nome} do carrinho`}
                         onClick={() => remover(item.produto_id)}
-                        className="shrink-0 rounded p-1 text-vermelho-escuro transition-colors hover:bg-red-50"
+                        className="inline-flex size-11 shrink-0 items-center justify-center rounded text-vermelho-escuro transition-colors hover:bg-red-50"
                       >
                         <Trash2 aria-hidden="true" className="size-4" />
                       </button>
@@ -175,7 +178,7 @@ function CarrinhoDrawer() {
                           aria-label={`Diminuir quantidade de ${item.nome}`}
                           disabled={item.quantidade <= 1}
                           onClick={() => mudarQuantidade(item, -1)}
-                          className="rounded-l-lg p-2 text-roxo transition-colors hover:bg-lilas/40 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="inline-flex size-11 items-center justify-center rounded-l-lg text-roxo transition-colors hover:bg-lilas/40 disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           <Minus aria-hidden="true" className="size-4" />
                         </button>
@@ -189,7 +192,7 @@ function CarrinhoDrawer() {
                           type="button"
                           aria-label={`Aumentar quantidade de ${item.nome}`}
                           onClick={() => mudarQuantidade(item, 1)}
-                          className="rounded-r-lg p-2 text-roxo transition-colors hover:bg-lilas/40"
+                          className="inline-flex size-11 items-center justify-center rounded-r-lg text-roxo transition-colors hover:bg-lilas/40"
                         >
                           <Plus aria-hidden="true" className="size-4" />
                         </button>

@@ -138,6 +138,10 @@ function Home() {
                 <img
                   src={produtoHero.imagem_url}
                   alt={`Produto em destaque: ${produtoHero.nome}`}
+                  width={800}
+                  height={800}
+                  fetchPriority="high"
+                  decoding="async"
                   className="aspect-square w-full rounded-xl object-contain"
                 />
                 <div className="px-2 pb-2 pt-4 text-roxo">
@@ -162,6 +166,7 @@ function Home() {
 
           {erroCategorias ? (
             <EmptyState
+              headingLevel={3}
               title="Não foi possível carregar a coleção"
               text="Tente novamente em instantes."
               action={<Button onClick={tentarNovamente} variant="secondary">Tentar de novo</Button>}
@@ -174,6 +179,7 @@ function Home() {
             </div>
           ) : categoriasVisiveis.length === 0 ? (
             <EmptyState
+              headingLevel={3}
               title="Novos universos a caminho"
               text="Estamos preparando categorias para você explorar."
             />
@@ -193,7 +199,7 @@ function Home() {
                   >
                     <Icon aria-hidden="true" className="size-9" />
                     <span>
-                      <span className="block text-2xl font-extrabold">{rotuloCurto(categoria.nome)}</span>
+                      <h3 className="text-2xl font-extrabold">{rotuloCurto(categoria.nome)}</h3>
                       <span className="mt-1 block text-sm opacity-90">
                         {erroProdutos
                           ? 'Contagem indisponível'
@@ -214,6 +220,7 @@ function Home() {
           </div>
           {erroProdutos || erroCategorias ? (
             <EmptyState
+              headingLevel={3}
               title="Destaques indisponíveis"
               text="Não foi possível carregar os produtos agora."
               action={<Button onClick={tentarNovamente} variant="secondary">Tentar de novo</Button>}
@@ -224,11 +231,12 @@ function Home() {
             </div>
           ) : produtos.length === 0 ? (
             <EmptyState
+              headingLevel={3}
               title="Nossa coleção está chegando"
               text="Em breve, novos produtos para você descobrir."
             />
           ) : destaques.length === 0 ? (
-            <EmptyState title="Novidades em breve" text="Ainda não há produtos disponíveis para destacar." />
+            <EmptyState headingLevel={3} title="Novidades em breve" text="Ainda não há produtos disponíveis para destacar." />
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
               {destaques.map((produto, indice) => (

@@ -25,6 +25,7 @@ function Confirmacao() {
     return (
       <Container className="py-6 sm:py-10">
         <EmptyState
+          headingLevel={1}
           title={!temToken ? 'Entre na sua conta para consultar seus pedidos' : 'Não encontramos o pedido'}
           text={!pedidoId
             ? 'Não recebemos a referência do pedido. Consulte seus pedidos ou volte à loja.'

@@ -16,7 +16,7 @@ const sizes = {
 };
 
 const baseClassName =
-  'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50';
 
 function Button({
   to,

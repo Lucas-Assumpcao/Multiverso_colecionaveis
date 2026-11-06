@@ -175,7 +175,9 @@ function AdminProdutoForm() {
     return (
       <Container className="py-6 sm:py-10">
         <div className="mx-auto max-w-2xl">
-          <Skeleton className="mb-6 h-9 w-1/2" />
+          <h1 className="mb-6 text-3xl font-extrabold text-roxo">
+            Editar produto
+          </h1>
           <EsqueletoFormulario />
         </div>
       </Container>
@@ -313,8 +315,11 @@ function AdminProdutoForm() {
                       <img
                         src={form.imagem_url}
                         alt={form.nome ? `Pré-visualização de ${form.nome}` : 'Pré-visualização da imagem do produto'}
+                        width={640}
+                        height={640}
+                        decoding="async"
                         onError={() => setImagemFalhou(true)}
-                        className="max-h-64 max-w-full object-contain"
+                        className="aspect-square max-h-64 max-w-full object-contain"
                       />
                     )
                     : (

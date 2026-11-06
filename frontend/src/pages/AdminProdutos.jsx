@@ -165,7 +165,7 @@ function AdminProdutos() {
           <option value="preco">Menor preço</option>
           <option value="estoque">Menor estoque</option>
         </Field>
-        <label className="flex items-center gap-3 self-end rounded-lg border border-borda px-3 py-3 text-sm font-semibold text-chumbo">
+        <label className="flex min-h-11 items-center gap-3 self-end rounded-lg border border-borda px-3 py-2 text-sm font-semibold text-chumbo">
           <input
             type="checkbox"
             checked={soEstoqueBaixo}
@@ -215,7 +215,16 @@ function AdminProdutos() {
                 <article key={produto.id} className="rounded-card border border-borda bg-white p-4 shadow-card">
                   <div className="flex gap-3">
                     {produto.imagem_url
-                      ? <img src={produto.imagem_url} alt="" className="size-16 shrink-0 rounded-lg bg-lilas/30 object-contain p-1" />
+                      ? (
+                        <img
+                          src={produto.imagem_url}
+                          alt=""
+                          width={64}
+                          height={64}
+                          decoding="async"
+                          className="size-16 shrink-0 rounded-lg bg-lilas/30 object-contain p-1"
+                        />
+                      )
                       : <div className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-lilas/30"><ImageOff aria-hidden="true" className="size-6 text-roxo-claro" /></div>}
                     <div className="min-w-0 flex-1">
                       <h2 className="font-bold text-roxo">{produto.nome}</h2>
@@ -227,8 +236,8 @@ function AdminProdutos() {
                     </div>
                   </div>
                   <div className="mt-4 flex justify-end gap-4 border-t border-borda pt-3">
-                    <Link to={`/admin/produtos/form?id=${produto.id}`} className="font-semibold text-roxo underline">Editar</Link>
-                    <button type="button" onClick={() => setProdutoRemocao(produto)} className="font-semibold text-vermelho-escuro underline">
+                    <Link to={`/admin/produtos/form?id=${produto.id}`} className="inline-flex min-h-11 items-center font-semibold text-roxo underline">Editar</Link>
+                    <button type="button" onClick={() => setProdutoRemocao(produto)} className="min-h-11 font-semibold text-vermelho-escuro underline">
                       Remover
                     </button>
                   </div>
@@ -258,7 +267,16 @@ function AdminProdutos() {
                         <th scope="row" className="px-4 py-3 font-semibold text-chumbo">
                           <div className="flex items-center gap-3">
                             {produto.imagem_url
-                              ? <img src={produto.imagem_url} alt="" className="size-12 rounded-lg bg-lilas/30 object-contain p-1" />
+                              ? (
+                                <img
+                                  src={produto.imagem_url}
+                                  alt=""
+                                  width={48}
+                                  height={48}
+                                  decoding="async"
+                                  className="size-12 rounded-lg bg-lilas/30 object-contain p-1"
+                                />
+                              )
                               : <div className="flex size-12 items-center justify-center rounded-lg bg-lilas/30"><ImageOff aria-hidden="true" className="size-5 text-roxo-claro" /></div>}
                             <span>{produto.nome}</span>
                           </div>
@@ -270,8 +288,8 @@ function AdminProdutos() {
                         <td className="px-4 py-3"><Badge variant={estoque.variant}>{estoque.label}</Badge></td>
                         <td className="px-4 py-3">
                           <div className="flex gap-3">
-                            <Link to={`/admin/produtos/form?id=${produto.id}`} className="font-semibold text-roxo underline">Editar</Link>
-                            <button type="button" onClick={() => setProdutoRemocao(produto)} className="font-semibold text-vermelho-escuro underline">
+                            <Link to={`/admin/produtos/form?id=${produto.id}`} className="inline-flex min-h-11 items-center font-semibold text-roxo underline">Editar</Link>
+                            <button type="button" onClick={() => setProdutoRemocao(produto)} className="min-h-11 font-semibold text-vermelho-escuro underline">
                               Remover
                             </button>
                           </div>

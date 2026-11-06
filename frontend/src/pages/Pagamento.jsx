@@ -86,6 +86,9 @@ function Pagamento() {
                         <img
                           src={item.imagem_url}
                           alt=""
+                          width={64}
+                          height={64}
+                          decoding="async"
                           className="size-16 shrink-0 rounded-lg bg-lilas/30 object-contain p-1"
                         />
                       )

@@ -168,7 +168,7 @@ function AdminPedidos() {
             type="button"
             aria-pressed={filtroStatus === 'todos'}
             onClick={() => setFiltroStatus('todos')}
-            className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold ${
+            className={`inline-flex min-h-11 shrink-0 items-center rounded-full border px-4 py-2 text-sm font-semibold ${
               filtroStatus === 'todos' ? 'border-roxo bg-roxo text-white' : 'border-borda bg-white text-roxo'
             }`}
           >
@@ -180,7 +180,7 @@ function AdminPedidos() {
               key={status.value}
               aria-pressed={filtroStatus === status.value}
               onClick={() => setFiltroStatus(status.value)}
-              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold ${
+              className={`inline-flex min-h-11 shrink-0 items-center rounded-full border px-4 py-2 text-sm font-semibold ${
                 filtroStatus === status.value ? 'border-roxo bg-roxo text-white' : 'border-borda bg-white text-roxo'
               }`}
             >

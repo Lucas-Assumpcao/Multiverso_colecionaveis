@@ -109,6 +109,16 @@ function AdminLayout() {
     return (
       <>
         {skipLink}
+        <header className="border-b border-borda bg-white">
+          <Container className="flex items-center justify-between gap-4 py-4">
+            <Link to="/admin" className="inline-flex min-h-11 items-center font-display font-extrabold text-roxo">MULTIVERSO ADMIN</Link>
+            <nav aria-label="Navegação pública">
+              <Link to="/" className="inline-flex min-h-11 items-center font-semibold text-roxo underline">
+                Voltar à loja
+              </Link>
+            </nav>
+          </Container>
+        </header>
         <main id="conteudo-admin" tabIndex="-1">
           <AdminLogin onLogin={() => setToken(localStorage.getItem('adminToken'))} />
         </main>
@@ -119,6 +129,18 @@ function AdminLayout() {
   return (
     <div className="min-h-[70vh] bg-[#F8F7FB]">
       {skipLink}
+      <header className="border-b border-borda bg-white">
+        <Container className="flex items-center justify-between gap-4 py-3">
+          <Link to="/admin" className="inline-flex min-h-11 items-center font-display font-extrabold text-roxo">
+            MULTIVERSO <span className="text-sm font-semibold text-roxo-claro">ADMIN</span>
+          </Link>
+          <nav aria-label="Atalhos administrativos">
+            <Link to="/" className="inline-flex min-h-11 items-center font-semibold text-roxo underline">
+              Ver loja
+            </Link>
+          </nav>
+        </Container>
+      </header>
       <div className="border-b border-borda bg-white lg:hidden">
         <Container className="py-3">
           <nav aria-label="Navegação administrativa" className="flex flex-wrap items-center justify-center gap-2">
@@ -127,17 +149,17 @@ function AdminLayout() {
                 key={link.to}
                 to={link.to}
                 end={link.end}
-                className={({ isActive }) => `rounded-lg px-3 py-2 text-sm font-semibold ${
+                className={({ isActive }) => `inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold ${
                   isActive ? 'bg-roxo text-white' : 'text-roxo hover:bg-lilas/40'
                 }`}
               >
                 {link.label}
               </NavLink>
             ))}
-            <Link to="/" className="rounded-lg px-3 py-2 text-sm font-semibold text-roxo hover:bg-lilas/40">
+            <Link to="/" className="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-roxo hover:bg-lilas/40">
               Ver loja
             </Link>
-            <button type="button" onClick={sair} className="rounded-lg px-3 py-2 text-sm font-semibold text-vermelho-escuro hover:bg-red-50">
+            <button type="button" onClick={sair} className="min-h-11 rounded-lg px-3 py-2 text-sm font-semibold text-vermelho-escuro hover:bg-red-50">
               Sair
             </button>
           </nav>
@@ -156,7 +178,7 @@ function AdminLayout() {
                 key={link.to}
                 to={link.to}
                 end={link.end}
-                className={({ isActive }) => `rounded-lg px-4 py-3 font-semibold ${
+                className={({ isActive }) => `inline-flex min-h-11 items-center rounded-lg px-4 py-3 font-semibold ${
                   isActive ? 'bg-roxo text-white' : 'text-chumbo hover:bg-lilas/40'
                 }`}
               >

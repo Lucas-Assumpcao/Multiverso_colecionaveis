@@ -44,6 +44,7 @@ function Carrinho() {
     return (
       <Container className="py-6 sm:py-10">
         <EmptyState
+          headingLevel={1}
           title="Sua coleção ainda está vazia"
           text="Encontre seus próximos colecionáveis favoritos e comece a montar sua coleção."
           action={<Button to="/">Explorar a loja</Button>}
@@ -86,6 +87,9 @@ function Carrinho() {
                       <img
                         src={item.imagem_url}
                         alt={item.nome}
+                        width={96}
+                        height={96}
+                        decoding="async"
                         className="size-full rounded-xl object-contain p-2"
                       />
                     )
@@ -95,7 +99,7 @@ function Carrinho() {
                 <div className="min-w-0">
                   <Link
                     to={`/produtos/${item.produto_id}`}
-                    className="font-bold text-roxo hover:underline"
+                    className="inline-flex min-h-11 items-center font-bold text-roxo hover:underline"
                   >
                     {item.nome}
                   </Link>
@@ -119,7 +123,7 @@ function Carrinho() {
                       aria-label={`Diminuir quantidade de ${item.nome}`}
                       disabled={item.quantidade <= 1}
                       onClick={() => mudarQuantidade(item, -1)}
-                      className="rounded-l-lg p-2 text-roxo hover:bg-lilas/30 disabled:opacity-40"
+                      className="inline-flex size-11 items-center justify-center rounded-l-lg text-roxo hover:bg-lilas/30 disabled:opacity-40"
                     >
                       <Minus aria-hidden="true" className="size-4" />
                     </button>
@@ -135,7 +139,7 @@ function Carrinho() {
                       aria-label={`Aumentar quantidade de ${item.nome}`}
                       disabled={atingiuEstoque}
                       onClick={() => mudarQuantidade(item, 1)}
-                      className="rounded-r-lg p-2 text-roxo hover:bg-lilas/30 disabled:opacity-40"
+                      className="inline-flex size-11 items-center justify-center rounded-r-lg text-roxo hover:bg-lilas/30 disabled:opacity-40"
                     >
                       <Plus aria-hidden="true" className="size-4" />
                     </button>
@@ -144,7 +148,7 @@ function Carrinho() {
                     type="button"
                     aria-label={`Remover ${item.nome} do carrinho`}
                     onClick={() => remover(item.produto_id)}
-                    className="rounded-lg p-2 text-vermelho-escuro transition-colors hover:bg-red-50"
+                    className="inline-flex size-11 items-center justify-center rounded-lg text-vermelho-escuro transition-colors hover:bg-red-50"
                   >
                     <Trash2 aria-hidden="true" className="size-5" />
                   </button>

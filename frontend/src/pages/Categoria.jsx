@@ -43,6 +43,7 @@ function Categoria() {
     return (
       <Container className="py-6 sm:py-10">
         <EmptyState
+          headingLevel={1}
           title="Categoria não encontrada"
           text="Confira outras categorias e encontre seu próximo colecionável."
           action={<Button to="/" variant="secondary">Voltar para o início</Button>}
@@ -54,7 +55,7 @@ function Categoria() {
   return (
     <Container className="py-6 sm:py-10">
       <nav aria-label="Trilha de navegação" className="mb-4 text-sm text-suave">
-        <Link to="/" className="text-roxo underline">Início</Link>
+        <Link to="/" className="inline-flex min-h-11 min-w-11 items-center justify-center text-roxo underline">Início</Link>
         <span aria-hidden="true" className="mx-2">/</span>
         <span aria-current="page">
           {categoria ? rotuloCurto(categoria.nome) : 'Carregando categoria'}

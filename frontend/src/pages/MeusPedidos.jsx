@@ -264,7 +264,7 @@ function MeusPedidos() {
           </ul>
         )}
 
-        <Link to="/" className="mt-6 inline-block font-semibold text-roxo underline">
+        <Link to="/" className="mt-6 inline-flex min-h-11 items-center font-semibold text-roxo underline">
           Voltar à loja
         </Link>
       </div>

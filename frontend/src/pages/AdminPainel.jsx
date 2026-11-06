@@ -122,6 +122,7 @@ function AdminPainel() {
     return (
       <Container className="py-6 sm:py-10">
         <EmptyState
+          headingLevel={1}
           title="Não foi possível carregar o painel"
           text={erro.message || 'Tente novamente em instantes.'}
           action={<Button onClick={carregar}>Tentar de novo</Button>}
