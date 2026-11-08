@@ -1,89 +1,83 @@
-const { Categoria, Pedido, Produto } = require('./documentos');
-const { proximoId } = require('./contadorModel');
+const { pool } = require('../config/db');
 const ErroDeNegocio = require('../utils/ErroDeNegocio');
-const { idNumerico, serializar } = require('./mongoUtils');
+
+function idPositivo(valor) {
+  const id = Number(valor);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
+}
 
 async function listarTodos() {
-  const produtos = await Produto.find().sort({ id: 1 }).lean();
-  return produtos.map(serializar);
+  const [linhas] = await pool.query('SELECT * FROM produto ORDER BY id');
+  return linhas;
 }
 
 async function buscarPorId(id) {
-  const produtoId = idNumerico(id);
-  if (produtoId === null) return null;
-
-  return serializar(await Produto.findOne({ id: produtoId }).lean());
+  const produtoId = idPositivo(id);
+  if (!produtoId) return null;
+  const [linhas] = await pool.query('SELECT * FROM produto WHERE id = ?', [produtoId]);
+  return linhas[0] || null;
 }
 
 async function listarCategoria(categoriaId) {
-  const id = idNumerico(categoriaId);
-  if (id === null) return [];
-
-  const produtos = await Produto.find({ categoria_id: id }).sort({ id: 1 }).lean();
-  return produtos.map(serializar);
+  const id = idPositivo(categoriaId);
+  if (!id) return [];
+  const [linhas] = await pool.query('SELECT * FROM produto WHERE categoria_id = ? ORDER BY id', [id]);
+  return linhas;
 }
 
 async function buscarPorNome(nome) {
-  const produtos = await Produto.find({
-    nome: { $regex: escaparRegex(nome), $options: 'i' },
-  }).sort({ id: 1 }).lean();
-  return produtos.map(serializar);
+  const [linhas] = await pool.query(
+    'SELECT * FROM produto WHERE nome LIKE ? ORDER BY id',
+    [`%${String(nome).trim()}%`]
+  );
+  return linhas;
 }
 
 async function inserir(produto) {
-  const categoriaId = idNumerico(produto.categoria_id);
-  if (categoriaId === null || !await Categoria.exists({ id: categoriaId })) {
-    throw new ErroDeNegocio('Categoria não encontrada', 404);
-  }
+  const categoriaId = idPositivo(produto.categoria_id);
+  if (!categoriaId) throw new ErroDeNegocio('Categoria não encontrada', 404);
+  const [categorias] = await pool.query('SELECT id FROM categoria WHERE id = ?', [categoriaId]);
+  if (!categorias.length) throw new ErroDeNegocio('Categoria não encontrada', 404);
 
-  const novoProduto = await Produto.create({
-    categoria_id: categoriaId,
-    nome: produto.nome,
-    descricao: produto.descricao ?? null,
-    preco: produto.preco,
-    estoque: produto.estoque,
-    imagem_url: produto.imagem_url || null,
-    id: await proximoId('produtos'),
-  });
-  return novoProduto.id;
+  const { nome, descricao, preco, estoque, imagem_url } = produto;
+  const [resultado] = await pool.query(
+    `INSERT INTO produto (categoria_id, nome, descricao, preco, estoque, imagem_url)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [categoriaId, nome, descricao || null, preco, estoque, imagem_url || null]
+  );
+  return resultado.insertId;
 }
 
 async function atualizar(id, produto) {
-  const produtoId = idNumerico(id);
-  const categoriaId = idNumerico(produto.categoria_id);
-  if (categoriaId === null || !await Categoria.exists({ id: categoriaId })) {
-    throw new ErroDeNegocio('Categoria não encontrada', 404);
-  }
-  if (produtoId === null) return null;
+  const produtoId = idPositivo(id);
+  if (!produtoId) return null;
 
-  const dadosAtualizados = await Produto.findOneAndUpdate(
-    { id: produtoId },
-    {
-      categoria_id: categoriaId,
-      nome: produto.nome,
-      descricao: produto.descricao ?? null,
-      preco: produto.preco,
-      estoque: produto.estoque,
-      imagem_url: produto.imagem_url || null,
-    },
-    { new: true, runValidators: true }
-  ).lean();
-  return serializar(dadosAtualizados);
+  const categoriaId = idPositivo(produto.categoria_id);
+  if (!categoriaId) throw new ErroDeNegocio('Categoria não encontrada', 404);
+  const [categorias] = await pool.query('SELECT id FROM categoria WHERE id = ?', [categoriaId]);
+  if (!categorias.length) throw new ErroDeNegocio('Categoria não encontrada', 404);
+
+  const { nome, descricao, preco, estoque, imagem_url } = produto;
+  const [resultado] = await pool.query(
+    `UPDATE produto
+     SET categoria_id = ?, nome = ?, descricao = ?, preco = ?, estoque = ?, imagem_url = ?
+     WHERE id = ?`,
+    [categoriaId, nome, descricao || null, preco, estoque, imagem_url || null, produtoId]
+  );
+  return resultado.affectedRows;
 }
 
 async function remover(id) {
-  const produtoId = idNumerico(id);
-  if (produtoId === null) return null;
+  const produtoId = idPositivo(id);
+  if (!produtoId) return null;
 
-  if (await Pedido.exists({ 'itens.produto_id': produtoId })) {
+  const [itens] = await pool.query('SELECT id FROM item_pedido WHERE produto_id = ? LIMIT 1', [produtoId]);
+  if (itens.length) {
     throw new ErroDeNegocio('Produto vinculado a pedido e não pode ser removido', 409);
   }
 
-  return serializar(await Produto.findOneAndDelete({ id: produtoId }).lean());
-}
-
-function escaparRegex(texto) {
-  return String(texto).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const [resultado] = await pool.query('DELETE FROM produto WHERE id = ?', [produtoId]);
+  return resultado.affectedRows;
 }
 
 module.exports = { listarTodos, buscarPorId, listarCategoria, buscarPorNome, inserir, atualizar, remover };

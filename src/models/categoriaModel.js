@@ -1,16 +1,16 @@
-const { Categoria } = require('./documentos');
-const { idNumerico, serializar } = require('./mongoUtils');
+const { pool } = require('../config/db');
 
 async function listarTodos() {
-  const categorias = await Categoria.find().sort({ id: 1 }).lean();
-  return categorias.map(serializar);
+  const [linhas] = await pool.query('SELECT id, nome FROM categoria ORDER BY id');
+  return linhas;
 }
 
 async function buscarPorId(id) {
-  const categoriaId = idNumerico(id);
-  if (categoriaId === null) return null;
+  const categoriaId = Number(id);
+  if (!Number.isSafeInteger(categoriaId) || categoriaId < 1) return null;
 
-  return serializar(await Categoria.findOne({ id: categoriaId }).lean());
+  const [linhas] = await pool.query('SELECT id, nome FROM categoria WHERE id = ?', [categoriaId]);
+  return linhas[0] || null;
 }
 
 module.exports = { listarTodos, buscarPorId };

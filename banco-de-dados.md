@@ -1,46 +1,42 @@
 # Banco de dados — Multiverso Colecionáveis
 
-SGBD: **MongoDB**, acessado pela aplicação com **Mongoose**. A URI fica em `MONGODB_URI`; os esquemas e coleções são declarados em `src/models/documentos.js`.
+O projeto usa MySQL 8+ ou MariaDB, acessado pelo driver `mysql2`. O schema está em `create.sql`; os dados de catálogo de demonstração estão em `insert.sql`. As tabelas usam InnoDB para que a criação do pedido e a baixa de estoque possam ser feitas na mesma transação.
 
-O banco usa as coleções `clientes`, `enderecos`, `categorias`, `produtos`, `usuarios_admin`, `pedidos`, `pagamentos` e `contadores`. Os IDs de domínio são numéricos e gerados por contador, preservando o formato usado pela API e pelo frontend. O `_id` interno do MongoDB não é exposto pela API.
+## Tabelas
 
-## Documentos e relacionamentos
-
-| Coleção | Conteúdo e referências |
+| Tabela | Conteúdo e relações |
 |---|---|
-| `clientes` | Nome, e-mail único, hash da senha, CPF opcional e data de cadastro. |
-| `enderecos` | Dados de entrega e `cliente_id` numérico. |
-| `categorias` | Nome único da categoria. |
-| `produtos` | `categoria_id`, nome, descrição, preço, estoque e URL da imagem. |
-| `usuarios_admin` | Credenciais administrativas, com e-mail único e hash da senha. |
-| `pedidos` | `cliente_id`, `endereco_id`, data, status, frete, total e array embutido de itens. |
-| `pagamentos` | Tentativas associadas a um pedido por `pedido_id`. |
-| `contadores` | Sequências atômicas usadas para emitir os IDs numéricos. |
+| `cliente` | Dados do cliente, e-mail único, hash da senha e data de cadastro. |
+| `endereco` | Endereços de entrega; cada endereço referencia um cliente. |
+| `categoria` | Categorias de produtos, com nome único. |
+| `produto` | Produtos, categoria, preço `DECIMAL(10,2)`, estoque e caminho da imagem. |
+| `usuario_admin` | Conta administrativa e hash da senha. |
+| `pedido` | Cliente, endereço, status, frete, total e data do pedido. |
+| `item_pedido` | Produtos do pedido, quantidade e preço unitário no momento da compra. |
+| `pagamento` | Tentativa de pagamento, método, status e identificador da transação. |
 
-Cada item embutido no pedido guarda `produto_id`, nome, quantidade e `preco_unitario` praticado na compra. Assim, o histórico continua legível mesmo se o cadastro do produto mudar. A aplicação impede remover produtos que já aparecem em pedidos.
-
-As relações entre coleções usam IDs numéricos, não chaves estrangeiras do banco. A aplicação valida a posse do endereço, a existência da categoria e a existência do produto nos fluxos correspondentes.
+Os IDs são inteiros auto incrementais. Chaves estrangeiras representam as relações entre tabelas. Valores monetários usam `DECIMAL`, não ponto flutuante.
 
 ## Pedido e estoque
 
-Criar pedido e baixar o estoque acontece dentro de uma transação MongoDB. O estoque é decrementado por atualização condicional (`estoque >= quantidade`); qualquer falha desfaz as alterações. Por esse motivo, a instância MongoDB deve ser um **replica set** (inclusive em desenvolvimento local) ou MongoDB Atlas. Uma instância standalone não suporta esse fluxo transacional.
+A API valida os dados do pedido e confere a posse do endereço e o estoque. Em seguida, dentro de uma transação InnoDB, grava o pedido e os itens e decrementa o estoque com uma condição (`estoque >= quantidade`). Se qualquer etapa falhar, a transação é desfeita.
 
-## Configuração e dados de demonstração
+## Configuração local
 
-Configure `MONGODB_URI` no `.env`, por exemplo:
+Configure no `.env` as variáveis de conexão. Para um MySQL/MariaDB local, o exemplo usual é:
 
 ```env
-MONGODB_URI=mongodb://127.0.0.1:27017/multiverso_colecionaveis?replicaSet=rs0
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=sua_senha
+DB_NAME=multiverso_colecionaveis
 ```
 
-Após configurar uma instância com suporte a transações, carregue os dados de demonstração com:
+No DBeaver, conecte ao servidor e execute `create.sql`; depois execute `insert.sql` para carregar o catálogo de demonstração. Execute também `npm run seed` depois de configurar o `.env`: ele garante as categorias e produtos e cria o administrador configurado por `ADMIN_EMAIL` e `ADMIN_SENHA` quando ainda não existe.
 
-```bash
-npm run seed
-```
+## Publicação
 
-O seed idempotente cria as três categorias, os produtos de exemplo e uma conta administrativa se ainda não existirem. A conta usa `ADMIN_EMAIL` e `ADMIN_SENHA`; os padrões de demonstração são `admin@multiversocolecionaveis.com.br` e `admin123`. Configure uma senha própria antes de usar em qualquer ambiente compartilhado.
+Em produção, o banco deve estar em um serviço acessível pela API hospedada. A API publicada na Vercel não consegue conectar ao banco local do computador do SENAI. Configure as credenciais no ambiente da hospedagem, habilite SSL conforme o provedor (`DB_SSL=true`) e escolha um limite de conexões compatível com o serviço. Não use credenciais locais ou de demonstração em produção.
 
-## Migração do banco anterior
-
-Os arquivos `create.sql`, `insert.sql`, `tests/limpar-testes.sql` e `docs/migracoes/*.sql` são scripts MySQL legados e **não** devem ser executados para configurar esta versão. O `npm run seed` carrega apenas os dados de demonstração no MongoDB; não importa automaticamente dados de uma instância MySQL existente. Preserve e migre os dados antigos separadamente antes de desativar o banco anterior.
+Esta versão da aplicação não lê nem migra dados do MongoDB usado anteriormente. O banco MongoDB existente não é apagado por esta mudança; pedidos e contas que estejam somente nele precisarão de uma migração de dados separada se forem necessários no MySQL/MariaDB.

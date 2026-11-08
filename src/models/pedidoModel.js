@@ -1,91 +1,93 @@
-const { mongoose } = require('../config/db');
-const { Cliente, Pedido, Produto } = require('./documentos');
-const { proximoId } = require('./contadorModel');
+const { pool } = require('../config/db');
 const ErroDeNegocio = require('../utils/ErroDeNegocio');
-const { idNumerico, serializar } = require('./mongoUtils');
+
+function idPositivo(valor) {
+  const id = Number(valor);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
+}
 
 async function criar(pedido, itens) {
-  const sessao = await mongoose.startSession();
-  let pedidoId;
-
+  const conexao = await pool.getConnection();
   try {
-    await sessao.withTransaction(async () => {
-      const itensDoPedido = [];
+    await conexao.beginTransaction();
+    const [resultadoPedido] = await conexao.query(
+      `INSERT INTO pedido (cliente_id, endereco_id, status, valor_frete, valor_total)
+       VALUES (?, ?, 'aguardando_pagamento', ?, ?)`,
+      [pedido.cliente_id, pedido.endereco_id, pedido.valor_frete, pedido.valor_total]
+    );
+    const pedidoId = resultadoPedido.insertId;
 
-      for (const item of itens) {
-        const produto = await Produto.findOneAndUpdate(
-          { id: item.produto_id, estoque: { $gte: item.quantidade } },
-          { $inc: { estoque: -item.quantidade } },
-          { new: true, session: sessao }
-        );
-
-        if (!produto) {
-          throw new ErroDeNegocio('Estoque insuficiente', 409);
-        }
-
-        itensDoPedido.push({
-          produto_id: produto.id,
-          nome: produto.nome,
-          quantidade: item.quantidade,
-          preco_unitario: item.preco_unitario,
-        });
+    for (const item of itens) {
+      const [resultadoEstoque] = await conexao.query(
+        'UPDATE produto SET estoque = estoque - ? WHERE id = ? AND estoque >= ?',
+        [item.quantidade, item.produto_id, item.quantidade]
+      );
+      if (resultadoEstoque.affectedRows !== 1) {
+        throw new ErroDeNegocio('Estoque insuficiente', 409);
       }
+      await conexao.query(
+        `INSERT INTO item_pedido (pedido_id, produto_id, quantidade, preco_unitario)
+         VALUES (?, ?, ?, ?)`,
+        [pedidoId, item.produto_id, item.quantidade, item.preco_unitario]
+      );
+    }
 
-      pedidoId = await proximoId('pedidos');
-      const novoPedido = new Pedido({
-        ...pedido,
-        id: pedidoId,
-        itens: itensDoPedido,
-      });
-      await novoPedido.save({ session: sessao });
-    });
-
+    await conexao.commit();
     return pedidoId;
+  } catch (erro) {
+    await conexao.rollback();
+    throw erro;
   } finally {
-    await sessao.endSession();
+    conexao.release();
   }
 }
 
 async function listarPorCliente(clienteId) {
-  const id = idNumerico(clienteId);
-  if (id === null) return [];
-
-  const pedidos = await Pedido.find({ cliente_id: id }).sort({ data_pedido: -1 }).lean();
-  return pedidos.map(serializar);
+  const id = idPositivo(clienteId);
+  if (!id) return [];
+  const [linhas] = await pool.query(
+    'SELECT * FROM pedido WHERE cliente_id = ? ORDER BY data_pedido DESC',
+    [id]
+  );
+  return linhas;
 }
 
-async function buscarPorId(id, clienteId) {
-  const pedidoId = idNumerico(id);
-  const donoId = idNumerico(clienteId);
-  if (pedidoId === null || donoId === null) return null;
+async function buscarPorId(pedidoId, clienteId) {
+  const id = idPositivo(pedidoId);
+  const donoId = idPositivo(clienteId);
+  if (!id || !donoId) return null;
 
-  return serializar(await Pedido.findOne({
-    id: pedidoId,
-    cliente_id: donoId,
-  }).lean());
+  const [pedidos] = await pool.query(
+    'SELECT * FROM pedido WHERE id = ? AND cliente_id = ?',
+    [id, donoId]
+  );
+  if (!pedidos.length) return null;
+
+  const [itens] = await pool.query(
+    `SELECT ip.produto_id, ip.quantidade, ip.preco_unitario, p.nome
+     FROM item_pedido ip
+     JOIN produto p ON p.id = ip.produto_id
+     WHERE ip.pedido_id = ? ORDER BY ip.id`,
+    [id]
+  );
+  return { ...pedidos[0], itens };
 }
 
 async function listarTodos() {
-  const pedidos = await Pedido.find().sort({ data_pedido: -1 }).lean();
-  const clientesIds = [...new Set(pedidos.map((pedido) => pedido.cliente_id))];
-  const clientes = await Cliente.find({ id: { $in: clientesIds } }).select({ id: 1, nome: 1 }).lean();
-  const nomesPorId = new Map(clientes.map((cliente) => [cliente.id, cliente.nome]));
-
-  return pedidos.map((pedido) => ({
-    ...serializar(pedido),
-    cliente_nome: nomesPorId.get(pedido.cliente_id) || null,
-  }));
+  const [linhas] = await pool.query(
+    `SELECT p.*, c.nome AS cliente_nome
+     FROM pedido p
+     JOIN cliente c ON c.id = p.cliente_id
+     ORDER BY p.data_pedido DESC`
+  );
+  return linhas;
 }
 
 async function atualizarStatus(id, status) {
-  const pedidoId = idNumerico(id);
-  if (pedidoId === null) return null;
-
-  return serializar(await Pedido.findOneAndUpdate(
-    { id: pedidoId },
-    { status },
-    { new: true, runValidators: true }
-  ).lean());
+  const pedidoId = idPositivo(id);
+  if (!pedidoId) return null;
+  const [resultado] = await pool.query('UPDATE pedido SET status = ? WHERE id = ?', [status, pedidoId]);
+  return resultado.affectedRows;
 }
 
 module.exports = { criar, listarPorCliente, buscarPorId, listarTodos, atualizarStatus };

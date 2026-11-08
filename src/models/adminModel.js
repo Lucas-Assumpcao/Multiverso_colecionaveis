@@ -1,10 +1,11 @@
-const { UsuarioAdmin } = require('./documentos');
-const { serializar } = require('./mongoUtils');
+const { pool } = require('../config/db');
 
 async function buscarPorEmail(email) {
-  return serializar(await UsuarioAdmin.findOne({
-    email: String(email).trim().toLowerCase(),
-  }).lean());
+  const [linhas] = await pool.query(
+    'SELECT * FROM usuario_admin WHERE email = ?',
+    [String(email).trim().toLowerCase()]
+  );
+  return linhas[0] || null;
 }
 
 module.exports = { buscarPorEmail };

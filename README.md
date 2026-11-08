@@ -21,7 +21,7 @@ Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — n
 
 ## Stack
 
-**Back-end:** Node.js, Express, MongoDB, Mongoose, bcrypt, jsonwebtoken, Mercado Pago SDK, cors, dotenv
+**Back-end:** Node.js, Express, MySQL/MariaDB (`mysql2`), bcrypt, jsonwebtoken, Mercado Pago SDK, cors, dotenv
 
 ## Front-end
 
@@ -82,15 +82,15 @@ Multiverso_colecionaveis/
 │       ├── context/              → estado global (carrinho)
 │       └── services/             → chamadas à API
 ├── docs/                      → materiais auxiliares e migrações
-│   ├── migracoes/              → scripts SQL legados (não usados pela aplicação)
-│   ├── atualizar-imagens.sql   → script SQL legado
+│   ├── migracoes/              → scripts SQL de ajuste do schema e catálogo
+│   ├── atualizar-imagens.sql   → atualização de caminhos das imagens
 │   ├── requisitos-situacao.md  → situação dos requisitos
 │   └── prints/                 → capturas de tela do front-end
 ├── tests/                     → testes automatizados
 │   ├── api.test.js
-│   └── limpar-testes.sql      → script SQL legado
-├── create.sql                 → schema MySQL legado
-├── insert.sql                 → dados MySQL legados
+│   └── limpar-testes.sql      → limpeza manual dos registros de smoke test
+├── create.sql                 → schema MySQL/MariaDB
+├── insert.sql                 → dados iniciais de demonstração
 ├── planilha-testes.xlsx       → planilha de testes
 ├── briefing.md                → visão do projeto
 ├── api.md                     → documentação da API
@@ -107,7 +107,7 @@ Multiverso_colecionaveis/
 
 ## Modelo de dados
 
-O banco MongoDB usa as coleções `clientes`, `enderecos`, `categorias`, `produtos`, `pedidos`, `pagamentos`, `usuarios_admin` e `contadores`. Os itens e o preço histórico ficam embutidos no documento de pedido. A API mantém IDs numéricos para preservar o contrato atual com o frontend.
+O banco relacional usa as tabelas `cliente`, `endereco`, `categoria`, `produto`, `pedido`, `item_pedido`, `pagamento` e `usuario_admin`. Cada item guarda o preço unitário praticado na compra. Os scripts `create.sql` e `insert.sql` preparam o esquema e os dados de exemplo.
 
 ## Rotas principais
 
@@ -131,15 +131,11 @@ O banco MongoDB usa as coleções `clientes`, `enderecos`, `categorias`, `produt
 
 ### Pré-requisitos
 
-Node.js e MongoDB configurado como replica set (ou MongoDB Atlas). As transações usadas ao criar pedidos exigem replica set.
+Node.js 20 ou superior, npm e MySQL 8+ ou MariaDB com InnoDB. Para executar pedidos, o usuário do banco precisa de permissão para ler e gravar nas tabelas do projeto.
 
 ### Banco de dados
 
-Configure `MONGODB_URI` no `.env` antes de iniciar. Para MongoDB local, o URI de exemplo usa `replicaSet=rs0`; configure e inicialize esse replica set antes de executar o seed.
-
-```bash
-npm run seed
-```
+Crie o schema e carregue o catálogo pelo DBeaver: abra e execute `create.sql` primeiro e `insert.sql` em seguida. Depois execute `npm run seed` para criar o administrador configurado no `.env.example` e garantir as categorias e produtos de demonstração. O seed pode ser executado novamente sem duplicar esses registros.
 
 ### API
 
@@ -147,20 +143,29 @@ npm run seed
 npm install
 ```
 
-Cria um `.env` na raiz (modelo em `.env.example`):
+Copie `.env.example` para `.env` e informe a conexão do MySQL/MariaDB. Nunca envie o `.env` ao Git.
+
+Exemplo para serviço local:
 
 ```env
-MONGODB_URI=mongodb://127.0.0.1:27017/multiverso_colecionaveis?replicaSet=rs0
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=sua_senha_local
+DB_NAME=multiverso_colecionaveis
 PORT=3000
 JWT_SECRET=uma_frase_longa_e_aleatoria
 MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
 ADMIN_EMAIL=admin@multiversocolecionaveis.com.br
 ADMIN_SENHA=admin123
+FRONTEND_URL=http://localhost:5173
+CORS_ORIGINS=http://localhost:5173
 ```
 
 ```bash
-npm run dev
-npm start
+npm run seed # cria o administrador e garante os dados iniciais
+npm run dev  # desenvolvimento
+# npm start  # produção
 ```
 
 ### Front-end
@@ -171,7 +176,11 @@ npm install
 npm run dev
 ```
 
-Front em `http://localhost:5173`, API em `http://localhost:3000`.
+Front em `http://localhost:5173`, API em `http://localhost:3000` e banco MySQL/MariaDB em `localhost:3306` (ou nas portas configuradas no serviço).
+
+### Publicação na Vercel
+
+O front-end e a API podem ser publicados como projetos separados ligados ao mesmo repositório, com `frontend/` como diretório raiz do front e a raiz do repositório para a API Express. Configure as variáveis da API no projeto do back-end (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL`, `JWT_SECRET`, `MP_ACCESS_TOKEN`, `FRONTEND_URL` e `CORS_ORIGINS`) e `VITE_API_URL` no projeto do front-end. O banco precisa estar hospedado em um serviço externo acessível pela Vercel; um MySQL/MariaDB rodando no computador do SENAI não fica acessível à aplicação publicada. Use SSL e um limite de conexões adequado ao provedor. A região da função deve ficar próxima do banco.
 
 ## Testes
 
@@ -184,8 +193,8 @@ npm test
 Pré-requisitos:
 
 - back-end em execução
-- banco populado com `npm run seed`
-- testes automatizados criam clientes e pedidos de teste; `tests/limpar-testes.sql` é legado e não deve ser usado com MongoDB
+- schema criado com `create.sql` e dados preparados com `insert.sql` e `npm run seed`
+- testes automatizados criam clientes e pedidos de teste; use a base de desenvolvimento, não a base de produção
 - teste opcional do Mercado Pago: `RUN_MP=1` em ambiente Unix/macOS ou, no PowerShell:
 
 ```powershell

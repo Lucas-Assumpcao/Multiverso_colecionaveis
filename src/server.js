@@ -1,13 +1,22 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { conectarBanco, mongoose } = require('./config/db');
+const { conectarBanco, pool } = require('./config/db');
 const enderecoRoutes = require('./routes/enderecoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const pagamentoRoutes = require('./routes/pagamentoRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
 
-app.use(cors());
+const origensPermitidas = (process.env.CORS_ORIGINS || 'http://localhost:5173')
+  .split(',')
+  .map((origem) => origem.trim())
+  .filter(Boolean);
+app.use(cors({
+  origin(origem, callback) {
+    if (!origem || origensPermitidas.includes(origem)) return callback(null, true);
+    return callback(new Error('Origem não permitida pelo CORS'));
+  },
+}));
 app.use(express.json());  // ← primeiro de tudo, antes das rotas
 app.use('/enderecos', enderecoRoutes);
 app.use('/admin', adminRoutes);
@@ -44,7 +53,7 @@ async function iniciarServidor() {
 if (require.main === module) {
   iniciarServidor().catch(async (erro) => {
     console.error('Não foi possível iniciar a API:', erro);
-    await mongoose.disconnect();
+    await pool.end();
     process.exitCode = 1;
   });
 }

@@ -1,31 +1,24 @@
-const { Pagamento } = require('./documentos');
-const { proximoId } = require('./contadorModel');
-const { idNumerico } = require('./mongoUtils');
+const { pool } = require('../config/db');
 
 async function inserir(pedidoId) {
-  const pagamento = await Pagamento.create({
-    id: await proximoId('pagamentos'),
-    pedido_id: pedidoId,
-  });
-  return pagamento.id;
+  const [resultado] = await pool.query(
+    'INSERT INTO pagamento (pedido_id, metodo, status) VALUES (?, NULL, ?)',
+    [pedidoId, 'pendente']
+  );
+  return resultado.insertId;
 }
 
 async function atualizarPorPedido(pedidoId, { metodo, status, transacaoId }) {
-  const id = idNumerico(pedidoId);
-  if (id === null) return null;
+  const id = Number(pedidoId);
+  if (!Number.isSafeInteger(id) || id < 1) return null;
 
-  return Pagamento.updateMany(
-    { pedido_id: id },
-    {
-      $set: {
-        metodo,
-        status,
-        transacao_id: transacaoId,
-        data_pagamento: new Date(),
-      },
-    },
-    { runValidators: true }
+  const [resultado] = await pool.query(
+    `UPDATE pagamento
+     SET metodo = ?, status = ?, transacao_id = ?, data_pagamento = CURRENT_TIMESTAMP
+     WHERE pedido_id = ?`,
+    [metodo || null, status, transacaoId || null, id]
   );
+  return resultado.affectedRows;
 }
 
 module.exports = { inserir, atualizarPorPedido };

@@ -5,6 +5,11 @@ const ErroDeNegocio = require('../utils/ErroDeNegocio');
 const pagamentoModel = require('../models/pagamentoModel');
 const { Payment } = require('mercadopago');
 
+function urlConfirmacao() {
+  const origem = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+  return `${origem}/confirmacao`;
+}
+
 async function criarPreferencia(pedidoId, clienteId) {
   const pedido = await pedidoModel.buscarPorId(pedidoId, clienteId);
   if (!pedido) throw new ErroDeNegocio('Pedido não encontrado', 404);
@@ -23,9 +28,9 @@ async function criarPreferencia(pedidoId, clienteId) {
       })),
       external_reference: String(pedidoId), // liga o pagamento ao seu pedido
       back_urls: {
-        success: 'http://localhost:5173/confirmacao',
-        failure: 'http://localhost:5173/confirmacao',
-        pending: 'http://localhost:5173/confirmacao',
+        success: urlConfirmacao(),
+        failure: urlConfirmacao(),
+        pending: urlConfirmacao(),
       },
     },
   });

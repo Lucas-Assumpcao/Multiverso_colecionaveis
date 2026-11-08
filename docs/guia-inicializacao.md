@@ -1,292 +1,104 @@
-# Guia de inicialização rápida
+# Guia de inicialização
 
-Este documento reúne os passos básicos para rodar o projeto Multiverso Colecionáveis: MongoDB, API (`server.js`), frontend e testes no Postman.
+Este guia inicia o banco MySQL/MariaDB, a API e o front-end em ambiente local.
 
-## 1) Pré-requisitos
+## Pré-requisitos
 
-Antes de iniciar, verifique se você tem instalado:
+- Node.js 20 ou superior e npm
+- MySQL 8+ ou MariaDB em execução, com acesso ao DBeaver ou cliente SQL equivalente
+- Git e Postman (opcional)
 
-- Node.js 20.19 ou superior
-- npm
-- MongoDB configurado como replica set ou MongoDB Atlas
-- Git
-- Postman
+## 1. Instalar dependências
 
-Opcional:
-
-- MongoDB Compass ou `mongosh` para visualizar o banco
-
-## 2) Clonar e instalar dependências
-
-Na raiz do projeto:
+Na raiz do repositório:
 
 ```bash
 npm install
 ```
 
-No frontend:
+No front-end, em outro terminal ou depois:
 
 ```bash
 cd frontend
 npm install
+cd ..
 ```
 
-## 3) Configurar o MongoDB
+## 2. Criar e popular o banco
 
-### 3.1 Iniciar o MongoDB
+No DBeaver, conecte ao servidor MySQL/MariaDB e execute primeiro `create.sql`, depois `insert.sql`. O primeiro script cria o banco e as tabelas; o segundo carrega as categorias e os produtos de demonstração. O projeto usa InnoDB para transações de pedido.
 
-As transações usadas ao criar pedidos exigem um replica set. Você pode usar MongoDB Atlas ou configurar uma instância MongoDB local como replica set.
+## 3. Configurar o ambiente local
 
-O URI local de exemplo em `.env.example` usa `replicaSet=rs0`. Configure e inicialize esse replica set antes de executar a aplicação.
+Copie `.env.example` para `.env` e ajuste os valores locais de banco, JWT e Mercado Pago. Exemplo da conexão:
 
-### 3.2 Carregar os dados de demonstração
+```env
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=sua_senha_local
+DB_NAME=multiverso_colecionaveis
+DB_CONNECTION_LIMIT=3
+DB_SSL=false
+PORT=3000
+JWT_SECRET=gere_uma_chave_aleatoria_longa
+MP_ACCESS_TOKEN=credencial_de_teste_do_mercado_pago
+ADMIN_EMAIL=admin@multiversocolecionaveis.com.br
+ADMIN_SENHA=defina_uma_senha_local
+FRONTEND_URL=http://localhost:5173
+CORS_ORIGINS=http://localhost:5173
+```
 
-Depois de configurar o `.env` na seção 4, execute na raiz do projeto:
+Não versione o `.env`. `MP_ACCESS_TOKEN` só é necessário para iniciar um pagamento no Mercado Pago; o restante do site pode ser desenvolvido sem executar esse fluxo.
+
+## 4. Cadastrar dados iniciais
+
+Depois de configurar o `.env`, execute o seed para criar o administrador com as credenciais de ambiente e garantir o catálogo inicial:
 
 ```bash
 npm run seed
 ```
 
-O comando cria categorias, produtos e um administrador de demonstração sem duplicar os registros existentes. A senha padrão do administrador é `admin123`; defina `ADMIN_EMAIL` e `ADMIN_SENHA` no `.env` antes de executar em ambientes não descartáveis.
+O seed é idempotente para categorias, produtos e administrador existentes.
 
-## 4) Configurar variáveis de ambiente
+## 5. Iniciar a API e o front-end
 
-Na raiz do projeto, copie o exemplo:
-
-```bash
-cp .env.example .env
-```
-
-Edite o arquivo `.env` com suas credenciais:
-
-```env
-MONGODB_URI=mongodb://127.0.0.1:27017/multiverso_colecionaveis?replicaSet=rs0
-PORT=3000
-JWT_SECRET=uma_frase_longa_e_aleatoria
-MP_ACCESS_TOKEN=seu_access_token_de_teste_do_mercado_pago
-ADMIN_EMAIL=admin@multiversocolecionaveis.com.br
-ADMIN_SENHA=admin123
-```
-
-Use a URI fornecida pelo MongoDB Atlas se estiver usando o serviço gerenciado.
-
-## 5) Iniciar a API (`server.js`)
-
-Na raiz do projeto:
+Na raiz:
 
 ```bash
 npm run dev
 ```
 
-Ou em modo produção:
-
-```bash
-npm start
-```
-
-A API será iniciada em:
-
-```text
-http://localhost:3000
-```
-
-O `server.js` registra as rotas principais, como:
-
-- `/produtos`
-- `/categorias`
-- `/clientes`
-- `/login`
-- `/pedidos`
-- `/enderecos`
-- `/pagamentos`
-- `/admin`
-
-## 6) Iniciar o frontend
-
-Abra outro terminal e rode:
+Em outro terminal:
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-O frontend geralmente será servido em:
+Endereços locais padrão: API `http://localhost:3000` e front-end `http://localhost:5173`.
 
-```text
-http://localhost:5173
+## 6. Verificar a API e testar
+
+Abra `http://localhost:3000/`; a resposta esperada é `{"status":"API no ar"}`. A documentação dos endpoints e exemplos de payload está em [api.md](../api.md). Com a API em execução e banco de desenvolvimento populado, os testes podem ser executados da raiz:
+
+```bash
+npm test
 ```
 
-Se quiser testar o fluxo completo da loja, abra essa URL no navegador e use a API em `http://localhost:3000`.
+Os testes criam registros. Use uma base local de desenvolvimento, nunca uma base de produção.
 
-## 7) Testar no Postman
+## Publicar na Vercel
 
-### 7.1 Verificar se a API está online
+O front-end e a API Express podem ser configurados como projetos separados no mesmo repositório: diretório raiz `frontend/` para o front e raiz do repositório para a API. Configure `VITE_API_URL` no projeto do front e as variáveis `DB_*`, `JWT_SECRET`, `MP_ACCESS_TOKEN`, `FRONTEND_URL` e `CORS_ORIGINS` no projeto da API.
 
-Crie uma requisição do tipo `GET` para:
+A Vercel precisa alcançar o banco por rede pública/privada suportada pelo provedor. O MySQL/MariaDB local do SENAI não fica acessível para uma API publicada. Para uso real, hospede o banco externamente, habilite SSL conforme as instruções do provedor e configure o limite de conexões. Defina `VITE_API_URL` nas variáveis do projeto front-end na Vercel (localmente o padrão é `http://localhost:3000`). Para apresentação em sala sem acesso ao serviço externo, rode API e front localmente contra o MariaDB do SENAI.
 
-```text
-http://localhost:3000/
-```
+## Problemas comuns
 
-Resposta esperada:
-
-```json
-{
-  "status": "API no ar"
-}
-```
-
-### 7.2 Listar produtos
-
-```text
-GET http://localhost:3000/produtos
-```
-
-### 7.3 Registrar cliente
-
-```text
-POST http://localhost:3000/clientes
-```
-
-Body em JSON:
-
-```json
-{
-  "nome": "João da Silva",
-  "email": "joao@email.com",
-  "senha": "123456",
-  "cpf": "123.456.789-09"
-}
-```
-
-### 7.4 Login
-
-```text
-POST http://localhost:3000/login
-```
-
-Body:
-
-```json
-{
-  "email": "joao@email.com",
-  "senha": "123456"
-}
-```
-
-Resposta esperada:
-
-```json
-{
-  "token": "eyJhbGciOi..."
-}
-```
-
-Copie o valor do token e use em rotas protegidas:
-
-```http
-Authorization: Bearer <token>
-```
-
-### 7.5 Fluxo de pedidos
-
-Para criar um pedido, normalmente você precisa:
-
-1. Fazer login
-2. Buscar produtos
-3. Montar o payload do pedido
-4. Enviar a requisição autenticada para `/pedidos`
-
-Exemplo:
-
-```text
-POST http://localhost:3000/pedidos
-```
-
-```json
-{
-  "clienteId": 1,
-  "enderecoId": 1,
-  "itens": [
-    {
-      "produtoId": 1,
-      "quantidade": 1
-    }
-  ]
-}
-```
-
-## 8) Fluxo recomendado para iniciar tudo
-
-Em ordem ideal:
-
-1. Inicie o MongoDB replica set ou configure o MongoDB Atlas
-2. Crie o `.env` e configure `MONGODB_URI`
-3. Rode `npm install`
-4. Carregue os dados com `npm run seed`
-5. Inicie a API com `npm run dev`
-6. Rode o frontend com `npm run dev` dentro de `frontend`
-7. Teste os endpoints no Postman
-
-## 9) Solução de problemas comuns
-
-### Erro de conexão com o banco
-
-Sintomas:
-
-- `ER_ACCESS_DENIED_ERROR`
-- `ECONNREFUSED`
-- `Unknown database`
-
-Verifique:
-
-- o MongoDB está acessível
-- `MONGODB_URI` está correto
-- a instância suporta replica set/transações
-
-### Porta ocupada
-
-Se a porta 3000 ou 5173 estiver ocupada, ajuste a porta no arquivo de configuração ou encerre o processo que está usando a porta.
-
-### CORS
-
-Se o frontend não conseguir acessar a API, verifique se `cors` está habilitado no `server.js`.
-
-### Token inválido
-
-Se a autenticação falhar:
-
-- confirme se o token foi enviado no header `Authorization`
-- use o formato `Bearer <token>`
-- verifique se o token foi gerado no login da mesma base
-
-### Frontend sem carregar a API
-
-Confirme se a API local está ativa em `http://localhost:3000` e se o serviço do frontend está apontando para a URL correta em `frontend/src/services/api.js` ou arquivos equivalentes.
-
-## 10) URLs úteis
-
-- API backend: `http://localhost:3000`
-- Frontend: `http://localhost:5173`
-- Banco local: MongoDB em `localhost` (replica set)
-
-## 11) Conta administrativa de exemplo
-
-O projeto já inclui um usuário admin de demonstração. Em geral:
-
-- Email: `admin@multiversocolecionaveis.com.br`
-- Senha: `admin123`
-
-Use isso para testar rotas administrativas como `/admin`.
-
-## 12) Dica final
-
-Para facilitar o desenvolvimento, mantenha sempre 3 terminais abertos:
-
-- 1 terminal: API (`npm run dev`)
-- 1 terminal: frontend (`cd frontend && npm run dev`)
-- 1 terminal: banco / consultas / testes
-
-Isso deixa o ciclo de desenvolvimento mais simples e rápido.
-
-Se quiser, posso também criar uma versão mais enxuta em formato de checklist para imprimir ou uma documentação com exemplos de chamadas prontas para o Postman.
+- **`ECONNREFUSED`:** confirme se o serviço MySQL/MariaDB está iniciado, e confira `DB_HOST` e `DB_PORT`.
+- **`ER_ACCESS_DENIED_ERROR`:** confira usuário e senha e as permissões desse usuário no banco.
+- **`Unknown database`:** execute `create.sql` no DBeaver.
+- **Erro de chave estrangeira:** verifique se as categorias foram carregadas antes dos produtos e se o endereço pertence ao cliente autenticado.
+- **Erro de CORS:** confirme que a origem do front está em `CORS_ORIGINS` na API.
+- **API sem resposta no front:** confirme `VITE_API_URL` e reinicie o servidor Vite após alterar variáveis.

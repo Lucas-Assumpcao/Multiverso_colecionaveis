@@ -22,7 +22,7 @@ API REST em Node.js + Express. Todas as respostas são JSON.
 | 409 | Conflito com o estado atual (e-mail já cadastrado, estoque insuficiente) |
 | 500 | Erro interno do servidor |
 
-> **Valores monetários** vêm como texto decimal, por exemplo `"249.90"`. Converta com `Number()` antes de calcular.
+> **Valores monetários** são armazenados em colunas `DECIMAL(10,2)` e serializados como números JSON pela API.
 
 ---
 
@@ -39,7 +39,7 @@ Lista os produtos. Parâmetro opcional: `?nome=goku` (busca por parte do nome, s
     "categoria_id": 1,
     "nome": "Action Figure Goku Ultra Instinct",
     "descricao": "Dragon Ball Super — coleção premium",
-    "preco": "229.90",
+    "preco": 229.90,
     "estoque": 10,
     "imagem_url": "/produtos/goku.jpg"
   }
@@ -160,7 +160,7 @@ Lista os pedidos do cliente logado, do mais recente para o mais antigo.
     "id": 7, "cliente_id": 5, "endereco_id": 3,
     "data_pedido": "2026-10-25T14:10:00.000Z",
     "status": "aguardando_pagamento",
-    "valor_frete": "15.00", "valor_total": "244.90"
+    "valor_frete": 15.00, "valor_total": 244.90
   }
 ]
 ```
@@ -172,9 +172,9 @@ Devolve o pedido com os itens. Pedido de outro cliente devolve `404`, igual a pe
 ```json
 {
   "id": 7, "status": "aguardando_pagamento",
-  "valor_frete": "15.00", "valor_total": "244.90",
+  "valor_frete": 15.00, "valor_total": 244.90,
   "itens": [
-    { "produto_id": 2, "nome": "Action Figure Goku Ultra Instinct", "quantidade": 1, "preco_unitario": "229.90" }
+    { "produto_id": 2, "nome": "Action Figure Goku Ultra Instinct", "quantidade": 1, "preco_unitario": 229.90 }
   ]
 }
 ```
@@ -254,6 +254,6 @@ Lista todos os pedidos, com o nome do cliente (`cliente_nome`).
 
 - O frete é fixo; o cálculo por CEP ficou para uma versão futura. O CEP só preenche o endereço (ViaCEP).
 - A listagem de produtos não tem paginação.
-- Um produto que já aparece em algum pedido não pode ser excluído (restrição de chave estrangeira); hoje isso volta como erro `500`.
+- Um produto que já aparece em algum pedido não pode ser excluído; a API responde `409`.
 - Em ambiente local o Mercado Pago não consegue chamar o webhook (`localhost` não é acessível da internet). A atualização de status foi validada chamando a rota manualmente.
-- O CORS está aberto para qualquer origem, adequado para desenvolvimento.
+- O CORS permite as origens listadas em `CORS_ORIGINS`; por padrão, permite `http://localhost:5173`.

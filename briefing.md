@@ -55,7 +55,7 @@
 | Pôster Retrô De Volta para o Futuro | R$ 59,90 | Impressão em alta qualidade |
 | Miniatura DeLorean | R$ 149,90 | Réplica em escala, edição retrô |
 
-Os dados de teste estão em [`insert.sql`](../insert.sql). Os preços são ilustrativos.
+Os dados de teste estão em [`insert.sql`](./insert.sql). Os preços são ilustrativos.
 
 ## 4. Regras de negócio desta versão
 

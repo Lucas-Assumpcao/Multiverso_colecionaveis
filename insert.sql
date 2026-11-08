@@ -45,18 +45,3 @@ INSERT INTO produto (categoria_id, nome, descricao, preco, estoque, imagem_url) 
 (3, 'Action Figure Link',                'The Legend of Zelda — Breath of the Wild',209.90, 10, '/produtos/link.webp'),
 (3, 'Pôster Retrô De Volta para o Futuro','Impressão em alta qualidade',        59.90, 40, '/produtos/poster.webp'),
 (3, 'Miniatura DeLorean',                'Réplica em escala, edição retrô',    149.90,  8, '/produtos/delorean.jpg');
-
--- ---------------------------------------------------------
--- usuário administrador (senha de teste — trocar o hash em produção)
--- ---------------------------------------------------------
-INSERT INTO usuario_admin (nome, email, senha_hash) VALUES
-('Admin Multiverso', 'admin@multiversocolecionaveis.com.br', '$2b$10$TuXVzxeiwdUD/1gL16PMduRh9LuwdgrBu95YoSQpfcxcouPMDcaqe');
-
--- ---------------------------------------------------------
--- cliente + endereço de teste (para testar o fluxo de compra)
--- ---------------------------------------------------------
-INSERT INTO cliente (nome, email, senha_hash, cpf) VALUES
-('Lucas Teste', 'lucas.teste@email.com', '$2b$10$exemplodehashbcryptaqui', NULL);
-
-INSERT INTO endereco (cliente_id, cep, logradouro, numero, complemento, bairro, cidade, estado) VALUES
-(1, '06400-000', 'Rua das Coleções', '123', 'Apto 45', 'Centro', 'Barueri', 'SP');
