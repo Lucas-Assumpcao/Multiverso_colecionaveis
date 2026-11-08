@@ -15,7 +15,7 @@ Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — n
 - **Senha nunca armazenada em texto puro** — hash com bcrypt, e erro de login propositalmente genérico (não revela se foi o e-mail ou a senha que errou — evita enumeração de usuários)
 - **Transação de banco de dados** no fechamento de pedido: grava o pedido, os itens e baixa o estoque como uma unidade atômica — se qualquer passo falhar, tudo é desfeito (testado simulando estoque insuficiente)
 - **Preço e identidade do comprador nunca vêm do front** — o back-end busca o preço real do produto no banco e identifica o cliente pelo token, não por dado que o cliente poderia manipular
-- **Integração de pagamento real** com Mercado Pago (Checkout Pro, ambiente sandbox) incluindo webhook para atualização assíncrona de status
+- **Integração com o Mercado Pago** (Checkout Pro em sandbox), com webhook para atualização assíncrona do status
 - **Queries parametrizadas** em todo acesso ao banco, prevenindo SQL Injection
 - **61 casos documentados (39 automáticos e 22 manuais)** cobrindo sucesso, erro e borda (estoque insuficiente, acesso cruzado entre contas, token inválido/expirado)
 
@@ -37,8 +37,7 @@ Funcionalidades principais:
 
 ### Escopo de verificação visual
 
-As telas públicas e os estados sem dados foram verificados em viewport de 360 px. Sem a API ativa e sem login, `/endereco`, `/pagamento`, `/confirmacao`, `/meus-pedidos` e as telas do admin foram observadas somente em estados de redirecionamento ou vazios; as telas autenticadas com dados reais permanecem a validar. As razões de contraste registradas em [requisitos-situacao.md](./docs/requisitos-situacao.md) são cálculos das combinações de cores, não uma auditoria completa de todas as telas. Lighthouse não foi executado.
-
+As telas públicas e os estados sem dados foram verificados em viewport de 360 px. Após a publicação, o responsável pelo projeto executou os testes funcionais e administrativos no site, incluindo o acesso ao banco Aiven. Isso não substitui uma auditoria visual de todos os estados. As razões de contraste registradas em [requisitos-situacao.md](./docs/requisitos-situacao.md) são cálculos das combinações de cores. Lighthouse não foi executado.
 ## Capturas de tela
 
 As capturas serão organizadas em [docs/prints/](./docs/prints/):
@@ -56,6 +55,7 @@ As capturas serão organizadas em [docs/prints/](./docs/prints/):
 
 - [briefing.md](./briefing.md)
 - [banco-de-dados.md](./banco-de-dados.md)
+- [Modelos conceitual e lógico](./docs/modelos-de-dados.md)
 - [api.md](./api.md)
 - [manual-do-usuario.md](./manual-do-usuario.md)
 - [requisitos-situacao.md](./docs/requisitos-situacao.md)
@@ -131,11 +131,11 @@ O banco relacional usa as tabelas `cliente`, `endereco`, `categoria`, `produto`,
 
 ### Pré-requisitos
 
-Node.js 20 ou superior, npm e MySQL 8+ ou MariaDB com InnoDB. Para executar pedidos, o usuário do banco precisa de permissão para ler e gravar nas tabelas do projeto.
+Node.js 22.12 ou superior (ou Node.js 20.19 ou superior), npm e MySQL 8+ ou MariaDB com InnoDB. Para executar pedidos, o usuário do banco precisa de permissão para ler e gravar nas tabelas do projeto.
 
 ### Banco de dados
 
-Crie o schema e carregue o catálogo pelo DBeaver: abra e execute `create.sql` primeiro e `insert.sql` em seguida. Depois execute `npm run seed` para criar o administrador configurado no `.env.example` e garantir as categorias e produtos de demonstração. O seed pode ser executado novamente sem duplicar esses registros.
+Crie o schema e carregue o catálogo pelo DBeaver ou MySQL Workbench: execute create.sql primeiro e insert.sql em seguida. Depois execute npm run seed para inserir os dados de demonstração e criar o administrador se o e-mail configurado ainda não existir. O seed não redefine a senha de um administrador existente; para alterá-la, atualize senha_hash com um hash bcrypt. Execute o seed apenas em uma base de desenvolvimento ou demonstração.
 
 ### API
 
@@ -178,9 +178,49 @@ npm run dev
 
 Front em `http://localhost:5173`, API em `http://localhost:3000` e banco MySQL/MariaDB em `localhost:3306` (ou nas portas configuradas no serviço).
 
-### Publicação na Vercel
+### Publicação em produção: Vercel + Aiven
 
-O front-end e a API podem ser publicados como projetos separados ligados ao mesmo repositório, com `frontend/` como diretório raiz do front e a raiz do repositório para a API Express. Configure as variáveis da API no projeto do back-end (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL`, `JWT_SECRET`, `MP_ACCESS_TOKEN`, `FRONTEND_URL` e `CORS_ORIGINS`) e `VITE_API_URL` no projeto do front-end. O banco precisa estar hospedado em um serviço externo acessível pela Vercel; um MySQL/MariaDB rodando no computador do SENAI não fica acessível à aplicação publicada. Use SSL e um limite de conexões adequado ao provedor. A região da função deve ficar próxima do banco.
+O front-end, a API e o banco são serviços separados. O front-end React/Vite e a API Express são publicados como dois projetos Vercel ligados ao mesmo repositório; o MySQL fica no Aiven. O banco local do computador ou do SENAI não é usado pela aplicação publicada.
+
+#### Projeto do front-end na Vercel
+
+- Configure a raiz do projeto como `frontend/`, o comando de build como `npm run build` e o diretório de saída como `dist` (a Vercel pode detectar esses valores automaticamente).
+- Defina `VITE_API_URL` no ambiente **Production** com a origem pública do projeto da API, por exemplo `https://sua-api.vercel.app`. Use somente a origem: sem `/api`, sem `/categorias` e sem barra final. Essa variável é incorporada durante o build, então alterá-la exige um novo deploy do front-end.
+- O arquivo `frontend/vercel.json` encaminha rotas da SPA, como `/admin` e `/admin/pedidos`, para `index.html`, permitindo que o React Router trate o caminho ao abrir ou atualizar diretamente a página.
+
+#### Projeto da API na Vercel
+
+- Configure a raiz do projeto como a raiz do repositório. O ponto de entrada `index.js` exporta a aplicação Express para a Vercel; localmente, o servidor continua podendo ser iniciado por `npm run dev`.
+- Cadastre as variáveis abaixo em **Settings → Environment Variables**, no ambiente **Production**. Use os valores de conexão exibidos no serviço MySQL do Aiven; não coloque segredos no README, no código ou em `VITE_API_URL`.
+
+| Variável | Uso |
+| --- | --- |
+| `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` | Host, porta, usuário e senha do Aiven |
+| `DB_NAME` | Schema criado para o projeto: `multiverso_colecionaveis` |
+| `DB_SSL` | Use `true`; o serviço Aiven exige SSL |
+| `DB_SSL_CA` | Certificado CA do serviço Aiven para validar o certificado SSL quando `DB_SSL_REJECT_UNAUTHORIZED=true` |
+| `DB_SSL_REJECT_UNAUTHORIZED` | Mantenha `true` quando o CA estiver configurado |
+| `DB_CONNECTION_LIMIT` | Limite do pool MySQL conforme a cota do plano |
+| `JWT_SECRET` | Segredo forte para assinar tokens de clientes e administradores |
+| `MP_ACCESS_TOKEN` | Token do Mercado Pago para o ambiente sandbox |
+| `FRONTEND_URL` | Origem pública do front-end |
+| `CORS_ORIGINS` | Origem exata do front-end, sem barra final; se houver mais origens, separe por vírgula |
+
+Salve as variáveis e faça um novo deploy da API. A Vercel não aplica mudanças de variáveis a implantações já existentes. Não use `localhost` nos valores de produção. A origem do front-end precisa coincidir exatamente com `CORS_ORIGINS`.
+
+#### Banco MySQL no Aiven
+
+1. Crie ou selecione o schema `multiverso_colecionaveis` na instância Aiven.
+2. Conecte pelo MySQL Workbench ou DBeaver usando os dados do painel Aiven e SSL com o certificado CA do serviço.
+3. Execute `create.sql` e depois `insert.sql` na conexão Aiven. Confirme o schema atual com `SELECT DATABASE()` e confira se a tabela `categoria` existe e possui dados.
+4. Configure `DB_NAME=multiverso_colecionaveis` na API. O nome padrão informado pelo provedor pode ser diferente do schema criado pelos scripts; use o nome que contém as tabelas da loja.
+
+#### Verificação do deploy
+
+- A raiz do domínio da API (`/`) deve responder `{"status":"API no ar"}`. Essa rota confirma que o Express está ativo, mas não testa o banco.
+- `GET /categorias` deve responder com a lista de categorias. Se retornar erro, consulte os Logs do projeto da API na Vercel; não envie senhas ou tokens nos relatórios.
+- Abra o domínio do front-end e teste também uma rota direta, como `/admin`. A autenticação do painel e as chamadas protegidas dependem da API e do registro administrativo no schema Aiven.
+- Mudanças em `VITE_API_URL` exigem novo build do front-end; mudanças em variáveis `DB_*`, `JWT_SECRET`, `MP_ACCESS_TOKEN`, `FRONTEND_URL` ou `CORS_ORIGINS` exigem novo deploy da API.
 
 ## Testes
 
@@ -203,13 +243,15 @@ $env:RUN_MP="1"; npm test
 
 Documentação de testes: [planilha-testes.xlsx](./planilha-testes.xlsx)
 
-### Conta de administrador (demo)
+### Conta local de administrador (demo)
 
-|        |                                      |
-| ------ | ------------------------------------ |
-| URL    | `/admin`                             |
-| E-mail | admin@multiversocolecionaveis.com.br |
-| Senha  | admin123                             |
+| Campo | Valor |
+| --- | --- |
+| URL | `/admin` |
+| E-mail local padrão | `admin@multiversocolecionaveis.com.br` |
+| Senha local padrão | `admin123` |
+
+Esses valores são usados somente pelo seed local quando não há `ADMIN_EMAIL` e `ADMIN_SENHA` configurados. Não são as credenciais de produção. O seed cria o administrador se o e-mail ainda não existir; ele não redefine a senha de um administrador existente. Em produção, mantenha a senha no banco somente como hash bcrypt e não documente a senha real.
 
 ## O que eu faria diferente numa v2
 
