@@ -62,4 +62,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { app, iniciarServidor };
+module.exports = app;
