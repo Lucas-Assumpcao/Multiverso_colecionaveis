@@ -109,10 +109,15 @@ CREATE TABLE item_pedido (
 CREATE TABLE pagamento (
   id              INT AUTO_INCREMENT PRIMARY KEY,
   pedido_id       INT NOT NULL,
-  metodo          ENUM('pix','cartao','boleto') NULL,
+  metodo          ENUM('pix','cartao','boleto') NOT NULL,
   status          ENUM('aprovado','pendente','recusado') NOT NULL DEFAULT 'pendente',
   transacao_id    VARCHAR(100),
   data_pagamento  DATETIME,
   CONSTRAINT fk_pagamento_pedido
     FOREIGN KEY (pedido_id) REFERENCES pedido(id)
 );
+SELECT id, nome, estoque FROM produto WHERE estoque > 0 LIMIT 5;
+SELECT id, nome, estoque FROM produto WHERE id IN (1, 2, 9);
+SELECT id, cliente_id, valor_total, status FROM pedido ORDER BY id DESC LIMIT 1;
+UPDATE usuario_admin SET senha_hash = '$2b$10$WX9kpK8qW2p5hMkhq34OFODedJf02fquOM9RiVlGXQwVHNakibY8q' WHERE email = 'admin@multiversocolecionaveis.com.br';
+SELECT id, nome, email, senha_hash FROM usuario_admin;
