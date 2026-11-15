@@ -4,6 +4,12 @@ Loja virtual full-stack para colecionáveis e action figures — construída do 
 
 > "Todo fandom, um só lugar."
 
+## Links
+
+- **Site (Vercel):** https://multiverso-colecionaveis-m67f.vercel.app/
+- **Protótipo (Figma):** https://www.figma.com/design/9aL9RWRDeXmgwqaFXG5rpk/Multiverso-Colecionaveis?node-id=0-1&p=f&t=rEEUOH4DeP29cZPU-0
+- **Modelo conceitual (apresentação):** [Multiverso_Colecionaveis_Modelagem_Banco_Dados.pptx](./Multiverso_Colecionaveis_Modelagem_Banco_Dados.pptx)
+
 ## Por que este projeto
 
 Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — não só fazer rotas funcionarem, mas tomar as decisões que times de verdade tomam: onde validar, onde confiar (ou não) no dado que chega do cliente, como separar responsabilidades em camadas, e como tratar erro de forma que signifique alguma coisa pra quem consume a API.
@@ -34,10 +40,17 @@ Funcionalidades principais:
 - Catálogo com filtros e paginação no cliente (12 produtos por página).
 - Checkout em etapas com endereço, revisão e pagamento via Mercado Pago.
 - Painel administrativo para indicadores, produtos e pedidos.
+- Cadastro e login de cliente.
+- Página de detalhe do produto.
+- Consulta de pedidos do cliente em **Meus Pedidos**.
+- Proteção das etapas de checkout e consulta de pedidos por autenticação de cliente.
+- Painel administrativo com login próprio.
+- Página 404 para rotas não encontradas e tratamento de erros da interface com ErrorBoundary.
 
 ### Escopo de verificação visual
 
 As telas públicas e os estados sem dados foram verificados em viewport de 360 px. Após a publicação, o responsável pelo projeto executou os testes funcionais e administrativos no site, incluindo o acesso ao banco Aiven. Isso não substitui uma auditoria visual de todos os estados. As razões de contraste registradas em [requisitos-situacao.md](./docs/requisitos-situacao.md) são cálculos das combinações de cores. Lighthouse não foi executado.
+
 ## Capturas de tela
 
 As capturas serão organizadas em [docs/prints/](./docs/prints/):
@@ -56,6 +69,7 @@ As capturas serão organizadas em [docs/prints/](./docs/prints/):
 - [briefing.md](./briefing.md)
 - [banco-de-dados.md](./banco-de-dados.md)
 - [Modelos conceitual e lógico](./docs/modelos-de-dados.md)
+- [Apresentação do modelo conceitual](./Multiverso_Colecionaveis_Modelagem_Banco_Dados.pptx)
 - [api.md](./api.md)
 - [manual-do-usuario.md](./manual-do-usuario.md)
 - [requisitos-situacao.md](./docs/requisitos-situacao.md)
@@ -98,6 +112,7 @@ Multiverso_colecionaveis/
 ├── manual-do-usuario.md       → guia do usuário
 ├── manual-de-marca-multiverso-colecionaveis.pdf
 ├── documento-requisitos-multiverso-colecionaveis.pdf
+├── Multiverso_Colecionaveis_Modelagem_Banco_Dados.pptx
 ├── package.json               → scripts da API
 ├── .env.example               → exemplo de variáveis de ambiente
 ├── .gitignore
