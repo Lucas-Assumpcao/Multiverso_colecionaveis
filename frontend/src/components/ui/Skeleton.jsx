@@ -17,12 +17,21 @@ export function ProdutoCardSkeleton() {
   return (
     <div
       aria-hidden="true"
-      className="rounded-card border border-borda bg-white p-4 shadow-card"
+      className="flex h-full flex-col overflow-hidden rounded-card border border-borda bg-white shadow-card"
     >
-      <Skeleton className="mb-4 aspect-square w-full" />
-      <Skeleton className="mb-3 h-5 w-3/4" />
-      <Skeleton className="mb-4 h-4 w-full" />
-      <Skeleton className="h-6 w-1/3" />
+      <Skeleton className="aspect-square w-full rounded-none" />
+      <div className="flex flex-1 flex-col p-4">
+        <div className="min-h-12">
+          <Skeleton className="h-6 w-3/4" />
+        </div>
+        <Skeleton className="mt-2 h-10 w-full" />
+        <div className="mt-auto pt-4">
+          <Skeleton className="h-6 w-1/3" />
+        </div>
+      </div>
+      <div className="px-4 pb-4">
+        <Skeleton className="h-11 w-full rounded-lg" />
+      </div>
     </div>
   );
 }

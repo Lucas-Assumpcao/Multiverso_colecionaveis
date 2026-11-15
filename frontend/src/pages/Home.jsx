@@ -226,7 +226,7 @@ function Home() {
               action={<Button onClick={tentarNovamente} variant="secondary">Tentar de novo</Button>}
             />
           ) : carregandoProdutos || carregandoCategorias ? (
-            <div aria-busy="true" aria-label="Carregando produtos em destaque" className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+            <div aria-busy="true" aria-label="Carregando produtos em destaque" className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {Array.from({ length: 6 }, (_, indice) => <ProdutoCardSkeleton key={indice} />)}
             </div>
           ) : produtos.length === 0 ? (
@@ -238,7 +238,7 @@ function Home() {
           ) : destaques.length === 0 ? (
             <EmptyState headingLevel={3} title="Novidades em breve" text="Ainda não há produtos disponíveis para destacar." />
           ) : (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {destaques.map((produto, indice) => (
                 <ProdutoCard key={produto.id} produto={produto} indice={indice} headingLevel={3} />
               ))}
@@ -252,7 +252,7 @@ function Home() {
               <p className="font-semibold uppercase tracking-widest text-vermelho-escuro">Não deixe passar</p>
               <h2 id="ultimas-titulo" className="mt-2 text-3xl font-extrabold text-roxo">Últimas unidades</h2>
             </div>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {ultimasUnidades.map((produto, indice) => (
                 <ProdutoCard key={produto.id} produto={produto} indice={indice} headingLevel={3} />
               ))}
