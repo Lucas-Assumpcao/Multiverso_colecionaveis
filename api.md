@@ -24,6 +24,14 @@ API REST em Node.js + Express. Todas as respostas são JSON.
 
 > **Valores monetários** são armazenados em colunas `DECIMAL(10,2)` e serializados como números JSON pela API.
 
+## Saúde da API
+
+### `GET /`
+
+```json
+{ "status": "API no ar" }
+```
+
 ---
 
 ## Catálogo (público)
@@ -63,6 +71,10 @@ Lista os produtos de uma categoria. Categoria sem produtos devolve `[]`.
   { "id": 3, "nome": "Cultura Pop/Nostalgia/Videogames" }
 ]
 ```
+
+### `GET /categorias/:id`
+
+Devolve a categoria no formato `{ "id": 1, "nome": "Animes/Mangás" }`. ID inválido ou inexistente: `404` com `{ "mensagem": "Categoria não encontrada" }`.
 
 ---
 

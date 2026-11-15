@@ -23,7 +23,7 @@ Comecei este projeto pra praticar arquitetura de back-end de ponta a ponta — n
 - **Preço e identidade do comprador nunca vêm do front** — o back-end busca o preço real do produto no banco e identifica o cliente pelo token, não por dado que o cliente poderia manipular
 - **Integração com o Mercado Pago** (Checkout Pro em sandbox), com webhook para atualização assíncrona do status
 - **Queries parametrizadas** em todo acesso ao banco, prevenindo SQL Injection
-- **61 casos documentados (39 automáticos e 22 manuais)** cobrindo sucesso, erro e borda (estoque insuficiente, acesso cruzado entre contas, token inválido/expirado)
+- **61 casos documentados na planilha de testes; testes automatizados em `tests/api.test.js` e demais casos verificados manualmente**
 
 ## Stack
 
@@ -131,6 +131,8 @@ O banco relacional usa as tabelas `cliente`, `endereco`, `categoria`, `produto`,
 | `/produtos` `?categoria=` `?nome=` | GET                           | —              |
 | `/produtos/:id`                    | GET                           | —              |
 | `/categorias`                      | GET                           | —              |
+| `/categorias/:id`                  | GET                           | —              |
+| `/`                                | GET                           | —              |
 | `/clientes`                        | POST                          | —              |
 | `/login`                           | POST                          | —              |
 | `/enderecos`                       | POST                          | Cliente        |
@@ -150,7 +152,7 @@ Node.js 22.12 ou superior (ou Node.js 20.19 ou superior), npm e MySQL 8+ ou Mari
 
 ### Banco de dados
 
-Crie o schema e carregue o catálogo pelo DBeaver ou MySQL Workbench: execute create.sql primeiro e insert.sql em seguida. Depois execute npm run seed para inserir os dados de demonstração e criar o administrador se o e-mail configurado ainda não existir. O seed não redefine a senha de um administrador existente; para alterá-la, atualize senha_hash com um hash bcrypt. Execute o seed apenas em uma base de desenvolvimento ou demonstração.
+Crie o schema e carregue o catálogo pelo DBeaver ou MySQL Workbench, nesta ordem: `create.sql` → `docs/migracoes/001-pagamento-metodo-null.sql` → `insert.sql` → `docs/atualizar-imagens.sql`. A migração permite que `pagamento.metodo` seja `NULL`, como a API grava; o script de imagens associa os caminhos dos arquivos em `frontend/public/produtos` aos produtos que o `insert.sql` cria com `imagem_url` nula. Depois execute npm run seed para inserir os dados de demonstração e criar o administrador se o e-mail configurado ainda não existir. O seed não redefine a senha de um administrador existente; para alterá-la, atualize senha_hash com um hash bcrypt. Execute o seed apenas em uma base de desenvolvimento ou demonstração.
 
 ### API
 
@@ -227,7 +229,7 @@ Salve as variáveis e faça um novo deploy da API. A Vercel não aplica mudança
 
 1. Crie ou selecione o schema `multiverso_colecionaveis` na instância Aiven.
 2. Conecte pelo MySQL Workbench ou DBeaver usando os dados do painel Aiven e SSL com o certificado CA do serviço.
-3. Execute `create.sql` e depois `insert.sql` na conexão Aiven. Confirme o schema atual com `SELECT DATABASE()` e confira se a tabela `categoria` existe e possui dados.
+3. Execute, nesta ordem, `create.sql` → `docs/migracoes/001-pagamento-metodo-null.sql` → `insert.sql` → `docs/atualizar-imagens.sql` na conexão Aiven. A migração permite `NULL` em `pagamento.metodo`, como a API grava; o script de imagens associa aos produtos os caminhos dos arquivos em `frontend/public/produtos`, pois `insert.sql` os cria com `imagem_url` nula. Confirme o schema atual com `SELECT DATABASE()` e confira se a tabela `categoria` existe e possui dados.
 4. Configure `DB_NAME=multiverso_colecionaveis` na API. O nome padrão informado pelo provedor pode ser diferente do schema criado pelos scripts; use o nome que contém as tabelas da loja.
 
 #### Verificação do deploy

@@ -78,7 +78,7 @@ Os dados de teste estão em [`insert.sql`](./insert.sql). Os preços são ilustr
 
 ## 6. Identidade e tom de voz
 
-Resumo do [manual de marca](manual-de-marca.pdf):
+Resumo do [manual de marca](manual-de-marca-multiverso-colecionaveis.pdf):
 
 - **Cores:** roxo `#2D1B4E`, amarelo `#F5B700`, vermelho `#E63946`, claro `#F7F7F7`, chumbo `#22223B`
 - **Tipografia:** Poppins nos títulos e botões, Inter no texto corrido
